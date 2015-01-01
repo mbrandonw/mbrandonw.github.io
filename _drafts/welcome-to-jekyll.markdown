@@ -23,3 +23,12 @@ Check out the [Jekyll docs][jekyll] for more info on how to get the most out of 
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
 [jekyll-help]: https://github.com/jekyll/jekyll-help
+
+Testing some stuff. Here $$x^2 + 1$$ is some inline math. And here is display math:
+
+$$ \int_{-\infty}^\infty \frac{1}{x^2 + 1} = \pi $$
+
+{% highlight swift %}
+let xs = [1, 2, 3, 4]
+reduce(xs, 0, +)
+{% endhighlight %}

@@ -1,0 +1,24 @@
+---
+layout: post
+title:  "Hello"
+date:   2015-01-01
+---
+
+Just testing some stuff. Here's some code for Haskell's `Functor` typeclass:
+
+{% highlight haskell %}
+class  Functor f  where
+  fmap  :: (a -> b) -> f a -> f b
+  (<$)  :: a -> f b -> f a
+  (<$)  =  fmap . const
+{% endhighlight %}
+
+
+
+And here is some math:
+
+<div>
+$$
+\begin{align} \cdots\rightarrow H_{n+1}(X)\,&\xrightarrow{\partial_*}\,H_{n}(A\cap B)\,\rightarrow\,H_{n}(A)\oplus H_{n}(B)\,\rightarrow\,H_{n}(X)\xrightarrow{\partial_*}\\ &\quad\xrightarrow{\partial_*}\,H_{n-1} (A\cap B)\rightarrow \cdots\rightarrow H_0(A)\oplus H_0(B)\,\rightarrow\,H_0(X)\rightarrow\,0. \end{align}
+$$
+</div>
