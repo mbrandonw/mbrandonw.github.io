@@ -202,3 +202,30 @@ pre {
         }
     }
 }
+
+
+/**
+ * Tables
+ */
+ table {
+   width: 100%;
+   margin-bottom: $spacing-unit/2;
+   border: #ccc 1px solid;
+
+   th {
+       text-align: left;
+   }
+
+   th, td {
+     padding: $spacing-unit/4 $spacing-unit/2;
+     border: #ccc 1px solid;
+   }
+ }
+
+
+/**
+ * iFrames
+ */
+iframe {
+    margin-bottom: $spacing-unit/2;
+}
