@@ -47,7 +47,7 @@ func f <A, B> (x: A, y: B) -> A {
 }
 ```
 
-This involves two generic parameters. It’s a function taking values in `A` and `B` and returning something in `A`. After completing the previous function this probably seems obvious. Without knowing anything about `A` or `B` we really have no choice but to return x again:
+This involves two generic parameters. It’s a function taking values in `A` and `B` and returning something in `A`. After completing the previous function this probably seems obvious. Without knowing anything about `A` or `B` we really have no choice but to return `x` again:
 
 ```swift
 func f <A, B> (x: A, y: B) -> A {
