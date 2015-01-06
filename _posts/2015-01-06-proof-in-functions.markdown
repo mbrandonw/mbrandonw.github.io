@@ -231,7 +231,7 @@ Clearly \\(P \Rightarrow R\\) and \\(Q \Rightarrow R\\), but \\(R\\) alone is no
 
 Swift’s type system is strong enough for us to prove De Morgan’s law, which relates the operations \\(\lnot\\), \\(\land\\) and \\(\lor\\). Programmers can apply this law in order to untangle and simplify gnarly conditional statements. The law states: for any propositions \\(P\\) and \\(Q\\), the following holds true:
 
-\\[ \lnot(P \lor Q) \Leftrightarrow \lnot P \land \lor Q \\]
+\\[ \lnot(P \lor Q) \Leftrightarrow \lnot P \land \lnot Q \\]
 
 You can think of this as \\(\lnot\\) distributing over \\(\lor\\) but at the cost of switching \\(\lor\\) to \\(\land\\).
 
@@ -266,7 +266,7 @@ struct And <A, B> {
 }
 ```
 
-Now we can try to write the proof. There are two parts. First proving that \\(\lnot(P \lor Q)\\) implies \\(\lnot P \land \lor Q\\). We do this by constructing a function:
+Now we can try to write the proof. There are two parts. First proving that \\(\lnot(P \lor Q)\\) implies \\(\lnot P \land \lnot Q\\). We do this by constructing a function:
 
 ```swift
 func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
