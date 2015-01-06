@@ -5,9 +5,7 @@ date:   2015-01-01
 categories: swift logic math
 ---
 
-Swift’s generic functions allow us to explore a beautiful idea that straddles the line between mathematics and computer science. If the signature of a function is sufficiently generic, then there is either a *unique* implementation of that function or *no* implementation of that function, and the existence of an implementation corresponds to a mathematical proof of some theorem in logic.
-
-That was a bit of a mouthful, but by the end of this short article you will understand what that means, and we will have constructed a computer proof of [De Morgan’s law](http://en.wikipedia.org/wiki/De_Morgan%27s_laws).
+Swift’s generic functions allow us to explore a beautiful idea that straddles the line between mathematics and computer science. If you write down and implement a function using only generic data types, there is a corresponding mathematical theorem that you have proven true. There are a lot of pieces to that statement, but by the end of this short article you will understand what that means, and we will have constructed a computer proof of [De Morgan’s law](http://en.wikipedia.org/wiki/De_Morgan%27s_laws).
 
 # Generic Functions
 
@@ -15,11 +13,11 @@ Let’s start with some exercises to prepare our brains for this kind of thinkin
 
 ```swift
 func f <A> (x: A) -> A {
-  // ???
+  ???
 }
 ```
 
-It’s a function that takes an `x` in some type `A` (can be any type) and needs to return something in `A`. We have absolutely no knowledge of `A`. No way of constructing a value in that type. For example, we can’t even do something like `A()`, for we have no way of knowing if `A` has an initializer of that form. Even worse, there’s a chance that A cannot be instantiated, i.e. `A` has no values! For example, an enum with no cases cannot be instantiated:
+It’s a function that takes an `x` in some type `A` (can be any type) and needs to return something in `A`. We have absolutely no knowledge of `A`. No way of constructing a value in that type. For example, we can’t even do something like `A()` to construct a value, for we have no way of knowing if `A` has an initializer of that form. Even worse, there’s a chance that A cannot be instantiated, i.e. `A` has no values! For example, an enum with no cases cannot be instantiated:
 
 ```swift
 enum Empty {
@@ -33,7 +31,7 @@ So, back to that function `f`. How can we implement it so that the compiler says
 
 ```swift
 func f <A> (x: A) -> A {
-  // ???
+  return x
 }
 ```
 
@@ -43,7 +41,7 @@ Let’s try to implement another generic function. Take this one:
 
 ```swift
 func f <A, B> (x: A, y: B) -> A {
-  // ???
+  ???
 }
 ```
 
@@ -59,7 +57,7 @@ Let’s try something a little more difficult. How might we implement the follow
 
 ```swift
 func f <A, B> (x: A, g: A -> B) -> B {
-  // ???
+  ???
 }
 ```
 
@@ -94,18 +92,18 @@ enum Or <A, B> {
 }
 ```
 
-The `Or<A, B>` type has two cases, a left and a right, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` or of type `B`. Unfortunately, this does not work in Swift due to a compiler bug. We can get around this bug by wrapping each case in an autoclosure:
+The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` *or* of type `B`. Unfortunately, this does not work in Swift due to a bug in the compiler in which it cannot determine the memory layout of this enum. We can get around this bug by wrapping each case in an autoclosure:
 
 ```swift
-case Or <A, B> {
+enum Or <A, B> {
   case left(@autoclosure () -> A)
   case right(@autoclosure () -> A)
 }
 ```
 
-These `@autoclosure` pieces are just an implementation detail and not actually important to the concepts we are expressing. It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` and of type `B`.
+These `@autoclosure` pieces are just an implementation detail and not actually important to the theory we are exploring. It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` *and* of type `B`.
 
-Let’s try implementing more generic functions with this new type. First, an easy one:
+Let’s try implementing some generic functions with this new type. First, an easy one:
 
 ```swift
 func f <A, B> (x: A) -> Or<A, B> {
@@ -113,13 +111,13 @@ func f <A, B> (x: A) -> Or<A, B> {
 }
 ```
 
-This is saying that given something in `A` we want to produce something in `Or<A, B>`, which of course means we just put it in the left case of the enum.
+This is saying that given something in `A` we want to produce something in `Or<A, B>`. Only way to do that is to instantiate a new value of the `left` case of `Or`.
 
 A more difficult one that we will break down in more detail:
 
 ```swift
 func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
-  // ???
+  ???
 }
 ```
 
@@ -129,9 +127,9 @@ We now have a value in `Or<A, B>`, a function from `A` to `C` and a function fro
 func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
   switch x {
   case .left:
-    // ???
+    ???
   case .right:
-    // ???
+    ???
   }
 }
 ```
@@ -149,11 +147,13 @@ func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
 }
 ```
 
+Remember that the `left` and `right` cases technically hold closure values, so that is why we have to invoke `a()` and `b()` in the case statements.
+
 Time to throw a curve ball. Let’s implement the function:
 
 ```swift
 func f <A, B> (x: A) -> B {
-  // ???
+  ???
 }
 ```
 
@@ -163,7 +163,7 @@ Here’s another:
 
 ```swift
 func f <A, B, C> (g: A -> C, h: B -> C) -> C {
-  // ???
+  ???
 }
 ```
 
@@ -181,7 +181,7 @@ In logic, the atomic object is the proposition which can be either true (\\(\top
 | \\(P \Rightarrow Q\\)     | \\(P\\) implies \\(Q\\)                             | false if \\(P\\) false and \\(Q\\) true, true otherwise |
 | \\(P \Leftrightarrow Q\\) | \\(P\\) implies \\(Q\\) and \\(Q\\) implies \\(P\\) |                                                         |
 
-Using these atoms and operations we can construct small statements. For example, \\(P \Rightarrow P\\), i.e. \\(P\\) implies \\(P\\). Well, of course that’s true. Or even: \\(P \land Q \Rightarrow P\\), i.e if \\(P\\) and \\(Q\\) are true, then \\(P\\) is true.
+Using these atoms and operations we can construct small statements. For example, \\(P \Rightarrow P\\), i.e. \\(P\\) implies \\(P\\). Well, of course that’s true, it’s called a *tautology*. Or even: \\(P \land Q \Rightarrow P\\), i.e if \\(P\\) and \\(Q\\) are true, then \\(P\\) is true.
 
 Here’s a seemingly more complicated one:
 
@@ -210,9 +210,9 @@ func f <A, B, C> (g: A -> B, h: B -> C) -> (A -> C) {
 
 See how the logical statement has the same “shape” as the function signature? This is the idea deep underneath everything we have been grasping at. For every function we could implement there is a corresponding mathematical theorem that is provably true. The converse is also true (but a little more nuanced): for every true logical theorem there is a corresponding generic function implementing the proof.
 
-This view also gives us some perspective on why the function `f (A) -> B` couldn’t be implemented. For if it could, then the corresponding theorem in logic would be true: \\(P \Rightarrow Q\\). That logical statement is saying that any proposition \\(P\\) implies any other proposition \\(Q\\), which is clearly false.
+This view also gives us some perspective on why the function `A -> B` couldn’t be implemented. For if it could, then the corresponding theorem in logic would be true: \\(P \Rightarrow Q\\). That logical statement is saying that any proposition \\(P\\) implies any other proposition \\(Q\\), which is clearly false.
 
-Another un-implementable function we considered was of the form `f (A -> C, B-> C) -> C`. That is, it took functions `A -> C` and `B -> C` as input and wanted to output a value in `C`. In the world of logic this corresponds to the statement: \\((P \Rightarrow R \land Q \Rightarrow R) \land R\\). Said verbally, if \\(P\\) implies \\(R\\) and \\(Q\\) implies \\(R\\) then \\(R\\) is true. It’s quite nice that we have two statements involving the truth of \\(R\\), but those statements alone do not prove the truth of \\(R\\). If you work better with concrete examples, here are some propositions we can substitute for \\(P\\), \\(Q\\) and \\(R\\) to show the absurdity of the statement:
+Another un-implementable function we considered was of the form `(A -> C, B-> C) -> C`. That is, it took functions `A -> C` and `B -> C` as input and wanted to output a value in `C`. In the world of logic this corresponds to the statement: \\((P \Rightarrow R \land Q \Rightarrow R) \Rightarrow R\\). Said verbally, if \\(P\\) implies \\(R\\) and \\(Q\\) implies \\(R\\) then \\(R\\) is true. It’s quite nice that we have two statements involving the truth of \\(R\\), but those statements alone do not prove the truth of \\(R\\). If you work better with concrete examples, here are some propositions we can substitute for \\(P\\), \\(Q\\) and \\(R\\) to show the absurdity of the statement:
 
 <div>$$
   \begin{align*}
@@ -249,7 +249,7 @@ struct Not <A> {
 }
 ```
 
-This type corresponds the negation of the proposition represented by `A`. 
+This type corresponds to the negation of the proposition represented by `A`. 
 
 Other parts of De Morgan’s law include \\(\lor\\) and \\(\land\\). We already have a type for the \\(\lor\\) disjunction: `Or<A, B>`. For the \\(\land\\) conjunction we have tuples `(A, B)`, but to be more explicit we will create a new type for this:
 
@@ -267,29 +267,103 @@ struct And <A, B> {
 Now we can try to write the proof. There are two parts. First proving that \\(\lnot(P \lor Q)\\) implies \\(\lnot P \land \lor Q\\). We do this by constructing a function:
 
 ```swift
-func dmg2 <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
+func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
+  ???
+}
+```
+
+We know we need to return something of type `And<Not<A>, Not<B>>`, so we can just fill that piece in:
+
+```swift
+func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
+  return And<Not<A>, Not<B>>(
+    ???
+  )
+}
+```
+
+The constructor of `And<Not<A>, Not<B>>` takes two arguments, the left `Not<A>` and the right `Not<B>`, so now we can fill in those pieces:
+
+```swift
+func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
+  return And<Not<A>, Not<B>>(
+    Not<A>(???),
+    Not<B>(???)
+  )
+}
+```
+
+The constructor of `Not<A>` takes a single function `A -> Nothing`. This is about the time we take a look at what values we have available to us and see how we can piece them together to get what we need. We have a value `f: Not<Or<A, B>>`, which by definition means `f.not: Or<A, B> -> Nothing`. This is close to what we want. If we had some `a: A`, then we could plug `Or.left(a)` into `f.not`. So now we have:
+
+```swift
+func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
+  return And<Not<A>, Not<B>>(
+    Not<A> {a in f.not(.left(a))},
+    Not<B>(???)
+  )
+}
+```
+
+The `Not<B>` piece works exactly the same, giving us the fully implemented function, and hence half the proof of De Morgan’s law:
+
+```swift
+func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
   return And<Not<A>, Not<B>>(
     Not<A> {a in f.not(.left(a))},
     Not<B> {b in f.not(.right(b))}
   )
 }
 ```
-
-
-There’s a lot to unwrap there, but the compiler says it’s ok so it must be ok. It’s a good idea to either write this function from scratch yourself or trace out every step of the above implementation and make sure all the types match up.
 
 Next we need to prove the converse: \\(\lnot P \land \lor Q\\) implies \\(\lnot(P \lor Q)\\). This is done by implementing the function:
 
 ```swift
-func deMorgan1 <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
-  return And<Not<A>, Not<B>>(
-    Not<A> {a in f.not(.left(a))},
-    Not<B> {b in f.not(.right(b))}
-  )
+func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
+  ???
 }
 ```
 
-We have now proven De Morgan’s law. The mere fact that we were able to implement these two functions gives a computer proof of De Morgan’s law.
+We see that we need to return something of type `Not<Or<A, B>>`, which has a constructor taking a function `Or<A, B> -> Nothing`, so we can fill that in:
+
+```swift
+func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
+  return Not<Or<A, B>> { (x: Or<A, B>) in
+    ???
+  }
+}
+```
+
+Now we have this value `x: Or<A, B>`, which is an enum, so we should switch on it and consider each case separately:
+
+```swift
+func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
+  return Not<Or<A, B>> { (x: Or<A, B>) in
+    switch x {
+    case let .left(a):
+      ???
+    case let .right(b):
+      ???
+    }
+  }
+}
+```
+
+Consider the `left` case. We have at our disposal `f: And<Not<A>, Not<B>>` and `a: A`. By definition `f.left: Not<A>`, and hence `f.left.not: A -> Nothing`. Therefore `f.left.not(a): Nothing`, which is exactly what we want. The `right` case works similarly, and we have implemented the function:
+
+```swift
+func deMorgan2 <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
+  return Not<Or<A, B>> {(x: Or<A, B>) in
+    switch x {
+    case let .left(a):
+      return f.left.not(a())
+    case let .right(b):
+      return f.right.not(b())
+    }
+  }
+}
+```
+
+We have now proven De Morgan’s law. The mere fact that we were able to implement these two functions and it type checks gives a computer proof of De Morgan’s law.
 
 This is about the most advanced mathematical theorem we can prove in Swift, but the stronger a language’s type system is the more powerful of theorems that can be proven. For example, in [Idris](http://www.idris-lang.org) one can prove that the sum of two even integers is even. Astonishingly, the languages [Agda](http://en.wikipedia.org/wiki/Agda_%28programming_language%29) and [Coq](http://en.wikipedia.org/wiki/Coq) can prove a [theorem](http://www.math.uchicago.edu/~may/VIGRE/VIGRE2011/REUPapers/Dooley.pdf) from topology: the [fundamental group](http://en.wikipedia.org/wiki/Fundamental_group) of the circle is isomorphic to the [group](http://en.wikipedia.org/wiki/Group_%28mathematics%29) of integers.
 
@@ -317,7 +391,7 @@ By the way, this isn’t the first time a dictionary has been made to map mathem
 
 # Hole-Driven Development
 
-Often when we tried to implement a function we used `???` as a placeholder for something we had not yet figured out. Sometimes we’d fill that placeholder with something more specific, but might have created more unknown chunks denoted by `???`. This is loosely known as “hole-driven development.” The hole is represented by the unknown `???` piece, and we look to the compiler for hints at how we should fill that hole. It’s almost like a conversation with with the compiler.
+Often when we tried to implement a function we used `???` as a placeholder for something we had not yet figured out. Sometimes we’d fill that placeholder with something more specific, but might have created more unknown chunks denoted by `???`. This is loosely known as “hole-driven development.” The hole is represented by the unknown `???` piece, and we look to the compiler for hints at how we should fill that hole. It’s almost like a [conversation](http://www.reddit.com/r/haskell/comments/19aj9t/holedriven_haskell/c8mazeg) with with the compiler.
 
 Some languages and compilers are sophisticated enough to do this work for you. See Agda as well as the `djinn` package for Haskell.
 
@@ -342,7 +416,7 @@ func f <A, B> (f: A -> B) -> A {
 
 ```swift
 func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
-  // ???
+  ???
 }
 ```
 
@@ -350,7 +424,7 @@ func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
 
 ```swift
 func f <A, B, C> (x: A, g: A -> B, h: A -> C) -> (B, C) {
-  // ???
+  ???
 }
 ```
 
@@ -362,7 +436,7 @@ by implementing the function:
 
 ```swift
 func f <A> (x: A) -> Not<Not<A>> {
-  // ???
+  ???
 }
 ```
 
@@ -374,7 +448,7 @@ by implementing the function:
 
 ```swift
 func f <A> (x: Not<Not<A>>) -> A {
-  // ???
+  ???
 }
 ```
 
