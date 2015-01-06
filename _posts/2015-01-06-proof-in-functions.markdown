@@ -99,7 +99,7 @@ The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated 
 ```swift
 enum Or <A, B> {
   case left(@autoclosure () -> A)
-  case right(@autoclosure () -> A)
+  case right(@autoclosure () -> B)
 }
 ```
 
