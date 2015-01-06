@@ -7,6 +7,8 @@ categories: swift logic math
 
 Swift’s generic functions allow us to explore a beautiful idea that straddles the line between mathematics and computer science. If you write down and implement a function using only generic data types, there is a corresponding mathematical theorem that you have proven true. There are a lot of pieces to that statement, but by the end of this short article you will understand what that means, and we will have constructed a computer proof of [De Morgan’s law](http://en.wikipedia.org/wiki/De_Morgan%27s_laws).
 
+All of the code samples in this article are contained in a Swift playground available for download [here](http://www.fewbutripe.com.s3.amazonaws.com/supporting/proof-in-functions/proof-in-functions.playground.zip).
+
 # Generic Functions
 
 Let’s start with some exercises to prepare our brains for this kind of thinking. If someone handed you the following function declaration, which doesn’t currently compile, and asked you to fill it out so that it compiles, could you?
@@ -397,7 +399,7 @@ Some languages and compilers are sophisticated enough to do this work for you. S
 
 # Exercises
 
-Below you will find some exercises to help you explore these ideas a little deeper. You can also download a playground with all of our code snippets and these exercises combined.
+Below you will find some exercises to help you explore these ideas a little deeper. You can also download a [playground](http://www.fewbutripe.com.s3.amazonaws.com/supporting/proof-in-functions/proof-in-functions.playground.zip) with all of our code snippets and these exercises combined.
 
 1.) Two of the following functions can be implemented and one cannot. Provide the implementations and explain why the un-implementable one is different.
 
