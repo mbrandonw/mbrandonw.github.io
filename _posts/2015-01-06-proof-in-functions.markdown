@@ -353,7 +353,7 @@ func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
 Consider the `left` case. We have at our disposal `f: And<Not<A>, Not<B>>` and `a: A`. By definition `f.left: Not<A>`, and hence `f.left.not: A -> Nothing`. Therefore `f.left.not(a): Nothing`, which is exactly what we want. The `right` case works similarly, and we have implemented the function:
 
 ```swift
-func deMorgan2 <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
+func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
   return Not<Or<A, B>> {(x: Or<A, B>) in
     switch x {
     case let .left(a):
