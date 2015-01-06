@@ -180,7 +180,7 @@ In logic, the atomic object is the proposition which can be either true (\\(\top
 | Symbol                    | Statement                                           | Truth value                                             |
 |---------------------------|:----------------------------------------------------|:--------------------------------------------------------|
 | \\(\lnot{P}\\)            | not \\(P\\)                                         | false if \\(P\\) true, true otherwise                   |
-| \\(P \Rightarrow Q\\)     | \\(P\\) implies \\(Q\\)                             | false if \\(P\\) false and \\(Q\\) true, true otherwise |
+| \\(P \Rightarrow Q\\)     | \\(P\\) implies \\(Q\\)                             | false if \\(P\\) true and \\(Q\\) false, true otherwise |
 | \\(P \Leftrightarrow Q\\) | \\(P\\) implies \\(Q\\) and \\(Q\\) implies \\(P\\) |                                                         |
 
 Using these atoms and operations we can construct small statements. For example, \\(P \Rightarrow P\\), i.e. \\(P\\) implies \\(P\\). Well, of course that’s true, it’s called a *tautology*. Or even: \\(P \land Q \Rightarrow P\\), i.e if \\(P\\) and \\(Q\\) are true, then \\(P\\) is true.
