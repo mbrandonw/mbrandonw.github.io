@@ -393,7 +393,7 @@ By the way, this isn’t the first time a dictionary has been made to map mathem
 
 # Hole-Driven Development
 
-Often when we tried to implement a function we used `???` as a placeholder for something we had not yet figured out. Sometimes we’d fill that placeholder with something more specific, but might have created more unknown chunks denoted by `???`. This is loosely known as “hole-driven development.” The hole is represented by the unknown `???` piece, and we look to the compiler for hints at how we should fill that hole. It’s almost like a [conversation](http://www.reddit.com/r/haskell/comments/19aj9t/holedriven_haskell/c8mazeg) with with the compiler.
+Often when we tried to implement a function we used `???` as a placeholder for something we had not yet figured out. Sometimes we’d fill that placeholder with something more specific, but might have created more unknown chunks denoted by `???`. This is loosely known as “hole-driven development.” The hole is represented by the unknown `???` piece, and we look to the compiler for hints at how we should fill that hole. It’s almost like a [conversation](http://www.reddit.com/r/haskell/comments/19aj9t/holedriven_haskell/c8mazeg) with the compiler.
 
 Some languages and compilers are sophisticated enough to do this work for you. See Agda as well as the `djinn` package for Haskell.
 
