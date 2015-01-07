@@ -152,8 +152,9 @@ func deMorgan2 <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
  */
 
 /*
- 8.) Using the type `T` defined in #7, construct a value
- in the type `Not<T>`.
+ 8.) Construct a value in the type `Not<Nothing>`, and 
+ describe how `Not<Nothing>` relates to the type constructed 
+ in #7.
  */
 
 
