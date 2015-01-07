@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Proof in functions"
+title:  "Proof in Functions"
 date:   2015-01-06
 categories: swift math
 ---
