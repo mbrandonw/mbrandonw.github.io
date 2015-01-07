@@ -387,7 +387,7 @@ The rigorous statement of the relationship we have been grasping at is known as 
 
 That is only the beginning. There’s a lot more.
 
-By the way, this isn’t the first time a dictionary has been made to map mathematical ideas to another, seemingly different field. In 1975 the mathematician Jim Simons worked with Nobel winning physicist C. N. Yang to create what later became known as the “Wu-Yang dictionary,” which mapped physics ideas to well-established (sometimes decades prior) mathematical concepts:
+By the way, this isn’t the first time a dictionary has been made to map mathematical ideas to another, seemingly different field. In 1975 the mathematician Jim Simons worked with Nobel winning physicist C. N. Yang to create what later became known as the “[Wu-Yang dictionary](http://www.math.columbia.edu/~woit/wordpress/?p=2047),” which mapped physics ideas to well-established (sometimes decades prior) mathematical concepts:
 
 ![Physics term on the left; mathematics term on the right.](https://s3.amazonaws.com/www.fewbutripe.com/assets/wu-yang-dictionary.png)
 
