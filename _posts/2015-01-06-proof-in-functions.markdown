@@ -19,7 +19,7 @@ func f <A> (x: A) -> A {
 }
 ```
 
-It’s a function that takes an `x` in some type `A` (can be any type) and needs to return something in `A`. We have absolutely no knowledge of `A`. No way of constructing a value in that type. For example, we can’t even do something like `A()` to construct a value, for we have no way of knowing if `A` has an initializer of that form. Even worse, there’s a chance that A cannot be instantiated, i.e. `A` has no values! For example, an enum with no cases cannot be instantiated:
+It’s a function that takes an `x` in some type `A` (can be any type) and needs to return something in `A`. We have absolutely no knowledge of `A`. No way of constructing a value in that type. For example, we can’t even do something like `A()` to construct a value, for we have no way of knowing if `A` has an initializer of that form. Even worse, there’s a chance that `A` cannot be instantiated, i.e. `A` has no values! For example, an enum with no cases cannot be instantiated:
 
 ```swift
 enum Empty {
@@ -317,7 +317,7 @@ func deMorgan <A, B> (f: Not<Or<A, B>>) -> And<Not<A>, Not<B>> {
 }
 ```
 
-Next we need to prove the converse: \\(\lnot P \land \lor Q\\) implies \\(\lnot(P \lor Q)\\). This is done by implementing the function:
+Next we need to prove the converse: \\(\lnot P \land \lnot Q\\) implies \\(\lnot(P \lor Q)\\). This is done by implementing the function:
 
 ```swift
 func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
