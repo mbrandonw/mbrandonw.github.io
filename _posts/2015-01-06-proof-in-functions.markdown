@@ -1,8 +1,9 @@
 ---
-layout: post
-title:  "Proof in Functions"
-date:   2015-01-06
+layout:     post
+title:      "Proof in Functions"
+date:       2015-01-06
 categories: swift math
+summary:    "Swift’s generic functions allow us to explore a beautiful idea that straddles the line between mathematics and computer science"
 ---
 
 Swift’s generic functions allow us to explore a beautiful idea that straddles the line between mathematics and computer science. If you write down and implement a function using only generic data types, there is a corresponding mathematical theorem that you have proven true. There are a lot of pieces to that statement, but by the end of this short article you will understand what that means, and we will have constructed a computer proof of [De Morgan’s law](http://en.wikipedia.org/wiki/De_Morgan%27s_laws).
