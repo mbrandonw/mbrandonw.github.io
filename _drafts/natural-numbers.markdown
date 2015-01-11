@@ -1,8 +1,9 @@
 ---
-layout: post
-title:  "Creating the natural numbers from first principles "
-date:   2015-01-01
+layout:     post
+title:      "Creating the natural numbers from first principles"
+date:       2015-01-01
 categories: swift math
+summary:    "Learn how to construct the natural numbers from first principles in Swift."
 ---
 
 > “God made the natural numbers; all else is the work of man.”
@@ -36,7 +37,7 @@ enum Nat {
 }
 ```
 
-However, this does not compile. Swift does not currently allow recursive enums. We can get around this by replacing the recursive `Nat` reference with an autoclosure:
+Unfortunately, this does not compile in Swift due to a bug in the compiler in which it cannot determine the memory layout of this enum. We can get around this bug by wrapping the associated value of `Succ` in an autoclosure:
 
 ```swift
 enum Nat {
@@ -63,7 +64,7 @@ Now let’s see how easy or difficult it is to actually work with this type. One
 
 ```swift
 func add (a: Nat, b: Nat) -> Nat {
-  // ???
+  ???
 }
 ```
 
@@ -73,13 +74,13 @@ The recursive definition of `Nat` will lead us through implementing this funtion
 func add (a: Nat, b: Nat) -> Nat {
   switch (a, b) {
   case (.Zero, .Zero):
-    // ???
+    ???
   case (.Succ, .Zero):
-    // ???
+    ???
   case (.Zero, .Succ):
-    // ???
+    ???
   case (.Succ, .Succ):
-    // ???
+    ???
   }
 }
 ```
@@ -94,12 +95,12 @@ func add (a: Nat, b: Nat) -> Nat {
   case (.Zero, _):
     return b
   case (.Succ, .Succ):
-    // ???
+    ???
   }
 }
 ```
 
-The last case is left: how to add two natural numbers, each of which are decomposed as the successors of smaller natural numbers. Since we know how to add `Zero` to anything, we can try recursively breaking down these numbers to reach that base case. In fact, by taking the predecessor of `a` and the successor of `b` (and hence not changing the overall sum), we have made it one step closer to reaching the `Zero` base case. In code this looks like:
+The last case that is left: how to add two natural numbers, each of which are decomposed as the successors of smaller natural numbers. Since we know how to add `Zero` to anything, we can try recursively breaking down these numbers to reach that base case. In fact, by taking the predecessor of `a` and the successor of `b` (and hence not changing the overall sum), we have made it one step closer to reaching the `Zero` base case. In code this looks like:
 
 ```swift
 func add (a: Nat, b: Nat) -> Nat {
@@ -109,7 +110,7 @@ func add (a: Nat, b: Nat) -> Nat {
   case (.Zero, _):
     return b
   case let (.Succ(pred), _):
-    return pred() + .Succ(b)
+    return add(pred(), .Succ(b))
   }
 }
 ```
@@ -138,7 +139,7 @@ So, let’s implement the `Equatable` protocol:
 ```swift
 extension Nat : Equatable {}
 func == (a: Nat, b: Nat) -> Bool {
-  // ???
+  ???
 }
 ```
 
@@ -190,10 +191,50 @@ You can download this playground to poke around these ideas directly.
 
 # Exercises
 
-1.) Implement exponentiation: `a^b`.
+1.) Implement exponentiation:
 
-2.) Implement `min` and `max`.
+```swift
+func exp (a: Nat, b: Nat) -> Nat {
+  ???
+}
+```
+
+2.) Implement `min` and `max`:
+
+```swift
+func min (a: Nat, b: Nat) -> Nat {
+  ???
+}
+
+func max (a: Nat, b: Nat) -> Nat {
+  ???
+}
+```
 
 3.) Make Nat implement the `Comparable` protocol.
 
-4.) Implement modulus: `a % m`
+4.) Implement modulus:
+
+```swift
+func mod (a: Nat, m: Nat) -> Nat {
+  ???
+}
+```
+
+5.) Implement a distance function between natural numbers, i.e. the absolute value of their difference:
+
+```swift
+func distance (a: Nat, b: Nat) -> Nat {
+  ???
+}
+```
+
+6.) Implement a predecessor function:
+
+```swift
+func pred (n: Nat) -> Nat {
+  ???
+}
+```
+
+You will need to use a non-returning function like `abort` in order to appease the compiler.
