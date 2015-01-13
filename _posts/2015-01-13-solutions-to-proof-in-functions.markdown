@@ -167,3 +167,5 @@ let y: () = ()
 ```
 
 Note that `()` stands for both the type *and* the only value in that type. Also note that `Void` is a typealias for `()`. This is why any function `A -> Void` does not need a return statement, because there is only one possible value to return!
+
+9.) This bonus question will be the topic of a future article :)
