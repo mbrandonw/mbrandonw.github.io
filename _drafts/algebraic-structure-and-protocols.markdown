@@ -199,6 +199,8 @@ protocol Monoid : Semigroup {
 }
 ```
 
+## Group
+
 ```swift
 protocol Group : Monoid {
   func inv () -> Self
@@ -267,7 +269,7 @@ enum Comparable {
 
 * Suppose that the type `S` is a semigroup.
 
-
+* make Function<A, A> into a monoid
 
 
 
