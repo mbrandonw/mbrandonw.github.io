@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "Creating the natural numbers from first principles"
-date:       2015-01-01
+title:      "Creating the Natural Numbers from First Principles"
+date:       2015-01-20
 categories: swift math
 summary:    "Learn how to construct the natural numbers from first principles in Swift."
 ---
@@ -9,7 +9,7 @@ summary:    "Learn how to construct the natural numbers from first principles in
 > “God made the natural numbers; all else is the work of man.”
 > – Leopold Kronecker
 
-Let’s for a moment forget that Swift has any primitive types such as `Int`, `String`, arrays and even `Bool`. All we have are enums. Can we build the natural numbers (0, 1, 2, …) from scratch?
+Let’s for a moment forget that Swift has any primitive types such as `Int`, `String`, arrays and even `Bool`. All we have are enums. Can we build the natural numbers (non-negative integers 0, 1, 2, …) from scratch?
 
 The simplest way might be to just build a grab bag of values. We could try enumerating every natural explicitly:
 
@@ -51,7 +51,7 @@ It’s unfortunate that we have to clutter our simple `Nat` type with a messy im
 We can now do the following to create a few values representing various natural numbers:
 
 ```swift
-let zero = Nat.Zero
+let zero: Nat = .Zero
 let one: Nat = .Succ(.Zero)
 let two: Nat = .Succ(one)
 let three: Nat = .Succ(two)
@@ -109,8 +109,8 @@ func add (a: Nat, b: Nat) -> Nat {
     return a
   case (.Zero, _):
     return b
-  case let (.Succ(pred), _):
-    return add(pred(), .Succ(b))
+  case let (.Succ(pred_a), _):
+    return add(pred_a(), .Succ(b))
   }
 }
 ```
@@ -132,7 +132,7 @@ let five = two + three
 let ten = five + five
 ```
 
-Ok. Well. That’s actually not telling us much. If you plug this into a playground these lines will only display as `(Enum Value)`. We probably want to come up with a way for testing equality of Nat values so that we can confirm that `five` is indeed equal to `.Succ(.Succ(.Succ(.Succ(.Succ(.Zero)))))` (phew).
+Ok. Well. That’s actually not telling us much. If you plug this into a playground these lines will only display as `(Enum Value)`. We probably want to come up with a way for testing equality of Nat values so that we can confirm that `five` is indeed equal to `.Succ(.Succ(.Succ(.Succ(.Succ(.Zero)))))` (*phew*).
 
 So, let’s implement the `Equatable` protocol:
 
@@ -143,7 +143,7 @@ func == (a: Nat, b: Nat) -> Bool {
 }
 ```
 
-Again we are forced to switch on `a` and `b` and analyze each case. This all will play out like before where we unwrap successors in order to reduce `a` and `b` to the `Zero` base case.
+Again we are forced to switch on `a` and `b` and analyze each case. This will play out like before where we unwrap successors in order to reduce `a` and `b` to the `Zero` base case.
 
 ```swift
 extension Nat : Equatable {}
@@ -153,8 +153,8 @@ func == (a: Nat, b: Nat) -> Bool {
     return true
   case (.Zero, .Succ), (.Succ, .Zero):
     return false
-  case let (.Succ(preda), .Succ(predb)):
-    return preda() == predb()
+  case let (.Succ(pred_a), .Succ(pred_b)):
+    return pred_a() == pred_b()
   }
 }
 ```
@@ -170,26 +170,37 @@ one == one                                        // true
 (one + three) == (two + two)                      // true
 ```
 
-There are more arithmetic functions we can implement on `Nat` in order to flex our recursive muscles. For example multiplication. `Zero` times anything is `Zero`, so that’s our base case. Reducing to the base case involves observing that `a*b = a*(b-1) + b`. So we can reduce `b` until it reaches zero.
+There are more arithmetic functions we can implement on `Nat` in order to flex our recursive muscles. For example multiplication. `Zero` times anything is `Zero`, so that’s our base case. Reducing to the base case involves observing that `a*b = (a-1) * b + b`. So we can reduce `b` until it reaches zero.
 
 ```swift
 func * (a: Nat, b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero), (.Zero, _):
     return .Zero
-  case let (.Succ(pred), _):
-    return b + pred() * b
+  case let (.Succ(pred_a), _):
+    return pred_a() * b + b
   }
 }
 ```
 
-And finally, implementing exponentiation. I’ll leave that as an exercise for the reader (hint: `a^b = (a^(b-1)) * b`). If you want to play with this more you could try implementing `min`, `max`, modulus, `Comparable`, etc…
+We can make sure this multiplication operates as we expect by testing some specific cases:
+
+```swift
+one * four == four                // true
+two * two == four                 // true
+four * three == two + two * five  // true
+two * three == five               // false
+```
+
+Finally, we could try implementing exponentiation. I’ll leave that as an exercise for the reader (hint: `a^b = (a^(b-1)) * b`). If you want to play with this more you could try implementing `min`, `max`, modulus, `Comparable`, etc…
 
 We have now constructed the natural numbers from scratch and implemented a bunch of arithmetic operations. Of course, `Nat` and the functions we defined are incredibly slow, but that wasn’t the point. It’s a fun exercise to take something as basic as the natural numbers and figure out how to build it from first principles, and even better that Swift’s type system is expressive enough to do this the right way. Some languages whose primary focus is mathematical correctness (such as [Agda](http://en.wikipedia.org/wiki/Agda_%28programming_language%29#Inductive_types)) use this inductive strategy to define natural numbers.
 
 You can download this playground to poke around these ideas directly.
 
 # Exercises
+
+Below you will find some exercises to help you explore these ideas even deeper. You can try solving these exercises in the [playground](http://www.fewbutripe.com.s3.amazonaws.com/supporting/natural-numbers/natural-numbers.playground.zip) that accompanies this article.
 
 1.) Implement exponentiation:
 
@@ -221,7 +232,7 @@ func mod (a: Nat, m: Nat) -> Nat {
 }
 ```
 
-5.) Implement a distance function between natural numbers, i.e. the absolute value of their difference:
+5.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
 
 ```swift
 func distance (a: Nat, b: Nat) -> Nat {
@@ -237,4 +248,9 @@ func pred (n: Nat) -> Nat {
 }
 ```
 
-You will need to use a non-returning function like `abort` in order to appease the compiler.
+Since `Zero` doesn’t have a predecessor, you will need to use a non-returning function like `abort` in order to appease the compiler.
+
+7.) Make `Nat` implement the `IntegerLiteralConvertible` protocol.
+
+8.) **Bonus:** The integers are a superset of the naturals and include all negative whole numbers. How might you model the integers as a new type in Swift?
+
