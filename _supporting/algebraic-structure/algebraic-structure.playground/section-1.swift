@@ -11,6 +11,11 @@ extension Int : Semigroup {
     return self + n
   }
 }
+extension UInt : Semigroup {
+  func sop (n: UInt) -> UInt {
+    return self + n
+  }
+}
 
 extension Bool : Semigroup {
   func sop (b: Bool) -> Bool {
@@ -30,16 +35,82 @@ extension Array : Semigroup {
   }
 }
 
-infix operator <> {associativity left}
+infix operator <> {associativity left precedence 150}
 func <> <S: Semigroup> (a: S, b: S) -> S {
   return a.sop(b)
 }
-
 
 2 <> 3
 false <> true
 "foo" <> "bar"
 [2, 3, 5] <> [7, 11]
+
+protocol Monoid : Semigroup {
+  class func id () -> Self
+}
+
+extension Int : Monoid {
+  static func id() -> Int {
+    return 0
+  }
+}
+extension UInt : Monoid {
+  static func id() -> UInt {
+    return 0
+  }
+}
+
+protocol CommutativeMonoid : Monoid {
+}
+
+extension Int : CommutativeMonoid {}
+extension UInt : CommutativeMonoid {}
+
+struct K <M: CommutativeMonoid> {
+  let p: M
+  let n: M
+
+  init() {
+    self.p = M.id()
+    self.n = M.id()
+  }
+  init(p: M) {
+    self.p = p
+    self.n = M.id()
+  }
+  init(n: M) {
+    self.p = M.id()
+    self.n = n
+  }
+  init(p: M, n: M) {
+    self.p = p
+    self.n = n
+  }
+}
+
+extension K : CommutativeMonoid {
+  func sop (a: K) -> K {
+    return K(p: self.p <> a.p, n: self.n <> a.n)
+  }
+  static func id () -> K {
+    return K()
+  }
+}
+
+func == <M: CommutativeMonoid where M: Equatable> (left: K<M>, right: K<M>) -> Bool {
+  return (left.p <> right.n) == (left.n <> right.p)
+}
+func negate <M: CommutativeMonoid> (x: K<M>) -> K<M> {
+  return K<M>(p: x.n, n: x.p)
+}
+
+typealias Z = K<UInt>
+
+let two = Z(p: 2)
+let ntwo = Z(n: 2)
+let zero = Z()
+
+two <> negate(two) == zero
 
 
 

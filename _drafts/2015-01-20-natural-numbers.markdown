@@ -210,7 +210,9 @@ func exp (a: Nat, b: Nat) -> Nat {
 }
 ```
 
-2.) Implement `min` and `max`:
+2.) Make Nat implement the `Comparable` protocol.
+
+3.) Implement `min` and `max`:
 
 ```swift
 func min (a: Nat, b: Nat) -> Nat {
@@ -221,8 +223,6 @@ func max (a: Nat, b: Nat) -> Nat {
   ???
 }
 ```
-
-3.) Make Nat implement the `Comparable` protocol.
 
 4.) Implement modulus:
 
@@ -243,12 +243,12 @@ func distance (a: Nat, b: Nat) -> Nat {
 6.) Implement a predecessor function:
 
 ```swift
-func pred (n: Nat) -> Nat {
+func pred (n: Nat) -> Nat? {
   ???
 }
 ```
 
-Since `Zero` doesn’t have a predecessor, you will need to use a non-returning function like `abort` in order to appease the compiler.
+Since `Zero` doesn’t have a predecessor, this function must return an optional `Nat`.
 
 7.) Make `Nat` implement the `IntegerLiteralConvertible` protocol.
 

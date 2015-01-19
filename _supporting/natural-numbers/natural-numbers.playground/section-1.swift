@@ -81,7 +81,16 @@ two * three == five
 //}
 
 /**
- 2.) Implement the `min` and `max` functions:
+2.) Make `Nat` implement `Comparable`:
+*/
+
+//extension Nat : Comparable {}
+//func < (a: Nat, b: Nat) -> Bool {
+//  ???
+//}
+
+/**
+ 3.) Implement the `min` and `max` functions:
 */
 
 //func min (a: Nat, b: Nat) -> Nat {
@@ -89,15 +98,6 @@ two * three == five
 //}
 
 //func max (a: Nat, b: Nat) -> Nat {
-//  ???
-//}
-
-/**
- 3.) Make `Nat` implement `Comparable`:
- */
-
-//extension Nat : Comparable {}
-//func < (a: Nat, b: Nat) -> Bool {
 //  ???
 //}
 

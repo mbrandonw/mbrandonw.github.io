@@ -188,7 +188,7 @@ Said more succinctly, \\( (X, \cdot, e) \\) is a monoid if \\( (X, \cdot) \\) is
 * Boolean values with disjunction: \\( (B, \lor, \top ) \\)
 * \\(2 \times 2\\) matrices with multiplication and the identity matrix: \\( (M_{2\times 2}, \times, I_{2\times 2} ) \\)
 
-A good *non-example* to consider is boolean values with conjunction \\((B, \land)\\). This is a semigroup, but cannot be made into a monoid because there is no identity element.
+
 
 Implementing a monoid in Swift is
 
@@ -219,7 +219,7 @@ Sometimes it can even make sense to consider nonassociative operations, for exam
 
 ## Exercises
 
-* Show that `Bool` equipped with `&&` is not a monoid.
+
 
 * In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
 
