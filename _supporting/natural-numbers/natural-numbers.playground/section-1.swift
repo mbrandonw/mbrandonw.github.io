@@ -68,9 +68,12 @@ four * three == two + two * five
 two * three == five
 
 
+
 /**
  Exercises
  */
+
+
 
 /**
  1.) Implement the following `exp` function so that `exp(a, b)` is the mathematical exponentiatino of the numbers: a^b
@@ -80,6 +83,8 @@ two * three == five
 //  ???
 //}
 
+
+
 /**
 2.) Make `Nat` implement `Comparable`:
 */
@@ -88,6 +93,8 @@ two * three == five
 //func < (a: Nat, b: Nat) -> Bool {
 //  ???
 //}
+
+
 
 /**
  3.) Implement the `min` and `max` functions:
@@ -101,21 +108,27 @@ two * three == five
 //  ???
 //}
 
+
+
 /**
- 4.) Implement the `modulus` function, i.e. the remainder after dividing `a` by `b`:
+4.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
+*/
+
+//func distance (a: Nat, b: Nat) -> Nat {
+//  ???
+//}
+
+
+
+/**
+ 5.) Implement the `modulus` function, i.e. the remainder after dividing `a` by `b`:
  */
 
 //func modulus (a: Nat, b: Nat) -> Nat {
 //  ???
 //}
 
-/**
- 5.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
-*/
 
-//func distance (a: Nat, b: Nat) -> Nat {
-//  ???
-//}
 
 /**
  6.) Implement a predecessor function. Since `Zero` doesn’t have a predecessor, you will need to use a non-returning function like `abort` in order to appease the compiler.
@@ -124,6 +137,8 @@ two * three == five
 //func pred (n: Nat) -> Nat {
 //  ???
 //}
+
+
 
 
 /**
@@ -135,6 +150,8 @@ two * three == five
 //    ???
 //  }
 //}
+
+
 
 
 /**

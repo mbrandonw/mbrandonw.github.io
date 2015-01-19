@@ -170,7 +170,7 @@ one == one                                        // true
 (one + three) == (two + two)                      // true
 ```
 
-There are more arithmetic functions we can implement on `Nat` in order to flex our recursive muscles. For example multiplication. `Zero` times anything is `Zero`, so that’s our base case. Reducing to the base case involves observing that `a*b = (a-1) * b + b`. So we can reduce `b` until it reaches zero.
+There are more arithmetic functions we can implement on `Nat` in order to flex our recursive muscles. For example multiplication. `Zero` times anything is `Zero`, so that’s our base case. Reducing to the base case involves observing that `a*b = (a-1) * b + b`. So we can reduce `a` until it reaches zero.
 
 ```swift
 func * (a: Nat, b: Nat) -> Nat {
@@ -224,18 +224,18 @@ func max (a: Nat, b: Nat) -> Nat {
 }
 ```
 
-4.) Implement modulus:
+4.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
 
 ```swift
-func mod (a: Nat, m: Nat) -> Nat {
+func distance (a: Nat, b: Nat) -> Nat {
   ???
 }
 ```
 
-5.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
+5.) Implement modulus:
 
 ```swift
-func distance (a: Nat, b: Nat) -> Nat {
+func mod (a: Nat, m: Nat) -> Nat {
   ???
 }
 ```
