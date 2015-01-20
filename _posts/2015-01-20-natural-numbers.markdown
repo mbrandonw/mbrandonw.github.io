@@ -58,7 +58,7 @@ let three: Nat = .Succ(two)
 let four: Nat = .Succ(.Succ(.Succ(.Succ(.Zero))))
 ```
 
-For `one`, `two` and `three` we took the successor of previously defined values. For `four` we decided to chain many successors together to derive it directly from `Zero`. In fact, any natural number can (theoretically) but constructed in this manner, and therefore we have defined the natural numbers using only an enum. This is quite cumbersome to deal with of course, but nonetheless we have constructed the natural numbers. 
+For `one`, `two` and `three` we took the successor of previously defined values. For `four` we decided to chain many successors together to derive it directly from `Zero`. In fact, any natural number can (theoretically) be constructed in this manner, and therefore we have defined the natural numbers using only an enum. This is quite cumbersome to deal with of course, but nonetheless we have constructed the natural numbers. 
 
 Now let’s see how easy or difficult it is to actually work with this type. One of the simplest functions we could try to implement is one that adds two natural numbers:
 
@@ -196,7 +196,7 @@ Finally, we could try implementing exponentiation. I’ll leave that as an exerc
 
 We have now constructed the natural numbers from scratch and implemented a bunch of arithmetic operations. Of course, `Nat` and the functions we defined are incredibly slow, but that wasn’t the point. It’s a fun exercise to take something as basic as the natural numbers and figure out how to build it from first principles, and even better that Swift’s type system is expressive enough to do this the right way. Some languages whose primary focus is mathematical correctness (such as [Agda](http://en.wikipedia.org/wiki/Agda_%28programming_language%29#Inductive_types)) use this inductive strategy to define natural numbers.
 
-You can download this playground to poke around these ideas directly.
+You can download this [playground](http://www.fewbutripe.com.s3.amazonaws.com/supporting/natural-numbers/natural-numbers.playground.zip) to poke around these ideas directly.
 
 # Exercises
 
@@ -210,7 +210,7 @@ func exp (a: Nat, b: Nat) -> Nat {
 }
 ```
 
-2.) Make Nat implement the `Comparable` protocol.
+2.) Make `Nat` implement the `Comparable` protocol.
 
 3.) Implement `min` and `max`:
 
@@ -232,7 +232,7 @@ func distance (a: Nat, b: Nat) -> Nat {
 }
 ```
 
-5.) Implement modulus, i.e. the remainder after dividing `a` by `b`:
+5.) Implement modulus, i.e. the remainder after dividing `a` by `m`:
 
 ```swift
 func modulus (a: Nat, m: Nat) -> Nat {
