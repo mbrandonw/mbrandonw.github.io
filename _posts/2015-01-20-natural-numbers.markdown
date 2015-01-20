@@ -232,10 +232,10 @@ func distance (a: Nat, b: Nat) -> Nat {
 }
 ```
 
-5.) Implement modulus:
+5.) Implement modulus, i.e. the remainder after dividing `a` by `b`:
 
 ```swift
-func mod (a: Nat, m: Nat) -> Nat {
+func modulus (a: Nat, m: Nat) -> Nat {
   ???
 }
 ```
