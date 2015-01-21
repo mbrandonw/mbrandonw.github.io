@@ -192,7 +192,7 @@ four * three == two + two * five  // true
 two * three == five               // false
 ```
 
-Finally, we could try implementing exponentiation. I’ll leave that as an exercise for the reader (hint: `a^b = (a^(b-1)) * b`). If you want to play with this more you could try implementing `min`, `max`, modulus, `Comparable`, etc…
+Finally, we could try implementing exponentiation. I’ll leave that as an exercise for the reader (hint: `a^b = (a^(b-1)) * a`). If you want to play with this more you could try implementing `min`, `max`, modulus, `Comparable`, etc…
 
 We have now constructed the natural numbers from scratch and implemented a bunch of arithmetic operations. Of course, `Nat` and the functions we defined are incredibly slow, but that wasn’t the point. It’s a fun exercise to take something as basic as the natural numbers and figure out how to build it from first principles, and even better that Swift’s type system is expressive enough to do this the right way. Some languages whose primary focus is mathematical correctness (such as [Agda](http://en.wikipedia.org/wiki/Agda_%28programming_language%29#Inductive_types)) use this inductive strategy to define natural numbers.
 
