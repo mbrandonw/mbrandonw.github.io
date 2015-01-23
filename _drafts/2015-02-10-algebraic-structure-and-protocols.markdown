@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Algebraic Structure and Protocols"
-date:       2015-01-20
+date:       2015-02-03
 categories: swift math algebra
 summary:    ""
 ---
@@ -16,13 +16,11 @@ Mathematicians do something very similar to study objects abstractly, and it for
 
 In every day work, a mathematician will often have a set of elements that is equipped with some operation(s) and want to study the properties of that object. Perhaps she is studying the set of solutions to some equation, and it turns out that she has discovered a binary operation, denoted by \\(\cdot\\), that takes two solutions \\(a\\), \\(b\\) and produces a third solution \\(a \cdot b\\). There is now algebraic structure on something that was previously a naked set of elements.
 
-Through much arduous work she then discovers that this operation satisfies some nice properties. For example, it's [associative](http://en.wikipedia.org/wiki/Associative_property) so that when performing the operation on three elements it doesn't matter the order in which we combine them: \\(a \cdot (b \cdot c) = (a \cdot b) \cdot c\\). Then she realizes that there's a unique element \\(e\\) in this set such that whenever it's combined with any other element it leaves that element unchanged: \\(e \cdot a = a \cdot e = a\\) for every element \\(a\\).
+Through much arduous work she then discovers that this operation satisfies some nice properties. For example, it's [associative](http://en.wikipedia.org/wiki/Associative_property) so that when performing the operation on three elements it doesn't matter the manner in which we paranthesize them: \\(a \cdot (b \cdot c) = (a \cdot b) \cdot c\\). Then she realizes that there's an element \\(e\\) in this set such that whenever it's combined with any other element it leaves that element unchanged: \\(e \cdot a = a \cdot e = a\\) for every element \\(a\\).
 
-What this mathematician has discovered is that her set and operation form what is known in algebra as a monoid. Other mathematicians studied monoids abstractly and found many nice properties and proved many nice theorems, and now that entire body of knowledge is available to her. For example, through a process known as the *Grothendieck group construction* she can enhance this simple algebraic structure into something stronger known as an *abelian group*.
+What this mathematician has discovered is that her set and operation form what is known in algebra as a *monoid*. Other mathematicians studied monoids abstractly and found many nice properties and proved many nice theorems, and now that entire body of knowledge is available to her. For example, through a process known as the *Grothendieck group construction* she can enhance this simple algebraic structure into something stronger known as an *abelian group*.
 
 The process of studying algebraic structures abstractly and then specializing them to real world cases is relatively recent. A class of structures known as permutation groups had been studied in various guises throughout the 18th and 19th centuries, but it wasn't until the late 1800’s that it was finally realized that all of that was just a special case of something far more general called a group. With that discovery came a major change in how mathematics was done. It became preferred to build a general theory around abstract objects and axiomatic systems and then apply them to concrete problems.
-
-
 
 ## Semigroup
 
@@ -36,7 +34,7 @@ Associativity is the simplest restriction we can put on a binary operation. It s
 
 There are plenty of examples of semigroups out in the wild:
 
-* Integers equipped with addition: \\((\mathbb{N}, +)\\)
+* Natural numbers equipped with addition: \\((\mathbb{N}, +)\\)
 * Boolean values \\( B = \\{ \top, \bot \\} \\) with disjunction: \\( (B, \lor) \\)
 * Boolean values with conjunction: \\( (B, \land) \\)
 * \\(2 \times 2\\) matrices equipped with multiplication: \\( (M_{2\times 2}, \times) \\)
@@ -48,7 +46,9 @@ How do we translate these ideas into Swift? The specification that we have a set
 
 ```swift
 protocol Semigroup {
-  // Binary, associative semigroup operation (op)
+  // Binary semigroup operation
+  // **AXIOM** Should be associative:
+  //   a.op(b.op(c)) == (a.op(b)).op(c)
   func op (g: Self) -> Self
 }
 ```
@@ -156,7 +156,7 @@ extension Array : Semigroup {
 There is a common infix operator used for `op` that we will define now:
 
 ```swift
-infix operator <> {associativity left}
+infix operator <> {associativity left precedence 150}
 func <> <S: Semigroup> (a: S, b: S) -> S {
   return a.op(b)
 }
@@ -171,9 +171,20 @@ false <> true         // true
 [2, 3, 5] <> [7, 11]  // [2, 3, 5, 7, 11]
 ```
 
+These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
 
+```swift
+func sreduce <S: Semigroup> (xs: [S], initial: S) -> S {
+  return xs.reduce(initial, <>)
+}
 
+sreduce([1, 2, 3, 4, 5], 0)             // 15
+sreduce([false, true], false)           // true
+sreduce(["f", "oo", "ba", "r"], "")     // "foobar"
+sreduce([[2, 3], [5, 7], [11, 13]], []) // [2, 3, 5, 7, 11, 13]
+```
 
+I’ve prefixed this function with `s` for semigroup. Notice that the last example is simply flattening a nested array of integers.
 
 ## Monoid
 
@@ -190,14 +201,68 @@ Said more succinctly, \\( (X, \cdot, e) \\) is a monoid if \\( (X, \cdot) \\) is
 
 
 
+
 Implementing a monoid in Swift is
 
 
 ```swift
 protocol Monoid : Semigroup {
-  class func mid () -> Self
+  // Identity element of monoiod
+  // **AXIOM** Should satisfy:
+  //   e.op(a) == a.op(e) == a
+  // for all values a
+  class func e () -> Self
 }
 ```
+
+
+~ ~ ~
+
+All of the semigroups we have defined so far can be enhanced to monoids quite easily:
+
+```swift
+extension Int : Monoid {
+  static func e() -> Int {
+    return 0
+  }
+}
+extension UInt : Monoid {
+  static func e() -> UInt {
+    return 0
+  }
+}
+extension Bool : Monoid {
+  static func e() -> Bool {
+    return false
+  }
+}
+extension String : Monoid {
+  static func e() -> String {
+    return ""
+  }
+}
+extension Array : Monoid {
+  static func e() -> Array {
+    return []
+  }
+}
+```
+
+The fact that monoids have a distinguished element means that we can provide an even simpler reduce:
+
+```swift
+func mreduce <M: Monoid> (xs: [M]) -> M {
+  return xs.reduce(M.e(), <>)
+}
+
+mreduce([1, 2, 3, 4, 5])            // 15
+mreduce([false, true])              // true
+mreduce(["f", "oo", "ba", "r"])     // "foobar"
+mreduce([[2, 3], [5, 7], [11, 13]]) // [2, 3, 5, 7, 11, 13]
+```
+
+
+
 
 ## Group
 
@@ -208,7 +273,72 @@ protocol Group : Monoid {
 ```
 
 
+## Commutativity
 
+Sometimes the additional structure we put on an object has nothing to do with defining additional operations or distinguished elements, but instead adds laws that the given operations must satisfy. For example, some of the semigroups we defined have a commutative binary operation: `a <> b == b <> a` for every value `a` and `b`. This is true of `Int` and `Bool`. However, this is not true of `String` and `Array`, for example: `"foo" <> "bar" == "foobar"` does not equal `"bar" <> "foo" == "barfoo"`.
+
+We can define a new protocol so that semigroups can advertise when their operation is commutative:
+
+```swift
+protocol CommutativeSemigroup : Semigroup {
+  // **AXIOM** The binary operation is commutative:
+  //   a <> b == b <> a
+  // for all values a and b
+}
+
+extension Int : CommutativeSemigroup {}
+extension Bool : CommutativeSemigroup {}
+```
+
+But, for us to truly say that `Int` and `Bool` are commutative semigroups we should write the corresponding QuickCheck test to verify that the operations are indeed commutative.
+
+We can combine this protocol with `Monoid` and `Group` to get the commutative versions of those algebraic structures. In the case of commutative groups there is a historically significant name: *abelian groups*, named after the XXXCOUNTRYXX mathematician XXXX Abel. Note that for some reason it has become accepted to not capitalize the `A` in abelian, even though it is named after a person.
+
+An example of how these protocols combine:
+
+```swift
+func f <M: Monoid where M: CommutativeSemigroup> (a: M, b: M) -> M {
+  return a <> b <> a <> b
+}
+
+func f <G: Group where G: CommutativeSemigroup> (a: G, b: G) -> G {
+  return a <> b <> a <> b
+}
+```
+
+## Enhancing Semigroups to Monoids
+
+There is a universal construction that can naturally create a monoid out of any semigroup. Recall that the only thing a semigroup \\(S\\) lacks from being a monoid is a distinguished identity element \\(e\\) such that \\(a \cdot e = e \cdot a = a\\) for every element \\(a\\) in \\(S\\). Well, we could just create a new set \\(M\\) by simply adjoining a new element to \\(S\\), i.e. \\(M = S \cup \left{e\right}\\). The binary operation \\(\cdot\\) on \\(S\\) extends to all of \\(M\\) by declaring that \\(a \cdot e = e \cdot a = a\\).
+
+The above may have sounded abstract, but it directly translates into code. Given a type `S` adopting the `Semigroup` protocol we want to construct a new type with all of the values from `S` plus one additional value, and then make this new type into a monoid. This sounds like an enum:
+
+```swift
+enum M <S: Semigroup> {
+  case Identity
+  case Element(S)
+}
+
+extension M : Monoid {
+  static func id() -> M {
+    return .Identity
+  }
+
+  func sop (b: M) -> M {
+    switch (self, b) {
+    case (.Identity, .Identity):
+      return .Identity
+    case (.Element, .Identity):
+      return self
+    case (.Identity, .Element):
+      return b
+    case let (.Element(a), .Element(b)):
+      return .Element(a <> b)
+    }
+  }
+}
+```
+
+We now have a very general method of turning semigroups into monoids. Sadly, it’s not very common to encounter semigroups that aren’t also monoids, so I don’t have any examples to show how this might be useful. In a future article we will explore a very general, universal construction for building an abelian group out of a commutative monoid. When one applies this construction to the natural numbers one recovers the integers.
 
 
 
@@ -224,27 +354,31 @@ Sometimes it can even make sense to consider nonassociative operations, for exam
 * In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
 
 ```swift
-enum Empty {
-  // no cases
-}
+enum Empty {}
 ```
 
 Make this type into a semigroup. Can this type be a monoid? Why or why not?
 
-* In the exercises of “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum with a single value:
+* In the exercises of “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the empty struct:
 
 ```swift
-enum Unit {
-  case A
+struct Unit {}
+```
+
+Make this type into a monoid.
+
+* Functions that have the same domain and range, i.e. `A -> A`, are called *endomorphisms* in math. Consider the type:
+
+```swift
+struct Endomorphism <A> {
+  let f: A -> A
 }
 ```
 
 Make this type into a monoid.
 
 
-
-
-* Consider the struct:
+* Consider the type:
 
 ```swift
 struct Predicate <A> {
@@ -254,7 +388,17 @@ struct Predicate <A> {
 
 This is a type representation of a predicate, i.e. a function from a type to `Bool`. These are precisely the types of functions that can be fed into `filter`. Using the monoid structure on `Bool`, make `Predicate` into a monoid.
 
-make comparable a monoid
+* Generalizing the previous exercise, consider type:
+
+```swift
+struct FunctionM <A, M: Monoid> {
+  let f: A -> M
+}
+```
+
+Make `FunctionM` into a monoid.
+
+
 
 * Consider the following enum:
 
@@ -266,10 +410,8 @@ enum Comparable {
 }
 ```
 
+* `Optional<S: Semigroup>`
 
-* Suppose that the type `S` is a semigroup.
-
-* make Function<A, A> into a monoid
 
 
 

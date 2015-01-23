@@ -45,6 +45,30 @@ false <> true
 "foo" <> "bar"
 [2, 3, 5] <> [7, 11]
 
+func sreduce <S: Semigroup> (xs: [S], initial: S) -> S {
+  return xs.reduce(initial, <>)
+}
+
+sreduce([1, 2, 3, 4, 5], 0)
+sreduce([false, true], false)
+sreduce(["f", "oo", "ba", "r"], "")
+sreduce([[2, 3], [5, 7], [11, 13]], [])
+
+func <> <S: Semigroup> (a: S?, b: S?) -> S? {
+  switch (a, b) {
+  case (.None, .None):
+    return .None
+  case (.None, .Some):
+    return b
+  case (.Some, .None):
+    return a
+  case let (.Some(a), .Some(b)):
+    return a <> b
+  }
+}
+
+
+
 protocol Monoid : Semigroup {
   class func id () -> Self
 }
@@ -59,14 +83,37 @@ extension UInt : Monoid {
     return 0
   }
 }
-
-protocol CommutativeMonoid : Monoid {
+extension Bool : Monoid {
+  static func id() -> Bool {
+    return false
+  }
+}
+extension String : Monoid {
+  static func id() -> String {
+    return ""
+  }
+}
+extension Array : Monoid {
+  static func id() -> Array {
+    return []
+  }
 }
 
-extension Int : CommutativeMonoid {}
-extension UInt : CommutativeMonoid {}
+func mreduce <M: Monoid> (xs: [M]) -> M {
+  return xs.reduce(M.id(), <>)
+}
 
-struct K <M: CommutativeMonoid> {
+mreduce([1, 2, 3, 4, 5])
+mreduce([false, true])
+mreduce(["f", "oo", "ba", "r"])
+mreduce([[2, 3], [5, 7], [11, 13]])
+
+protocol CommutativeSemigroup : Semigroup {}
+
+extension Int : CommutativeSemigroup {}
+extension UInt : CommutativeSemigroup {}
+
+struct K <M: Monoid where M: CommutativeSemigroup> {
   let p: M
   let n: M
 
@@ -74,7 +121,7 @@ struct K <M: CommutativeMonoid> {
     self.p = M.id()
     self.n = M.id()
   }
-  init(p: M) {
+  init(_ p: M) {
     self.p = p
     self.n = M.id()
   }
@@ -88,7 +135,7 @@ struct K <M: CommutativeMonoid> {
   }
 }
 
-extension K : CommutativeMonoid {
+extension K : Monoid, CommutativeSemigroup {
   func sop (a: K) -> K {
     return K(p: self.p <> a.p, n: self.n <> a.n)
   }
@@ -97,20 +144,46 @@ extension K : CommutativeMonoid {
   }
 }
 
-func == <M: CommutativeMonoid where M: Equatable> (left: K<M>, right: K<M>) -> Bool {
+func == <M: Monoid where M: CommutativeSemigroup, M: Equatable> (left: K<M>, right: K<M>) -> Bool {
   return (left.p <> right.n) == (left.n <> right.p)
 }
-func negate <M: CommutativeMonoid> (x: K<M>) -> K<M> {
+func negate <M: Monoid where M: CommutativeSemigroup> (x: K<M>) -> K<M> {
   return K<M>(p: x.n, n: x.p)
+}
+func negate <M: Monoid where M: CommutativeSemigroup> (x: M) -> K<M> {
+  return K<M>(n: x)
 }
 
 typealias Z = K<UInt>
 
-let two = Z(p: 2)
-let ntwo = Z(n: 2)
+let two = Z(2)
+let ntwo = negate(Z(2))
 let zero = Z()
 
 two <> negate(two) == zero
+
+enum M <S: Semigroup> {
+  case Identity
+  case Element(S)
+}
+
+extension M : Monoid {
+  static func id() -> M {
+    return .Identity
+  }
+  func sop (b: M) -> M {
+    switch (self, b) {
+    case (.Identity, .Identity):
+      return .Identity
+    case (.Element, .Identity):
+      return self
+    case (.Identity, .Element):
+      return b
+    case let (.Element(a), .Element(b)):
+      return .Element(a <> b)
+    }
+  }
+}
 
 
 

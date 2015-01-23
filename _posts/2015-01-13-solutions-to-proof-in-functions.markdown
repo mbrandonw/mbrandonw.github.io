@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Solutions to Exercises from “Proof in Functions”"
+title:  "[Solutions to Exercises] “Proof in Functions”"
 date:   2015-01-13
 categories: swift math
 ---
