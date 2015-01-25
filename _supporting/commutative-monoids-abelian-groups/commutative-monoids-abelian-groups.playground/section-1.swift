@@ -1,6 +1,5 @@
 import Foundation
 
-
 protocol Semigroup {
   // Binary, associative semigroup operation (op)
   func op (g: Self) -> Self
@@ -40,35 +39,6 @@ func <> <S: Semigroup> (a: S, b: S) -> S {
   return a.op(b)
 }
 
-2 <> 3
-false <> true
-"foo" <> "bar"
-[2, 3, 5] <> [7, 11]
-
-func sreduce <S: Semigroup> (xs: [S], initial: S) -> S {
-  return xs.reduce(initial, <>)
-}
-
-sreduce([1, 2, 3, 4, 5], 0)
-sreduce([false, true], false)
-sreduce(["f", "oo", "ba", "r"], "")
-sreduce([[2, 3], [5, 7], [11, 13]], [])
-
-func <> <S: Semigroup> (a: S?, b: S?) -> S? {
-  switch (a, b) {
-  case (.None, .None):
-    return .None
-  case (.None, .Some):
-    return b
-  case (.Some, .None):
-    return a
-  case let (.Some(a), .Some(b)):
-    return a <> b
-  }
-}
-
-
-
 protocol Monoid : Semigroup {
   class func e () -> Self
 }
@@ -98,15 +68,6 @@ extension Array : Monoid {
     return []
   }
 }
-
-func mreduce <M: Monoid> (xs: [M]) -> M {
-  return xs.reduce(M.e(), <>)
-}
-
-mreduce([1, 2, 3, 4, 5])
-mreduce([false, true])
-mreduce(["f", "oo", "ba", "r"])
-mreduce([[2, 3], [5, 7], [11, 13]])
 
 protocol CommutativeSemigroup : Semigroup {}
 

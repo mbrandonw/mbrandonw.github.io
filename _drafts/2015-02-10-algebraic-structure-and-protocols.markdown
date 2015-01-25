@@ -222,27 +222,27 @@ All of the semigroups we have defined so far can be enhanced to monoids quite ea
 
 ```swift
 extension Int : Monoid {
-  static func e() -> Int {
+  static func e () -> Int {
     return 0
   }
 }
 extension UInt : Monoid {
-  static func e() -> UInt {
+  static func e () -> UInt {
     return 0
   }
 }
 extension Bool : Monoid {
-  static func e() -> Bool {
+  static func e () -> Bool {
     return false
   }
 }
 extension String : Monoid {
-  static func e() -> String {
+  static func e () -> String {
     return ""
   }
 }
 extension Array : Monoid {
-  static func e() -> Array {
+  static func e () -> Array {
     return []
   }
 }
@@ -292,7 +292,7 @@ extension Bool : CommutativeSemigroup {}
 
 But, for us to truly say that `Int` and `Bool` are commutative semigroups we should write the corresponding QuickCheck test to verify that the operations are indeed commutative.
 
-We can combine this protocol with `Monoid` and `Group` to get the commutative versions of those algebraic structures. In the case of commutative groups there is a historically significant name: *abelian groups*, named after the XXXCOUNTRYXX mathematician XXXX Abel. Note that for some reason it has become accepted to not capitalize the `A` in abelian, even though it is named after a person.
+We can combine this protocol with `Monoid` and `Group` to get the commutative versions of those algebraic structures. In the case of commutative groups there is a historically significant name: *abelian group*, named after the Norwegian mathematician [Niels Henrik Abel](http://en.wikipedia.org/wiki/Niels_Henrik_Abel). Note that for some reason it has become accepted to not capitalize the `A` in abelian, even though it is named after a person.
 
 An example of how these protocols combine:
 
@@ -300,15 +300,11 @@ An example of how these protocols combine:
 func f <M: Monoid where M: CommutativeSemigroup> (a: M, b: M) -> M {
   return a <> b <> a <> b
 }
-
-func f <G: Group where G: CommutativeSemigroup> (a: G, b: G) -> G {
-  return a <> b <> a <> b
-}
 ```
 
 ## Enhancing Semigroups to Monoids
 
-There is a universal construction that can naturally create a monoid out of any semigroup. Recall that the only thing a semigroup \\(S\\) lacks from being a monoid is a distinguished identity element \\(e\\) such that \\(a \cdot e = e \cdot a = a\\) for every element \\(a\\) in \\(S\\). Well, we could just create a new set \\(M\\) by simply adjoining a new element to \\(S\\), i.e. \\(M = S \cup \left{e\right}\\). The binary operation \\(\cdot\\) on \\(S\\) extends to all of \\(M\\) by declaring that \\(a \cdot e = e \cdot a = a\\).
+There is a universal construction that can naturally create a monoid out of any semigroup. Recall that the only thing a semigroup \\(S\\) lacks from being a monoid is a distinguished identity element \\(e\\) such that \\(a \cdot e = e \cdot a = a\\) for every element \\(a\\) in \\(S\\). Well, we could just create a new set \\(M\\) by simply adjoining a new element to \\(S\\), i.e. \\( M = S \cup e \\). The binary operation \\(\cdot\\) on \\(S\\) extends to all of \\(M\\) by declaring that \\(a \cdot e = e \cdot a = a\\).
 
 The above may have sounded abstract, but it directly translates into code. Given a type `S` adopting the `Semigroup` protocol we want to construct a new type with all of the values from `S` plus one additional value, and then make this new type into a monoid. This sounds like an enum:
 
@@ -319,7 +315,7 @@ enum M <S: Semigroup> {
 }
 
 extension M : Monoid {
-  static func id() -> M {
+  static func e () -> M {
     return .Identity
   }
 
@@ -412,6 +408,7 @@ enum Comparable {
 
 * `Optional<S: Semigroup>`
 
+* Any type that implements the `Comparable` protocol can be made into a monoid in two different ways
 
 
 
