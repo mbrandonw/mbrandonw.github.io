@@ -79,6 +79,8 @@ func exp (a: Nat, b: Nat) -> Nat {
   }
 }
 
+exp(two, three) == .Succ(.Succ(.Succ(five)))
+
 extension Nat : Comparable {}
 func < (a: Nat, b: Nat) -> Bool {
   switch (a, b) {
@@ -90,6 +92,8 @@ func < (a: Nat, b: Nat) -> Bool {
     return pred_a() < pred_b()
   }
 }
+
+two < three
 
 func distance (a: Nat, b: Nat) -> Nat {
   switch (a, b) {
@@ -104,18 +108,7 @@ func distance (a: Nat, b: Nat) -> Nat {
   }
 }
 
-func less (a: Nat, b: Nat) -> Nat? {
-  switch (a, b) {
-  case (.Zero, .Zero):
-    return .Zero
-  case (.Succ, .Zero):
-    return a
-  case (.Zero, .Succ):
-    return nil
-  case let (.Succ(a), .Succ(b)):
-    return less(a(), b())
-  }
-}
+distance(two, four) == two
 
 func modulus (a: Nat, m: Nat) -> Nat {
   if a < m {
@@ -126,7 +119,6 @@ func modulus (a: Nat, m: Nat) -> Nat {
 
 modulus(five, two) == one
 modulus(.Succ(five), two) == .Zero
-
 
 func pred (n: Nat) -> Nat? {
   switch n {
