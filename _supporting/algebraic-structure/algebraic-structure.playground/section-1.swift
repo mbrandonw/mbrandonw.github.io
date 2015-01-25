@@ -45,14 +45,14 @@ false <> true
 "foo" <> "bar"
 [2, 3, 5] <> [7, 11]
 
-func sreduce <S: Semigroup> (xs: [S], initial: S) -> S {
+func sconcat <S: Semigroup> (xs: [S], initial: S) -> S {
   return xs.reduce(initial, <>)
 }
 
-sreduce([1, 2, 3, 4, 5], 0)
-sreduce([false, true], false)
-sreduce(["f", "oo", "ba", "r"], "")
-sreduce([[2, 3], [5, 7], [11, 13]], [])
+sconcat([1, 2, 3, 4, 5], 0)
+sconcat([false, true], false)
+sconcat(["f", "oo", "ba", "r"], "")
+sconcat([[2, 3], [5, 7], [11, 13]], [])
 
 func <> <S: Semigroup> (a: S?, b: S?) -> S? {
   switch (a, b) {
@@ -99,14 +99,14 @@ extension Array : Monoid {
   }
 }
 
-func mreduce <M: Monoid> (xs: [M]) -> M {
+func mconcat <M: Monoid> (xs: [M]) -> M {
   return xs.reduce(M.e(), <>)
 }
 
-mreduce([1, 2, 3, 4, 5])
-mreduce([false, true])
-mreduce(["f", "oo", "ba", "r"])
-mreduce([[2, 3], [5, 7], [11, 13]])
+mconcat([1, 2, 3, 4, 5])
+mconcat([false, true])
+mconcat(["f", "oo", "ba", "r"])
+mconcat([[2, 3], [5, 7], [11, 13]])
 
 protocol CommutativeSemigroup : Semigroup {}
 
@@ -134,33 +134,6 @@ struct K <M: Monoid where M: CommutativeSemigroup> {
     self.n = n
   }
 }
-
-extension K : Monoid, CommutativeSemigroup {
-  func op (a: K) -> K {
-    return K(p: self.p <> a.p, n: self.n <> a.n)
-  }
-  static func e () -> K {
-    return K()
-  }
-}
-
-func == <M: Monoid where M: CommutativeSemigroup, M: Equatable> (left: K<M>, right: K<M>) -> Bool {
-  return (left.p <> right.n) == (left.n <> right.p)
-}
-func negate <M: Monoid where M: CommutativeSemigroup> (x: K<M>) -> K<M> {
-  return K<M>(p: x.n, n: x.p)
-}
-func negate <M: Monoid where M: CommutativeSemigroup> (x: M) -> K<M> {
-  return K<M>(n: x)
-}
-
-typealias Z = K<UInt>
-
-let two = Z(2)
-let ntwo = negate(Z(2))
-let zero = Z()
-
-two <> negate(two) == zero
 
 enum M <S: Semigroup> {
   case Identity

@@ -201,6 +201,6 @@ let neg_two = Z.Neg(two)
 let pos_four = Z.Pos(four)
 let neg_four = Z.Neg(four)
 
-pos_two * pos_two == pos_two + pos_two
+neg_two * neg_two == pos_two + pos_two
 pos_two * neg_two == neg_four
 

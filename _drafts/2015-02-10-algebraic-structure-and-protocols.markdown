@@ -174,17 +174,17 @@ false <> true         // true
 These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
 
 ```swift
-func sreduce <S: Semigroup> (xs: [S], initial: S) -> S {
+func sconcat <S: Semigroup> (xs: [S], initial: S) -> S {
   return xs.reduce(initial, <>)
 }
 
-sreduce([1, 2, 3, 4, 5], 0)             // 15
-sreduce([false, true], false)           // true
-sreduce(["f", "oo", "ba", "r"], "")     // "foobar"
-sreduce([[2, 3], [5, 7], [11, 13]], []) // [2, 3, 5, 7, 11, 13]
+sconcat([1, 2, 3, 4, 5], 0)             // 15
+sconcat([false, true], false)           // true
+sconcat(["f", "oo", "ba", "r"], "")     // "foobar"
+sconcat([[2, 3], [5, 7], [11, 13]], []) // [2, 3, 5, 7, 11, 13]
 ```
 
-I’ve prefixed this function with `s` for semigroup. Notice that the last example is simply flattening a nested array of integers.
+I’ve called this function `sconcat` as is customary when dealing with semigroups. Notice that the last example is simply flattening a nested array of integers.
 
 ## Monoid
 
@@ -209,6 +209,7 @@ Implementing a monoid in Swift is
 protocol Monoid : Semigroup {
   // Identity element of monoiod
   // **AXIOM** Should satisfy:
+  //   let e = Self.e()
   //   e.op(a) == a.op(e) == a
   // for all values a
   class func e () -> Self
@@ -251,20 +252,22 @@ extension Array : Monoid {
 The fact that monoids have a distinguished element means that we can provide an even simpler reduce:
 
 ```swift
-func mreduce <M: Monoid> (xs: [M]) -> M {
+func mconcat <M: Monoid> (xs: [M]) -> M {
   return xs.reduce(M.e(), <>)
 }
 
-mreduce([1, 2, 3, 4, 5])            // 15
-mreduce([false, true])              // true
-mreduce(["f", "oo", "ba", "r"])     // "foobar"
-mreduce([[2, 3], [5, 7], [11, 13]]) // [2, 3, 5, 7, 11, 13]
+mconcat([1, 2, 3, 4, 5])            // 15
+mconcat([false, true])              // true
+mconcat(["f", "oo", "ba", "r"])     // "foobar"
+mconcat([[2, 3], [5, 7], [11, 13]]) // [2, 3, 5, 7, 11, 13]
 ```
 
 
 
 
 ## Group
+
+
 
 ```swift
 protocol Group : Monoid {
@@ -273,9 +276,11 @@ protocol Group : Monoid {
 ```
 
 
+
+
 ## Commutativity
 
-Sometimes the additional structure we put on an object has nothing to do with defining additional operations or distinguished elements, but instead adds laws that the given operations must satisfy. For example, some of the semigroups we defined have a commutative binary operation: `a <> b == b <> a` for every value `a` and `b`. This is true of `Int` and `Bool`. However, this is not true of `String` and `Array`, for example: `"foo" <> "bar" == "foobar"` does not equal `"bar" <> "foo" == "barfoo"`.
+Sometimes the additional structure we put on an object has nothing to do with defining additional operations or distinguished elements, but instead adds laws that the operations must satisfy. For example, some of the semigroups we defined have a commutative binary operation: `a <> b == b <> a` for every value `a` and `b`. This is true of `Int` and `Bool`. However, this is not true of `String` and `Array`, for example: `"foo" <> "bar" == "foobar"` does not equal `"bar" <> "foo" == "barfoo"`.
 
 We can define a new protocol so that semigroups can advertise when their operation is commutative:
 
@@ -319,7 +324,7 @@ extension M : Monoid {
     return .Identity
   }
 
-  func sop (b: M) -> M {
+  func op (b: M) -> M {
     switch (self, b) {
     case (.Identity, .Identity):
       return .Identity
@@ -345,9 +350,7 @@ Sometimes it can even make sense to consider nonassociative operations, for exam
 
 ## Exercises
 
-
-
-* In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
+1.) In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
 
 ```swift
 enum Empty {}
@@ -355,7 +358,7 @@ enum Empty {}
 
 Make this type into a semigroup. Can this type be a monoid? Why or why not?
 
-* In the exercises of “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the empty struct:
+2.) In the exercises of “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the empty struct:
 
 ```swift
 struct Unit {}
@@ -363,7 +366,7 @@ struct Unit {}
 
 Make this type into a monoid.
 
-* Functions that have the same domain and range, i.e. `A -> A`, are called *endomorphisms* in math. Consider the type:
+3.) Functions that have the same domain and range, i.e. `A -> A`, are called *endomorphisms* in mathematics. Consider the type:
 
 ```swift
 struct Endomorphism <A> {
@@ -374,7 +377,7 @@ struct Endomorphism <A> {
 Make this type into a monoid.
 
 
-* Consider the type:
+4.) Consider the type:
 
 ```swift
 struct Predicate <A> {
@@ -384,7 +387,7 @@ struct Predicate <A> {
 
 This is a type representation of a predicate, i.e. a function from a type to `Bool`. These are precisely the types of functions that can be fed into `filter`. Using the monoid structure on `Bool`, make `Predicate` into a monoid.
 
-* Generalizing the previous exercise, consider type:
+5.) Generalizing the previous exercise, consider type:
 
 ```swift
 struct FunctionM <A, M: Monoid> {
@@ -394,24 +397,19 @@ struct FunctionM <A, M: Monoid> {
 
 Make `FunctionM` into a monoid.
 
-
-
-* Consider the following enum:
+6.) Any type that implements the `Comparable` protocol can be made into a semigroup in two different ways. Taking the hint from the suggestive names, make the following two types implement the `Semigroup` protocol:
 
 ```swift
-enum Comparable {
-  case LT
-  case EQ
-  case GT
+struct Max <A: Comparable> {
+  let a: A
+}
+
+struct Min <A: Comparable> {
+  let a: A
 }
 ```
 
-* `Optional<S: Semigroup>`
+7.) Use the `M` construction for upgrading semigroups to monoids on the `Max` and `Min` semigroups defined above. What does the identity element correspond to in each case?
 
-* Any type that implements the `Comparable` protocol can be made into a monoid in two different ways
-
-
-
-http://www.scs.stanford.edu/14sp-cs240h/slides/phantoms.html
 
 
