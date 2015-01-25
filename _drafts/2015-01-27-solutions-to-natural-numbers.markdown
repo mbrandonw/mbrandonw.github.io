@@ -125,7 +125,7 @@ func < (a: Nat, b: Nat) -> Bool {
 }
 ```
 
-3.) This question was to define `min` and `max` for `Nat`, but really we get that for free by adopting the `Comparable` protocol. I didn't really think this one through :/
+3.) This question was to define `min` and `max` for `Nat`, but really we get that for free by adopting the `Comparable` protocol. I didn’t really think this one through :/
 
 4.) Now we want to implement the distance function:
 
@@ -170,11 +170,69 @@ func distance (a: Nat, b: Nat) -> Nat {
 
 I explicity put every case instead of wildcards because the Swift compiler didn’t think I was being exhaustive in my case statements for some reason.
 
-5.)
+5.) Using the `distance` function from above we can write this quite easily:
 
-6.)
+```swift
+func modulus (a: Nat, m: Nat) -> Nat {
+  if a < m {
+    return a
+  }
+  return modulus(distance(a, m), m)
+}
 
-7.)
+modulus(five, two) == one
+modulus(.Succ(five), two) == .Zero
+```
+
+Notice that `distance` is simulating subtraction in `Nat`.
+
+6.) This function is quite simple to implement:
+
+```swift
+func pred (n: Nat) -> Nat? {
+  switch n {
+  case .Zero:
+    return nil
+  case let .Succ(pred):
+    return pred()
+  }
+}
+
+pred(two) == one
+pred(.Zero) == nil
+```
+
+7.) Implementing the `IntegerLiteralConvertible` involves filling in this function:
+
+```swift
+extension Nat : IntegerLiteralConvertible {
+  init(integerLiteral value: IntegerLiteralType) {
+    self = ???
+  }
+}
+```
+
+Now, every function we wrote involving `Nat` was recursive, and that’s due to the inductive nature of `Nat`. Unfortunately we cannot inmplement `init` using recursion. So, we will need to define a helper function:
+
+```swift
+extension Nat : IntegerLiteralConvertible {
+  init(integerLiteral value: IntegerLiteralType) {
+    self = Nat.fromInt(value)
+  }
+
+  static func fromInt (n: Int, accum: Nat = .Zero) -> Nat {
+    if n == 0 {
+      return accum
+    }
+    return Nat.fromInt(n-1, accum: .Succ(accum))
+  }
+}
+
+let six: Nat = 6        // true
+six == .Succ(five)      // true
+let seven = Nat.Succ(6) // true
+seven == six + 1        // true
+```
 
 8.) This will be a topic of a future post where we will discuss a very general construction for turning any commutative monoid into an abelian group. In a very precise sense, this is the most universal and “correct” way of constructing the integers from the natural numbers.
 
@@ -187,7 +245,7 @@ enum Z {
 }
 ```
 
-I'm using `Z` for this type because that is what is used in mathematics (actually, it's \\( \mathbb Z \\)), for the German word XXXXX).
+I’m using `Z` for this type because that is what is used in mathematics (for the German word *Zahlen*, and the symbol used is \\(\mathbb Z\\)).
 
 To make this type resemble the integers we should define addition, multiplication, equality, et cetera. Some of that would look like this:
 
@@ -226,9 +284,9 @@ func == (a: Z, b: Z) -> Bool {
   case let (.Pos(a), .Pos(b)):
     return a == b
   case let (.Pos(a), .Neg(b)):
-    return false
+    return a == .Zero && b == .Zero
   case let (.Neg(a), .Pos(b)):
-    return false
+    return a == .Zero && b == .Zero
   }
 }
 ```
@@ -245,7 +303,9 @@ pos_two * pos_two == pos_two + pos_two
 pos_two * neg_two == neg_four
 ```
 
-Now, we have indeed constructed the integers from the natural numbers `Nat`, but there is something not quite right about this solution.
+Now, we have indeed constructed the integers from the natural numbers `Nat`, but there is something not quite right about this solution. In the definition of `+` we had to use the fact that `Nat` is comparable. Otherwise, the definition of `Z` depended on only the abstract properties of `Nat`.
+
+Turns out, there is a very general construction that can be used to make `Z` out of `Nat`, but it also works in many other situations. Even better, in a very precise since, it is the most universal way of constructing `Z` out of `Nat`. This will be the topic of a future post after the necessary concepts have been developed. This object is known as the “[Grothendieck group](http://en.wikipedia.org/wiki/Grothendieck_group)”, and it constructs an abelian group from a commutative monoid.
 
 
 I leave it as an exercise to develop the rest of the integer theory, in particular:
@@ -256,23 +316,4 @@ I leave it as an exercise to develop the rest of the integer theory, in particul
 * Define subtraction `- (Z, Z) -> Z`.
 * Define exponentiation `exp (Z, Nat) -> Z`. Note that the power is `Nat` because if one uses negative exponents one needs fractions.
 * **Bonus**: Can you construct the rational numbers (fractions `a/b`) from `Z`?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

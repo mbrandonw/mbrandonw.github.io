@@ -134,7 +134,7 @@ two * three == five
  6.) Implement a predecessor function. Since `Zero` doesn’t have a predecessor, you will need to use a non-returning function like `abort` in order to appease the compiler.
 */
 
-//func pred (n: Nat) -> Nat {
+//func pred (n: Nat) -> Nat? {
 //  ???
 //}
 
