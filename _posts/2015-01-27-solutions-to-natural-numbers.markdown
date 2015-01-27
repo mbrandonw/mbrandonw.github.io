@@ -6,7 +6,7 @@ categories: swift math
 summary:    ""
 ---
 
-In the article “[Creating the Natural Numbers from First Principles]({% post_url 2015-01-20-natural-numbers %})” I provided some exercises at the end. If these exercises were easy for you, skip down to the solution of the bonus where I outline an interesting construct and provide more exercises for even deeper exploration.
+In the article “[Creating the Natural Numbers from First Principles]({% post_url 2015-01-20-natural-numbers %})” I provided some exercises at the end. If these exercises were easy for you, skip down to the solution of the bonus where I outline an interesting construction and provide more exercises for even deeper exploration.
 
 1.) We need to implement exponentiation for `Nat`. Switching on `a` and `b` we have:
 
