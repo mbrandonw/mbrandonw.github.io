@@ -16,33 +16,30 @@ Mathematicians do something very similar to study objects abstractly, and it for
 
 In every day work, a mathematician will often have a set of elements that is equipped with some operation(s) and want to study the properties of that object. Perhaps she is studying the set of solutions to some equation, and it turns out that she has discovered a binary operation, denoted by \\(\cdot\\), that takes two solutions \\(a\\), \\(b\\) and produces a third solution \\(a \cdot b\\). There is now algebraic structure on something that was previously a naked set of elements.
 
-Through much arduous work she then discovers that this operation satisfies some nice properties. For example, it's [associative](http://en.wikipedia.org/wiki/Associative_property) so that when performing the operation on three elements it doesn't matter the manner in which we paranthesize them: \\(a \cdot (b \cdot c) = (a \cdot b) \cdot c\\). Then she realizes that there's an element \\(e\\) in this set such that whenever it's combined with any other element it leaves that element unchanged: \\(e \cdot a = a \cdot e = a\\) for every element \\(a\\).
+Through much arduous work she then discovers that this operation satisfies some nice properties. For example, it’s [associative](http://en.wikipedia.org/wiki/Associative_property) so that when performing the operation on three elements it doesn’t matter the manner in which they are paranthesized: \\(a \cdot (b \cdot c) = (a \cdot b) \cdot c\\). Then she realizes that there’s an element \\(e\\) in this set such that whenever it’s combined with any other element it leaves that element unchanged: \\(e \cdot a = a \cdot e = a\\) for every element \\(a\\).
 
 What this mathematician has discovered is that her set and operation form what is known in algebra as a *monoid*. Other mathematicians studied monoids abstractly and found many nice properties and proved many nice theorems, and now that entire body of knowledge is available to her. For example, through a process known as the *Grothendieck group construction* she can enhance this simple algebraic structure into something stronger known as an *abelian group*.
 
-The process of studying algebraic structures abstractly and then specializing them to real world cases is relatively recent. A class of structures known as permutation groups had been studied in various guises throughout the 18th and 19th centuries, but it wasn't until the late 1800’s that it was finally realized that all of that was just a special case of something far more general called a group. With that discovery came a major change in how mathematics was done. It became preferred to build a general theory around abstract objects and axiomatic systems and then apply them to concrete problems.
+The process of studying algebraic structures abstractly and then specializing them to real world cases is relatively recent. A class of structures known as permutation groups had been studied in various guises throughout the 18th and 19th centuries, but it wasn’t until the late 1800’s that it was finally realized that all of that was just a special case of something far more general called a group. With that discovery came a major change in how mathematics was done. It became preferable to build a general theory around abstract objects and axiomatic systems and then apply them to concrete problems.
 
 ## Semigroup
 
 Perhaps the simplest algebraic structure one can study is the [semigroup](http://en.wikipedia.org/wiki/Semigroup). In the language of mathematics, a semigroup is a set \\(X\\), a binary operation \\(\cdot\\) that takes two elements \\(a, b\\) in \\(X\\) and produces a third \\(a \cdot b\\), such that the operation is associative:
 
 \\[
-  a \cdot (b \cdot c) = (a \cdot b) \cdot c \ \ \ \text{for every $a,b,c$}
+  a \cdot (b \cdot c) = (a \cdot b) \cdot c \ \ \ \text{for every $a,b,c$ in $X$}
 \\]
 
 Associativity is the simplest restriction we can put on a binary operation. It simply tells us that we do not have to worry about parenthesizing an expression and can write \\(a \cdot b \cdot c\\).
 
 There are plenty of examples of semigroups out in the wild:
 
-* Natural numbers equipped with addition: \\((\mathbb{N}, +)\\)
+* Integers equipped with addition: \\((\mathbb{Z}, +)\\)
 * Boolean values \\( B = \\{ \top, \bot \\} \\) with disjunction: \\( (B, \lor) \\)
 * Boolean values with conjunction: \\( (B, \land) \\)
 * \\(2 \times 2\\) matrices equipped with multiplication: \\( (M_{2\times 2}, \times) \\)
-* Fix any set \\(A\\), then the set of functions \\(A \rightarrow \mathbb N\\) is a semigroup with the operation: for \\( f, g: A \rightarrow \mathbb N \\)
 
-\\[ (f \cdot g)(a) = f(a) + g(a) \\]
-
-How do we translate these ideas into Swift? The specification that we have a set \\(X\\) and a binary operation \\( \cdot : X \times X \rightarrow X \\) fits very well into a protocol:
+How do we translate these ideas into Swift? The specification that we have a set \\(X\\) and a binary operation \\( \cdot : (X, X) \rightarrow X \\) fits very well into a protocol:
 
 ```swift
 protocol Semigroup {
@@ -73,7 +70,7 @@ extension Bool : Semigroup {
 }
 ```
 
-We've now made `Int` and `Bool` adopt the `Semigroup` protocol, but can we really say that these types behave as semigroups? Our mathematical definition of semigroup had another piece that we are completely ignoring: associativity of the binary operation. This piece of the story is very important, and we must find a way to represent it in Swift. Using pseudo code, we essentially want:
+We’ve now made `Int` and `Bool` adopt the `Semigroup` protocol, but can we really say that these types behave as semigroups? Our mathematical definition of semigroup had another requirement that we are completely ignoring: associativity of the binary operation. This piece of the story is very important, and we must find a way to represent it in Swift. Using pseudo code, we essentially want:
 
 ```swift
 // pseudo code to verify that Int.op is associative
@@ -109,15 +106,15 @@ func multiplicationIsCommutative (a: Int, b: Int) -> Bool {
 }
 ```
 
-Now we want to test this predicate for hundreds, maybe thousands of different combinations of integers. We aren't going to implement such a function, but it might look something like this:
+Now we want to test this predicate for hundreds, maybe thousands of different combinations of integers. We aren’t going to implement such a function, but it’s API might look something like this:
 
 ```swift
 check("* is commutative", multiplicationIsCommutative)
 ```
 
-The `check` function would be smart enough to be able to inspect the arguments of `multiplicationIsCommutative`, generate many inputs, plug them in, and verify the predicate holds true. We will assume we have access to such a theoretical function for the remainder of this article.
+The `check` function would be smart enough to infer the types of `multiplicationIsCommutative`’s arguments, generate many values, plug them in, and verify the predicate holds true. We will assume we have access to such a theoretical function for the remainder of this article.
 
-There is a very good discussion of QuickCheck in the context of Swift in the book [Functional Programming in Swift](http://www.objc.io/books/).
+For a quick introduction to QuickCheck in the context of Swift, check out Chris Eidhof's [blog post](http://chris.eidhof.nl/posts/quickcheck-in-swift.html), and for a more in-depth look there is a chapter dedicated to it in [Functional Programming in Swift](http://www.objc.io/books/). There are also at least two open source implementations, [Fox](https://github.com/jeffh/Fox) and [SwiftCheck](https://github.com/typelift/SwiftCheck).
 
 ## Back to semigroups
 
@@ -171,11 +168,11 @@ false <> true         // true
 [2, 3, 5] <> [7, 11]  // [2, 3, 5, 7, 11]
 ```
 
-These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
+These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental unit of computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
 
 ```swift
 func sconcat <S: Semigroup> (xs: [S], initial: S) -> S {
-  return xs.reduce(initial, <>)
+  return reduce(xs, initial, <>)
 }
 
 sconcat([1, 2, 3, 4, 5], 0)             // 15
@@ -184,7 +181,7 @@ sconcat(["f", "oo", "ba", "r"], "")     // "foobar"
 sconcat([[2, 3], [5, 7], [11, 13]], []) // [2, 3, 5, 7, 11, 13]
 ```
 
-I’ve called this function `sconcat` as is customary when dealing with semigroups. Notice that the last example is simply flattening a nested array of integers.
+I’ve called this function `sconcat` as is customary when dealing with semigroups in computer science. Notice that the last example is simply flattening a nested array of integers.
 
 ## Monoid
 
@@ -193,31 +190,26 @@ The next simplest algebraic structure is the [monoid](http://en.wikipedia.org/wi
 * \\(\cdot\\) is associative: \\( a \cdot (b \cdot c) = (a \cdot b) \cdot c \\) for all \\(a, b, c\\) in \\(X\\).
 * \\(e\\) is an identity: \\(e \cdot a = a \cdot e = a\\) for all \\(a\\) in \\(X\\).
 
-Said more succinctly, \\( (X, \cdot, e) \\) is a monoid if \\( (X, \cdot) \\) is a semigroup and \\(e\\) is an identity element. Examples include:
+Said more succinctly, \\( (X, \cdot, e) \\) is a monoid if \\( (X, \cdot) \\) is first a semigroup and \\(e\\) is an identity element. Examples include:
 
-* Natural numbers with addition: \\( (\mathbb N, +, 0) \\)
+* Integers with addition: \\( (\mathbb{Z}, +, 0) \\)
 * Boolean values with disjunction: \\( (B, \lor, \top ) \\)
+* Boolean values with conjunction: \\( (B, \land, \bot ) \\)
 * \\(2 \times 2\\) matrices with multiplication and the identity matrix: \\( (M_{2\times 2}, \times, I_{2\times 2} ) \\)
 
-
-
-
-Implementing a monoid in Swift is
-
+A monoid in Swift is modeled by a protocol just like we did for semigroups. Since a monoid is a semigroup with some extra structure added, we can make the `Monoid` protocol inherit from the `Semigroup` protocol:
 
 ```swift
 protocol Monoid : Semigroup {
-  // Identity element of monoiod
+  // Identity value of monoid
   // **AXIOM** Should satisfy:
-  //   let e = Self.e()
-  //   e.op(a) == a.op(e) == a
+  //   Self.e() <> a == a <> Self.e() == a
   // for all values a
   class func e () -> Self
 }
 ```
 
-
-~ ~ ~
+Any type `A` that implements `Monoid` will have the binary operation `A.op` and the distinguished identity element `A.e()`.
 
 All of the semigroups we have defined so far can be enhanced to monoids quite easily:
 
@@ -227,33 +219,36 @@ extension Int : Monoid {
     return 0
   }
 }
-extension UInt : Monoid {
-  static func e () -> UInt {
-    return 0
-  }
-}
+
 extension Bool : Monoid {
   static func e () -> Bool {
     return false
   }
 }
+
 extension String : Monoid {
   static func e () -> String {
     return ""
   }
 }
+
 extension Array : Monoid {
   static func e () -> Array {
     return []
   }
 }
+
+3 <> Int.e()            // 3
+false <> Bool.e()       // false
+"foo" <> String.e()     // "foo"
+[2, 3, 5] <> Array.e()  // [2, 3, 5]
 ```
 
 The fact that monoids have a distinguished element means that we can provide an even simpler reduce:
 
 ```swift
 func mconcat <M: Monoid> (xs: [M]) -> M {
-  return xs.reduce(M.e(), <>)
+  return reduce(xs, M.e(), <>)
 }
 
 mconcat([1, 2, 3, 4, 5])            // 15
@@ -262,20 +257,73 @@ mconcat(["f", "oo", "ba", "r"])     // "foobar"
 mconcat([[2, 3], [5, 7], [11, 13]]) // [2, 3, 5, 7, 11, 13]
 ```
 
-
-
+Here we have used the monoid’s identity value as the initial value to feed into `reduce`. This is not possible to do in the fully generic case because we have no way of constructing an element.
 
 ## Group
 
+We can enhance our monoids with additional structure that is ubiquitous in mathematics, but turns out to be quite exotic in computer science. An element \\(a\\) in a monoid \\((X, \cdot, e)\\) is said to have an inverse, denoted by \\(a^{-1}\\), if \\(a\cdot a^{-1} = a^{-1}\cdot a = e\\). That is, if we multiply the element with it’s inverse in any order we get back to the identity element.
 
+A group is a set \\(X\\), a binary operation \\(\cdot\\), and a distinguished element \\(e\\) of \\(X\\) such that the following holds:
+
+* \\(\cdot\\) is associative: \\( a \cdot (b \cdot c) = (a \cdot b) \cdot c \\) for all \\(a, b, c\\) in \\(X\\).
+* \\(e\\) is an identity: \\(e \cdot a = a \cdot e = a\\) for all \\(a\\) in \\(X\\).
+* For every \\(a\\) in \\(X\\) there exists an element \\(a^{-1}\\) in \\(X\\) such that \\(a^{-1}\\), if \\(a\cdot a^{-1} = a^{-1}\cdot a = e\\)
+
+Said more succintly, a group is a monoid with inverses. Examples include:
+
+* The set of integers with addition.
+* The set of *non-zero* real numbers with multiplication.
+* The set of \\(2\times 2\\) matrices with addition.
+
+Examples of monoids that are **not** groups:
+
+* The natural numbers (0, 1, 2, 3, ...) with addition, for there is no natural number \\(n\\) such that \\(n + 1 = 0\\).
+* Boolean values with conjunction or disjunction, for each value has multiple inverses.
+* The set of \\(2\times 2\\) matrices with multiplication, for not every matrix has an inverse.
+
+The requirement for every element to have an inverse translates to a protocol quite easily:
 
 ```swift
 protocol Group : Monoid {
+  // Inverse value of group
+  // **AXIOM** Should satisfy:
+  //   a <> a.inv() == a.inv() <> a == Self.e()
+  // for each value a.
   func inv () -> Self
 }
 ```
 
+The `Group` protocol has inherited from `Monoid` since that gives us the binary operation and identity element for free.
 
+We can make `Int` into a group:
+
+```swift
+extension Int {
+  func inv () -> Int {
+    return -self
+  }
+}
+
+3 <> 3.inv() // 0
+```
+
+All of the other monoids we have defined cannot be enhanced to adopt `Group`. For example, `String` cannot be made into a group with concatentation, for the identity element is the string of length 0, and concatenation can only increase the length.
+
+In mathematics there is the concept of the “[commutator](XXX link)” of two elements in a group. If \\(a\\) and \\(b\\) are elements of a group \\(X\\), then the commutator is denoted by \\([a, b]\\) and defined by
+
+\\[ [a, b] = a \cdot b \cdot a^{-1} \cdot b^{-1} \\]
+
+This gives us a nice example of something we can write in Swift to show how to deal with groups:
+
+```swift
+func commutator <G: Group> (a: G, b: G) -> G {
+  return a <> b <> a.inv() <> b.inv()
+}
+```
+
+In a sense, \\( [\cdot, \cdot] \\) measures how much elements fail to commute, for \\( [a, b] = e \\) if and only if \\( a\cdot b = b\cdot a \\).
+
+We will not go any deeper into the theory behind `Group` given that computer science isn’t flush with good examples of groups. However, in upcoming articles we will explore `Group` more; in particular, the theory of [elliptic curves](XXX link) and the [Grothendieck construction](XXX link).
 
 
 ## Commutativity
@@ -305,6 +353,15 @@ An example of how these protocols combine:
 func f <M: Monoid where M: CommutativeSemigroup> (a: M, b: M) -> M {
   return a <> b <> a <> b
 }
+```
+
+Even better, we can define new protocols that compose these protocols for us:
+
+```swift
+protocol CommutativeMonoid : Monoid, CommutativeSemigroup {}
+protocol AbelianGroup : Group, CommutativeMonoid {}
+
+extension Int : AbelianGroup {}
 ```
 
 ## Enhancing Semigroups to Monoids
@@ -339,13 +396,15 @@ extension M : Monoid {
 }
 ```
 
-We now have a very general method of turning semigroups into monoids. Sadly, it’s not very common to encounter semigroups that aren’t also monoids, so I don’t have any examples to show how this might be useful. In a future article we will explore a very general, universal construction for building an abelian group out of a commutative monoid. When one applies this construction to the natural numbers one recovers the integers.
+We now have a very general method of turning semigroups into monoids. Sadly, it’s not very common to encounter semigroups that aren’t also monoids. The reason for this is mostly due to the fact that it’s so easy to turn a semigroup into a monoid via the above construction. There is one particularly good example, but I’m saving that for the exercises.
 
+In a future article we will explore a very general, universal construction for building an abelian group out of a commutative monoid. When one applies this construction to the natural numbers one recovers the integers.
 
+## Conclusion
 
-### footnotes
+### Footnotes
 
-Sometimes it can even make sense to consider nonassociative operations, for example [octonions](http://en.wikipedia.org/wiki/Octonion), which are a kind of generalization of complex numbers.
+Sometimes it can even make sense to consider non-associative operations, for example [octonions](http://en.wikipedia.org/wiki/Octonion), which are a kind of generalization of complex numbers.
 
 
 ## Exercises
@@ -356,7 +415,7 @@ Sometimes it can even make sense to consider nonassociative operations, for exam
 enum Empty {}
 ```
 
-Make this type into a semigroup. Can this type be a monoid? Why or why not?
+Make this type into a semigroup. Can this type be a monoid?
 
 2.) In the exercises of “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the empty struct:
 
@@ -364,9 +423,11 @@ Make this type into a semigroup. Can this type be a monoid? Why or why not?
 struct Unit {}
 ```
 
-Make this type into a monoid.
+Make this type into a monoid. Can it be a group?
 
-3.) Functions that have the same domain and range, i.e. `A -> A`, are called *endomorphisms* in mathematics. Consider the type:
+3.) How does our construction `M<S: Semigroup>` compare with Swift’s optional types `Optional<S: Semigroup>`.
+
+4.) Functions that have the same domain and range, i.e. `A -> A`, are called *endomorphisms* in mathematics. Consider the type:
 
 ```swift
 struct Endomorphism <A> {
@@ -374,10 +435,10 @@ struct Endomorphism <A> {
 }
 ```
 
-Make this type into a monoid.
+Make this type into a monoid. Can it be a group?
 
 
-4.) Consider the type:
+5.) Consider the type:
 
 ```swift
 struct Predicate <A> {
@@ -387,7 +448,7 @@ struct Predicate <A> {
 
 This is a type representation of a predicate, i.e. a function from a type to `Bool`. These are precisely the types of functions that can be fed into `filter`. Using the monoid structure on `Bool`, make `Predicate` into a monoid.
 
-5.) Generalizing the previous exercise, consider type:
+6.) Generalizing the previous exercise, consider type:
 
 ```swift
 struct FunctionM <A, M: Monoid> {
@@ -397,19 +458,43 @@ struct FunctionM <A, M: Monoid> {
 
 Make `FunctionM` into a monoid.
 
-6.) Any type that implements the `Comparable` protocol can be made into a semigroup in two different ways. Taking the hint from the suggestive names, make the following two types implement the `Semigroup` protocol:
+7.) Continuing with this theme of functions whose range has algebraic structure, consider:
+
+```swift
+struct FunctionG <A, G: Group> {
+  let f: A -> G
+}
+```
+
+Make `FunctionG` into a group.
+
+8.) Any type that implements the `Comparable` protocol can be made into a semigroup in two different ways. Taking the hint from the suggestive names, make the following two types implement the `Semigroup` protocol:
 
 ```swift
 struct Max <A: Comparable> {
   let a: A
+  init (_ a: A) { self.a = a }
 }
 
 struct Min <A: Comparable> {
   let a: A
+  init (_ a: A) { self.a = a }
 }
 ```
 
-7.) Use the `M` construction for upgrading semigroups to monoids on the `Max` and `Min` semigroups defined above. What does the identity element correspond to in each case?
+9.) What do the following computations represent?
+
+```swift
+sconcat([Max(2), Max(5), Max(100), Max(2)], Max(0))
+sconcat([Min(2), Min(5), Min(100), Min(2)], Min(200))
+```
+
+10.) Recall that the `M` construction can upgrade a semigroup to a monoid. Use this on the `Max` and `Min` semigroups defined above. What does the identity element correspond to in each case? What do the following computations represent?
+
+```swift
+mconcat([M(Max(2)), M(Max(5)), M(Max(100)), M(Max(2))])
+mconcat([M(Min(2)), M(Min(5)), M(Min(100)), M(Min(2))])
+```
 
 
 
