@@ -1,8 +1,12 @@
 import Foundation
 
+// Compiles in Swift 1.1
+
 
 protocol Semigroup {
-  // Binary, associative semigroup operation (op)
+  // Binary semigroup operation
+  // **AXIOM** Should be associative:
+  //   a.op(b.op(c)) == (a.op(b)).op(c)
   func op (g: Self) -> Self
 }
 
@@ -47,6 +51,10 @@ sconcat(["f", "oo", "ba", "r"], "")
 sconcat([[2, 3], [5, 7], [11, 13]], [])
 
 protocol Monoid : Semigroup {
+  // Identity value of monoid
+  // **AXIOM** Should satisfy:
+  //   Self.e() <> a == a <> Self.e() == a
+  // for all values a
   class func e () -> Self
 }
 
@@ -115,16 +123,6 @@ protocol AbelianGroup : Group, CommutativeMonoid {}
 
 extension Int : AbelianGroup {}
 
-struct Max <A: Comparable> {
-  let a: A
-  init (_ a: A) { self.a = a }
-}
-extension Max : Semigroup {
-  func op (m: Max) -> Max {
-    return Max(max(self.a, m.a))
-  }
-}
-
 enum M <S: Semigroup> {
   case Identity
   case Element(S)
@@ -150,48 +148,71 @@ extension M : Monoid {
   }
 }
 
-sconcat([Max(2), Max(5), Max(100), Max(2)], Max(3))
-let a = mconcat([M(Max(2)), M(Max(5)), M(Max(100)), M(Max(2))])
-switch a {
-case let .Element(a):
-  a;
-case .Identity:
-  "e"
+
+/**
+ 1.) Make Empty into a semigroup.
+ */
+enum Empty {}
+
+/**
+ 2.) Make Unit into a monoid. What about a group?
+ */
+struct Unit {}
+
+/**
+ 3.) How does our construction `M<S: Semigroup>` compare with Swift’s optional types `Optional<S: Semigroup>`.
+ */
+
+/**
+ 4.) Make Endomorphism into a monoid. What about a group?
+ */
+struct Endomorphism <A> {
+  let f: A -> A
 }
 
-struct K <M: Monoid where M: CommutativeSemigroup> {
-  let p: M
-  let n: M
-
-  init() {
-    self.p = M.e()
-    self.n = M.e()
-  }
-  init(_ p: M) {
-    self.p = p
-    self.n = M.e()
-  }
-  init(n: M) {
-    self.p = M.e()
-    self.n = n
-  }
-  init(p: M, n: M) {
-    self.p = p
-    self.n = n
-  }
+/**
+ 5.) Make Predicate into a monoid.
+ */
+struct Predicate <A> {
+  let p: A -> Bool
 }
 
-
-func <> <S: Semigroup> (a: S?, b: S?) -> S? {
-  switch (a, b) {
-  case (.None, .None):
-    return .None
-  case (.None, .Some):
-    return b
-  case (.Some, .None):
-    return a
-  case let (.Some(a), .Some(b)):
-    return a <> b
-  }
+/**
+ 6.) If M is a monoid, make FunctionM into a monoid:
+ */
+struct FunctionM <A, M: Monoid> {
+  let f: A -> M
 }
+
+/**
+ 7.) If G is a group, make FunctionG into a group:
+ */
+struct FunctionG <A, G: Group> {
+  let f: A -> G
+}
+
+/**
+ 8.) Make Max and Min into semigroups in the natural way:
+ */
+struct Max <A: Comparable> {
+  let a: A
+  init (_ a: A) { self.a = a }
+}
+
+struct Min <A: Comparable> {
+  let a: A
+  init (_ a: A) { self.a = a }
+}
+
+/**
+ 9.) What do the following computations represent?
+ */
+//sconcat([Max(2), Max(5), Max(100), Max(2)], Max(0))
+//sconcat([Min(2), Min(5), Min(100), Min(2)], Min(200))
+
+/**
+ 10.) What do the following computations represent?
+ */
+//mconcat([M(Max(2)), M(Max(5)), M(Max(100)), M(Max(2))])
+//mconcat([M(Min(2)), M(Min(5)), M(Min(100)), M(Min(2))])
 

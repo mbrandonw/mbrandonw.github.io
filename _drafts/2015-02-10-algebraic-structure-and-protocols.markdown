@@ -34,7 +34,7 @@ Associativity is the simplest restriction we can put on a binary operation. It s
 
 There are plenty of examples of semigroups out in the wild:
 
-* Integers equipped with addition: \\((\mathbb{Z}, +)\\)
+* Integers (denoted by \\(\mathbb Z\\)) equipped with addition: \\((\mathbb{Z}, +)\\)
 * Boolean values \\( B = \\{ \top, \bot \\} \\) with disjunction: \\( (B, \lor) \\)
 * Boolean values with conjunction: \\( (B, \land) \\)
 * \\(2 \times 2\\) matrices equipped with multiplication: \\( (M_{2\times 2}, \times) \\)
@@ -106,7 +106,7 @@ func multiplicationIsCommutative (a: Int, b: Int) -> Bool {
 }
 ```
 
-Now we want to test this predicate for hundreds, maybe thousands of different combinations of integers. We aren’t going to implement such a function, but it’s API might look something like this:
+Now we want to test this predicate for hundreds, maybe thousands of different combinations of integers. We aren’t going to implement such a function, but its API might look something like this:
 
 ```swift
 check("* is commutative", multiplicationIsCommutative)
@@ -244,6 +244,8 @@ false <> Bool.e()       // false
 [2, 3, 5] <> Array.e()  // [2, 3, 5]
 ```
 
+There should of course be corresponding QuickCheck tests to verifty that each of the proposed identity elements satisfy the necessary axioms.
+
 The fact that monoids have a distinguished element means that we can provide an even simpler reduce:
 
 ```swift
@@ -257,7 +259,7 @@ mconcat(["f", "oo", "ba", "r"])     // "foobar"
 mconcat([[2, 3], [5, 7], [11, 13]]) // [2, 3, 5, 7, 11, 13]
 ```
 
-Here we have used the monoid’s identity value as the initial value to feed into `reduce`. This is not possible to do in the fully generic case because we have no way of constructing an element.
+Here we have used the monoid’s identity value as the initial value to feed into `reduce`. This is not possible to do in the more generic case of a semigroup because we have no way of constructing an element.
 
 ## Group
 
@@ -278,7 +280,6 @@ Said more succintly, a group is a monoid with inverses. Examples include:
 Examples of monoids that are **not** groups:
 
 * The natural numbers (0, 1, 2, 3, ...) with addition, for there is no natural number \\(n\\) such that \\(n + 1 = 0\\).
-* Boolean values with conjunction or disjunction, for each value has multiple inverses.
 * The set of \\(2\times 2\\) matrices with multiplication, for not every matrix has an inverse.
 
 The requirement for every element to have an inverse translates to a protocol quite easily:
@@ -307,9 +308,9 @@ extension Int {
 3 <> 3.inv() // 0
 ```
 
-All of the other monoids we have defined cannot be enhanced to adopt `Group`. For example, `String` cannot be made into a group with concatentation, for the identity element is the string of length 0, and concatenation can only increase the length.
+All of the other monoids we have defined cannot be enhanced to adopt `Group`. For example, `String` cannot be made into a group with concatentation, for concatentation of strings increases the length, never decreases.
 
-In mathematics there is the concept of the “[commutator](XXX link)” of two elements in a group. If \\(a\\) and \\(b\\) are elements of a group \\(X\\), then the commutator is denoted by \\([a, b]\\) and defined by
+In mathematics there is the concept of the “[commutator](http://en.wikipedia.org/wiki/Commutator)” of two elements in a group. If \\(a\\) and \\(b\\) are elements of a group \\(X\\), then the commutator is denoted by \\([a, b]\\) and defined by
 
 \\[ [a, b] = a \cdot b \cdot a^{-1} \cdot b^{-1} \\]
 
@@ -400,14 +401,9 @@ We now have a very general method of turning semigroups into monoids. Sadly, it�
 
 In a future article we will explore a very general, universal construction for building an abelian group out of a commutative monoid. When one applies this construction to the natural numbers one recovers the integers.
 
-## Conclusion
-
-### Footnotes
-
-Sometimes it can even make sense to consider non-associative operations, for example [octonions](http://en.wikipedia.org/wiki/Octonion), which are a kind of generalization of complex numbers.
-
-
 ## Exercises
+
+http://www.fewbutripe.com.s3.amazonaws.com/supporting/algebraic-structure-and-protocols/algebraic-structure.playground.zip
 
 1.) In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
 
@@ -495,6 +491,25 @@ sconcat([Min(2), Min(5), Min(100), Min(2)], Min(200))
 mconcat([M(Max(2)), M(Max(5)), M(Max(100)), M(Max(2))])
 mconcat([M(Min(2)), M(Min(5)), M(Min(100)), M(Min(2))])
 ```
+
+11.) The following enumeration represents the states of being “less than,” “equal to” or ”greater than”:
+
+```swift
+enum Ordering {
+  case LT
+  case EQ
+  case GT
+}
+```
+
+Make `Ordering` into a monoid in the most obvious way (hint: figure out which element should be the identity first).
+
+12.) Functions of the form `(A, A) -> Ordering` are precisely the ones that can be used to order lists of values.
+
+
+
+
+
 
 
 
