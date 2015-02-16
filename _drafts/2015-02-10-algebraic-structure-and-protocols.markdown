@@ -492,24 +492,3 @@ mconcat([M(Max(2)), M(Max(5)), M(Max(100)), M(Max(2))])
 mconcat([M(Min(2)), M(Min(5)), M(Min(100)), M(Min(2))])
 ```
 
-11.) The following enumeration represents the states of being “less than,” “equal to” or ”greater than”:
-
-```swift
-enum Ordering {
-  case LT
-  case EQ
-  case GT
-}
-```
-
-Make `Ordering` into a monoid in the most obvious way (hint: figure out which element should be the identity first).
-
-12.) Functions of the form `(A, A) -> Ordering` are precisely the ones that can be used to order lists of values.
-
-
-
-
-
-
-
-
