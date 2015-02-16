@@ -403,7 +403,7 @@ In a future article we will explore a very general, universal construction for b
 
 ## Exercises
 
-http://www.fewbutripe.com.s3.amazonaws.com/supporting/algebraic-structure-and-protocols/algebraic-structure.playground.zip
+Code samples from this article and exercises are in the following [playground](http://www.fewbutripe.com.s3.amazonaws.com/supporting/algebraic-structure-and-protocols/algebraic-structure.playground.zip).
 
 1.) In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” we considered the enum type with no values:
 
