@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      "Algebraic Structure and Protocols"
-date:       2015-02-03
+date:       2015-02-17
 categories: swift math algebra
 summary:    ""
 ---
