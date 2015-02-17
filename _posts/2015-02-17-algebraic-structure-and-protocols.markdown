@@ -193,8 +193,8 @@ The next simplest algebraic structure is the [monoid](http://en.wikipedia.org/wi
 Said more succinctly, \\( (X, \cdot, e) \\) is a monoid if \\( (X, \cdot) \\) is first a semigroup and \\(e\\) is an identity element. Examples include:
 
 * Integers with addition: \\( (\mathbb{Z}, +, 0) \\)
-* Boolean values with disjunction: \\( (B, \lor, \top ) \\)
-* Boolean values with conjunction: \\( (B, \land, \bot ) \\)
+* Boolean values with disjunction: \\( (B, \lor, \bot ) \\)
+* Boolean values with conjunction: \\( (B, \land, \top ) \\)
 * \\(2 \times 2\\) matrices with multiplication and the identity matrix: \\( (M_{2\times 2}, \times, I_{2\times 2} ) \\)
 
 A monoid in Swift is modeled by a protocol just like we did for semigroups. Since a monoid is a semigroup with some extra structure added, we can make the `Monoid` protocol inherit from the `Semigroup` protocol:
