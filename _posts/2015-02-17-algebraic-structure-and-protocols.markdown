@@ -132,7 +132,7 @@ check("Bool.op is associative", { (a: Bool, b: Bool, c: Bool) -> Bool in
 
 This will run thousands of checks so that we can safely say that `Int.op` and `Bool.op` are indeed associative.
 
-Now, `Int` with `+` and `Bool` with `||` are simple enough semigroups that we already knew they satisified the associativity law. But sometimes these laws can be subtle, and we may have convinced ourselves that they hold when in reality they do not. We should never feel comfortable saying a type is a semigroup unlesss these tests are written.
+Now, `Int` with `+` and `Bool` with `||` are simple enough semigroups that we already knew they satisified the associativity law. But sometimes these laws can be subtle, and we may have convinced ourselves that they hold when in reality they do not. We should never feel comfortable saying a type is a semigroup unless these tests are written.
 
 Two other types in the Swift standard library that immediately lend themselves to semigroup structures are `String` and `Array`, and their binary operations are nearly identical. Given two strings `a` and `b` there is a clear way to produce a third string: just concatenate the strings `a + b`. Similarly for `Array`, and so we have two more semigroups:
 
