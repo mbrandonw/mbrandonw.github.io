@@ -346,7 +346,7 @@ extension Bool : CommutativeSemigroup {}
 
 But, for us to truly say that `Int` and `Bool` are commutative semigroups we should write the corresponding QuickCheck test to verify that the operations are indeed commutative.
 
-We can combine this protocol with `Monoid` and `Group` to get the commutative versions of those algebraic structures. In the case of commutative groups there is a historically significant name: *abelian group*, named after the Norwegian mathematician [Niels Henrik Abel](http://en.wikipedia.org/wiki/Niels_Henrik_Abel). Note that for some reason it has become accepted to not capitalize the `A` in abelian, even though it is named after a person.
+We can combine this protocol with `Monoid` and `Group` to get the commutative versions of those algebraic structures. In the case of commutative groups there is a historically significant name: *abelian group*, named after the Norwegian mathematician [Niels Henrik Abel](http://en.wikipedia.org/wiki/Niels_Henrik_Abel). Note that for some reason it has become accepted to not capitalize the “A” in abelian, even though it is named after a person.
 
 An example of how these protocols combine:
 
