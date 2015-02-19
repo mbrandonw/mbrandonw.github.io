@@ -324,7 +324,7 @@ func commutator <G: Group> (a: G, b: G) -> G {
 
 In a sense, \\( [\cdot, \cdot] \\) measures how much elements fail to commute, for \\( [a, b] = e \\) if and only if \\( a\cdot b = b\cdot a \\).
 
-We will not go any deeper into the theory behind `Group` given that computer science isn’t flush with good examples of groups. However, in upcoming articles we will explore `Group` more; in particular, the theory of [elliptic curves](http://en.wikipedia.org/wiki/Elliptic_curve) and the [Grothendieck construction](http://en.wikipedia.org/wiki/Grothendieck_construction).
+We will not go any deeper into the theory behind `Group` given that computer science isn’t flush with good examples of groups. However, in upcoming articles we will explore `Group` more; in particular, the theory of [elliptic curves](http://en.wikipedia.org/wiki/Elliptic_curve) and the [Grothendieck group](http://en.wikipedia.org/wiki/Grothendieck_group).
 
 
 ## Commutativity
