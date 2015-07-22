@@ -95,16 +95,16 @@ enum Or <A, B> {
 }
 ```
 
-The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` *or* of type `B`. Unfortunately, this does not work in Swift due to a bug in the compiler in which it cannot determine the memory layout of this enum. We can get around this bug by wrapping each case in an autoclosure:
+The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` *or* of type `B`.
 
 ```swift
 enum Or <A, B> {
-  case left(@autoclosure () -> A)
-  case right(@autoclosure () -> B)
+  case left(A)
+  case right(B)
 }
 ```
 
-These `@autoclosure` pieces are just an implementation detail and not actually important to the theory we are exploring. It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` *and* of type `B`.
+It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` *and* of type `B`.
 
 Let’s try implementing some generic functions with this new type. First, an easy one:
 
@@ -143,14 +143,12 @@ Now, how to fill in each case? In the left case we will have a value in `A`. Huh
 func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
   switch x {
   case let .left(a):
-    return g(a())
+    return g(a)
   case let .right(b):
-    return h(b())
+    return h(b)
   }
 }
 ```
-
-Remember that the `left` and `right` cases technically hold closure values, so that is why we have to invoke `a()` and `b()` in the case statements.
 
 Time to throw a curve ball. Let’s implement the function:
 
@@ -358,9 +356,9 @@ func deMorgan <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
   return Not<Or<A, B>> {(x: Or<A, B>) in
     switch x {
     case let .left(a):
-      return f.left.not(a())
+      return f.left.not(a
     case let .right(b):
-      return f.right.not(b())
+      return f.right.not(b)
     }
   }
 }

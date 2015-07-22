@@ -22,8 +22,8 @@ func f <A, B, C> (g: A -> B, h: B -> C) -> (A -> C) {
 }
 
 enum Or <A, B> {
-  case left(@autoclosure () -> A)
-  case right(@autoclosure () -> B)
+  case left(A)
+  case right(B)
 }
 
 func f <A, B> (x: A) -> Or<A, B> {
@@ -33,9 +33,9 @@ func f <A, B> (x: A) -> Or<A, B> {
 func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
   switch x {
   case let .left(a):
-    return g(a())
+    return g(a)
   case let .right(b):
-    return h(b())
+    return h(b)
   }
 }
 
@@ -88,9 +88,9 @@ func deMorgan2 <A, B> (f: And<Not<A>, Not<B>>) -> Not<Or<A, B>> {
   return Not<Or<A, B>> {(x: Or<A, B>) in
     switch x {
     case let .left(a):
-      return f.left.not(a())
+      return f.left.not(a)
     case let .right(b):
-      return f.right.not(b())
+      return f.right.not(b)
     }
   }
 }
