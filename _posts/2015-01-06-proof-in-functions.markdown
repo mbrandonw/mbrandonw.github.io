@@ -95,16 +95,7 @@ enum Or <A, B> {
 }
 ```
 
-The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` *or* of type `B`.
-
-```swift
-enum Or <A, B> {
-  case left(A)
-  case right(B)
-}
-```
-
-It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` *and* of type `B`.
+The `Or<A, B>` type has two cases, a `left` and a `right`, each with associated values from `A` and `B`. A value of this type is really either holding a value of type `A` *or* of type `B`. It should be noted that this type is in some sense “dual” to the tuple type `(A, B)`. A value of type `(A, B)` is really holding a value of type `A` *and* of type `B`.
 
 Let’s try implementing some generic functions with this new type. First, an easy one:
 
