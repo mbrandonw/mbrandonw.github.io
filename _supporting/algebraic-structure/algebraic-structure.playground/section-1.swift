@@ -1,8 +1,5 @@
 import Foundation
 
-// Compiles in Swift 1.1
-
-
 protocol Semigroup {
   // Binary semigroup operation
   // **AXIOM** Should be associative:
@@ -41,8 +38,8 @@ false <> true
 "foo" <> "bar"
 [2, 3, 5] <> [7, 11]
 
-func sconcat <S: Semigroup> (xs: [S], initial: S) -> S {
-  return reduce(xs, initial, <>)
+func sconcat <S: Semigroup> (xs: [S], _ initial: S) -> S {
+  return xs.reduce(initial, combine: <>)
 }
 
 sconcat([1, 2, 3, 4, 5], 0)
@@ -55,7 +52,7 @@ protocol Monoid : Semigroup {
   // **AXIOM** Should satisfy:
   //   Self.e() <> a == a <> Self.e() == a
   // for all values a
-  class func e () -> Self
+  static func e () -> Self
 }
 
 extension Int : Monoid {
@@ -85,7 +82,7 @@ false <> Bool.e()
 [2, 3, 5] <> Array.e()
 
 func mconcat <M: Monoid> (xs: [M]) -> M {
-  return reduce(xs, M.e(), <>)
+  return xs.reduce(M.e(), combine: <>)
 }
 
 mconcat([1, 2, 3, 4, 5])

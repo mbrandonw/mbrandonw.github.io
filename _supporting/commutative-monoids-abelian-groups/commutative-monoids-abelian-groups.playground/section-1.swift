@@ -40,7 +40,7 @@ func <> <S: Semigroup> (a: S, b: S) -> S {
 }
 
 protocol Monoid : Semigroup {
-  class func e () -> Self
+  static func e () -> Self
 }
 
 extension Int : Monoid {

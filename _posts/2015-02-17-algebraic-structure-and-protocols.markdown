@@ -171,8 +171,8 @@ false <> true         // true
 These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental unit of computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
 
 ```swift
-func sconcat <S: Semigroup> (xs: [S], initial: S) -> S {
-  return reduce(xs, initial, <>)
+func sconcat <S: Semigroup> (xs: [S], _ initial: S) -> S {
+  return xs.reduce(initial, combine: <>)
 }
 
 sconcat([1, 2, 3, 4, 5], 0)             // 15
@@ -205,7 +205,7 @@ protocol Monoid : Semigroup {
   // **AXIOM** Should satisfy:
   //   Self.e() <> a == a <> Self.e() == a
   // for all values a
-  class func e () -> Self
+  static func e () -> Self
 }
 ```
 
@@ -250,7 +250,7 @@ The fact that monoids have a distinguished element means that we can provide an 
 
 ```swift
 func mconcat <M: Monoid> (xs: [M]) -> M {
-  return reduce(xs, M.e(), <>)
+  return xs.reduce(M.e(), combine: <>)
 }
 
 mconcat([1, 2, 3, 4, 5])            // 15
