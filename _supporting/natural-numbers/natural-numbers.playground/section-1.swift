@@ -9,7 +9,7 @@ enum NatLessThan4 {
 
 enum Nat {
   case Zero
-  case Succ(@autoclosure () -> Nat)
+  indirect case Succ(Nat)
 }
 
 let zero = Nat.Zero
@@ -18,14 +18,14 @@ let two: Nat = .Succ(one)
 let three: Nat = .Succ(two)
 let four: Nat = .Succ(.Succ(.Succ(.Succ(.Zero))))
 
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return a
   case (.Zero, _):
     return b
   case let (.Succ(pred_a), _):
-    return add(pred_a(), .Succ(b))
+    return add(pred_a, .Succ(b))
   }
 }
 
@@ -44,7 +44,7 @@ func == (a: Nat, b: Nat) -> Bool {
   case (.Zero, .Succ), (.Succ, .Zero):
     return false
   case let (.Succ(pred_a), .Succ(pred_b)):
-    return pred_a() == pred_b()
+    return pred_a == pred_b
   }
 }
 
@@ -58,7 +58,7 @@ func * (a: Nat, b: Nat) -> Nat {
   case (_, .Zero), (.Zero, _):
     return .Zero
   case let (.Succ(pred_a), _):
-    return pred_a() * b + b
+    return pred_a * b + b
   }
 }
 

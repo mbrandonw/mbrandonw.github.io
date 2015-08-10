@@ -37,16 +37,16 @@ enum Nat {
 }
 ```
 
-Unfortunately, this does not compile in Swift due to a bug in the compiler in which it cannot determine the memory layout of this enum. We can get around this bug by wrapping the associated value of `Succ` in an autoclosure:
+Unfortunately, this does not compile in Swift due to how the compiler handles the memory layout of a recursive enum. There’s an easy fix: we can mark the `Succ` case as `indirect` to let Swift figure this out:
 
 ```swift
 enum Nat {
   case Zero
-  case Succ(@autoclosure () -> Nat)
+  indirect case Succ(Nat)
 }
 ```
 
-It’s unfortunate that we have to clutter our simple `Nat` type with a messy implementation detail. We have to remember that anytime we extract a value out of the `Succ` case we must invoke it with `()` in order to execute the closure.
+It’s unfortunate that we have to clutter our simple `Nat` type with a messy implementation detail.
 
 We can now do the following to create a few values representing various natural numbers:
 
@@ -63,7 +63,7 @@ For `one`, `two` and `three` we took the successor of previously defined values.
 Now let’s see how easy or difficult it is to actually work with this type. One of the simplest functions we could try to implement is one that adds two natural numbers:
 
 ```swift
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   ???
 }
 ```
@@ -71,7 +71,7 @@ func add (a: Nat, b: Nat) -> Nat {
 The recursive definition of `Nat` will lead us through implementing this funtion. Since `a` and `b` are enums, the only thing we can do with them is switch on their values:
 
 ```swift
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Zero, .Zero):
     ???
@@ -88,7 +88,7 @@ func add (a: Nat, b: Nat) -> Nat {
 We have to figure out how to fill these cases. The first three are quite easy. `Zero` plus `Zero` is just `Zero`, and `Zero` plus something is just that something. We can use some wildcard pattern matching to simplify that even further:
 
 ```swift
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return a
@@ -103,19 +103,19 @@ func add (a: Nat, b: Nat) -> Nat {
 The last case that is left: how to add two natural numbers, each of which are decomposed as the successors of smaller natural numbers. Since we know how to add `Zero` to anything, we can try recursively breaking down these numbers to reach that base case. In fact, by taking the predecessor of `a` and the successor of `b` (and hence not changing the overall sum), we have made it one step closer to reaching the `Zero` base case. In code this looks like:
 
 ```swift
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return a
   case (.Zero, _):
     return b
   case let (.Succ(pred_a), _):
-    return add(pred_a(), .Succ(b))
+    return add(pred_a, .Succ(b))
   }
 }
 ```
 
-Notice in that last line we had to invoke `pred()` since technically the `Succ` case holds an autoclosure and not an actual `Nat`. Also note that the last line is exactly what we verbalized: `a+b` is the sum of the predecessor of `a` and the successor of `b`, i.e. `a+b = (a-1)+(b+1)`. This recursive function will terminate since the predecessors of `a` will eventually reach `Zero`, which is a case that explicitly returns.
+Note that the last line is exactly what we verbalized: `a+b` is the sum of the predecessor of `a` and the successor of `b`, i.e. `a+b = (a-1)+(b+1)`. This recursive function will terminate since the predecessors of `a` will eventually reach `Zero`, which is a case that explicitly returns.
 
 We can also overload `+` to make this more natural to use.
 
@@ -154,7 +154,7 @@ func == (a: Nat, b: Nat) -> Bool {
   case (.Zero, .Succ), (.Succ, .Zero):
     return false
   case let (.Succ(pred_a), .Succ(pred_b)):
-    return pred_a() == pred_b()
+    return pred_a == pred_b
   }
 }
 ```
@@ -205,7 +205,7 @@ Below you will find some exercises to help you explore these ideas even deeper. 
 1.) Implement exponentiation:
 
 ```swift
-func exp (a: Nat, b: Nat) -> Nat {
+func exp (a: Nat, _ b: Nat) -> Nat {
   ???
 }
 ```
@@ -215,11 +215,11 @@ func exp (a: Nat, b: Nat) -> Nat {
 3.) Implement `min` and `max`:
 
 ```swift
-func min (a: Nat, b: Nat) -> Nat {
+func min (a: Nat, _ b: Nat) -> Nat {
   ???
 }
 
-func max (a: Nat, b: Nat) -> Nat {
+func max (a: Nat, _ b: Nat) -> Nat {
   ???
 }
 ```
@@ -227,7 +227,7 @@ func max (a: Nat, b: Nat) -> Nat {
 4.) Implement a distance function between natural numbers, i.e. the absolute value of their difference.
 
 ```swift
-func distance (a: Nat, b: Nat) -> Nat {
+func distance (a: Nat, _ b: Nat) -> Nat {
   ???
 }
 ```
@@ -235,7 +235,7 @@ func distance (a: Nat, b: Nat) -> Nat {
 5.) Implement modulus, i.e. the remainder after dividing `a` by `m`:
 
 ```swift
-func modulus (a: Nat, m: Nat) -> Nat {
+func modulus (a: Nat, _ m: Nat) -> Nat {
   ???
 }
 ```

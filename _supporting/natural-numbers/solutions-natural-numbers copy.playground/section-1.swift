@@ -9,7 +9,7 @@ enum NatLessThan4 {
 
 enum Nat {
   case Zero
-  case Succ(@autoclosure () -> Nat)
+  indirect case Succ(Nat)
 }
 
 let zero = Nat.Zero
@@ -18,14 +18,14 @@ let two: Nat = .Succ(one)
 let three: Nat = .Succ(two)
 let four: Nat = .Succ(.Succ(.Succ(.Succ(.Zero))))
 
-func add (a: Nat, b: Nat) -> Nat {
+func add (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return a
   case (.Zero, _):
     return b
   case let (.Succ(pred_a), _):
-    return add(pred_a(), .Succ(b))
+    return add(pred_a, .Succ(b))
   }
 }
 
@@ -44,7 +44,7 @@ func == (a: Nat, b: Nat) -> Bool {
   case (.Zero, .Succ), (.Succ, .Zero):
     return false
   case let (.Succ(pred_a), .Succ(pred_b)):
-    return pred_a() == pred_b()
+    return pred_a == pred_b
   }
 }
 
@@ -58,7 +58,7 @@ func * (a: Nat, b: Nat) -> Nat {
   case (_, .Zero), (.Zero, _):
     return .Zero
   case let (.Succ(pred_a), _):
-    return pred_a() * b + b
+    return pred_a * b + b
   }
 }
 
@@ -68,14 +68,14 @@ four * three == two + two * five
 two * three == five
 
 
-func exp (a: Nat, b: Nat) -> Nat {
+func exp (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return .Succ(.Zero)
   case (.Zero, .Succ):
     return .Zero
   case let (.Succ, .Succ(pred_b)):
-    return exp(a, pred_b()) * a
+    return exp(a, pred_b) * a
   }
 }
 
@@ -89,13 +89,13 @@ func < (a: Nat, b: Nat) -> Bool {
   case (_, .Zero):
     return false
   case let (.Succ(pred_a), .Succ(pred_b)):
-    return pred_a() < pred_b()
+    return pred_a < pred_b
   }
 }
 
 two < three
 
-func distance (a: Nat, b: Nat) -> Nat {
+func distance (a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Zero, .Zero):
     return .Zero
@@ -104,13 +104,13 @@ func distance (a: Nat, b: Nat) -> Nat {
   case (.Succ, .Zero):
     return a
   case let (.Succ(pred_a), .Succ(pred_b)):
-    return distance(pred_a(), pred_b())
+    return distance(pred_a, pred_b)
   }
 }
 
 distance(two, four) == two
 
-func modulus (a: Nat, m: Nat) -> Nat {
+func modulus (a: Nat, _ m: Nat) -> Nat {
   if a < m {
     return a
   }
@@ -125,7 +125,7 @@ func pred (n: Nat) -> Nat? {
   case .Zero:
     return nil
   case let .Succ(pred):
-    return pred()
+    return pred
   }
 }
 
@@ -189,9 +189,7 @@ func == (a: Z, b: Z) -> Bool {
     return a == b
   case let (.Pos(a), .Pos(b)):
     return a == b
-  case let (.Pos(a), .Neg(b)):
-    return false
-  case let (.Neg(a), .Pos(b)):
+  case (.Neg, .Pos), (.Pos, .Neg):
     return false
   }
 }
