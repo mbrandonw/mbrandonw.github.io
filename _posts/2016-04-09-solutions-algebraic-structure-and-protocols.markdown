@@ -12,7 +12,7 @@ In the article “[Algebraic Structure and Protocols]({% post_url 2015-02-17-alg
 
 ```swift
 extension Empty: Semigroup {
-  func op(b: Empty) -> Empty {
+  func op(_ b: Empty) -> Empty {
     // ???
   }
 }
@@ -22,7 +22,7 @@ Now, `Empty` contains no values, hence `b: Empty` is impossible to construct, bu
 
 ```swift
 extension Empty: Semigroup {
-  func op (b: Empty) -> Empty {
+  func op(_ b: Empty) -> Empty {
     return self // could also return `b`
   }
 }
@@ -36,7 +36,7 @@ The [empty semigroup](http://en.wikipedia.org/wiki/Empty_semigroup) may sound pa
 
 ```swift
 extension Unit: Monoid {
-  func op(b: Unit) -> Unit {
+  func op(_ b: Unit) -> Unit {
     return self // could also return `b`
   }
   static func e() -> Unit {
@@ -61,7 +61,7 @@ extension Unit: Group {
 
 ```swift
 extension Endomorphism : Semigroup {
-  func op (endo: Endomorphism) -> Endomorphism {
+  func op(_ endo: Endomorphism) -> Endomorphism {
     // ???
   }
 }
@@ -71,7 +71,7 @@ We need to figure out how to fill in this function. Taking inspiration from the 
 
 ```swift
 extension Endomorphism: Semigroup {
-  func op(endo: Endomorphism) -> Endomorphism {
+  func op(_ endo: Endomorphism) -> Endomorphism {
     return Endomorphism { a in
       return ???
     }
@@ -83,7 +83,7 @@ Now we have `a: A` to work with, but we also have `self.f: A -> A` and `endo.f: 
 
 ```swift
 extension Endomorphism: Semigroup {
-  func op(endo: Endomorphism) -> Endomorphism {
+  func op(_ endo: Endomorphism) -> Endomorphism {
     return Endomorphism { a in
       return self.f(endo.f(a))
     }
@@ -109,7 +109,7 @@ Now `Endomorphism` is a monoid. Can it be made into a group? If it could then an
 
 ```swift
 extension Predicate: Monoid {
-  func op(pred: Predicate) -> Predicate {
+  func op(_ pred: Predicate) -> Predicate {
     return Predicate { a in
       return self.p(a) && pred.p(a)
     }
@@ -125,7 +125,7 @@ extension Predicate: Monoid {
 
 ```swift
 extension FunctionM: Monoid {
-  func op(function: FunctionM) -> FunctionM {
+  func op(_ function: FunctionM) -> FunctionM {
     return FunctionM { x in
       return self.f(x).op(function.f(x))
     }
@@ -141,7 +141,7 @@ extension FunctionM: Monoid {
 
 ```swift
 extension FunctionG: Monoid {
-  func op(function: FunctionG) -> FunctionG {
+  func op(_ function: FunctionG) -> FunctionG {
     return FunctionM { x in
       return self.f(x).op(function.f(x))
     }
@@ -163,7 +163,7 @@ extension FunctionG: Monoid {
 
 ```swift
 extension Max: Semigroup {
-  func op(s: Max) -> Max {
+  func op(_ s: Max) -> Max {
     return Max(max(self.a, s.a))
   }
 }
@@ -173,7 +173,7 @@ And similarly for `Min`:
 
 ```swift
 extension Min: Semigroup {
-  func op(s: Min) -> Min {
+  func op(_ s: Min) -> Min {
     return Min(min(self.a, s.a))
   }
 }

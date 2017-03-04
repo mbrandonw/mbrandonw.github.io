@@ -10,7 +10,7 @@ In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions
 1.) The first two are the only implementable functions:
 
 ```swift
-func f <A, B> (x: A) -> B -> A {
+func f <A, B> (x: A) -> (B) -> A {
   return { _ in x }
 }
 
@@ -26,7 +26,7 @@ The main reason I stacked these three functions together is because they all hav
 2.) Let’s use the idea of “hole-driven development” to fill this in. We need to return something of the form `((C, B) -> C) -> ((C, A) -> C)`, so it’s a closure that accepts `((C, B) -> C)` as an argument:
 
 ```swift
-func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: @escaping (A) -> B) -> (@escaping (C, B) -> C) -> ((C, A) -> C) {
   return { g in
     ???
   }
@@ -36,7 +36,7 @@ func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
 Now we need to return something of the form `((C, A) -> C)`, which is a closure accepting `(C, A)` as an argument:
 
 ```swift
-func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: @escaping (A) -> B) -> (@escaping (C, B) -> C) -> ((C, A) -> C) {
   return { g in
     return { c, a in
       ???
@@ -48,7 +48,7 @@ func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
 Now we need to return something in `C` where we have placed `???`. We have at our disposal `f: A -> B`, `g: (C, B) -> C`, `c: C` and `a: A`. Turns out there are two ways to finish the implementation of this function, something we didn’t encounter in the original article.
 
 ```swift
-func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: @escaping (A) -> B) -> (@escaping (C, B) -> C) -> ((C, A) -> C) {
   return { g in
     return { c, a in
       return c
@@ -56,7 +56,7 @@ func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
   }
 }
 
-func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: @escaping (A) -> B) -> (@escaping (C, B) -> C) -> ((C, A) -> C) {
   return { g in
     return { c, a in
       return g(c, f(a))
@@ -78,7 +78,7 @@ To summarize, redundancies in a logical statement lead to multiple proofs, and h
 3.) We are tasked with implementing the function:
 
 ```swift
-func f <A, B, C> (x: A, g: A -> B, h: A -> C) -> (B, C) {
+func f <A, B, C> (x: A, g: (A) -> B, h: (A) -> C) -> (B, C) {
   ???
 }
 ```
@@ -86,7 +86,7 @@ func f <A, B, C> (x: A, g: A -> B, h: A -> C) -> (B, C) {
 We can see that a few types align nicely: we are given `x: A` and we have two functions `g`, `h` whose sole arguement is of type `A`. By plugging `x` into those functions we now have values in types `B` and `C`, which is precisely what we want to return:
 
 ```swift
-func f <A, B, C> (x: A, g: A -> B, h: A -> C) -> (B, C) {
+func f <A, B, C> (x: A, g: (A) -> B, h: (A) -> C) -> (B, C) {
   return (g(x), h(x))
 }
 ```

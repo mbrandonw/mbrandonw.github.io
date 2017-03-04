@@ -11,7 +11,7 @@ In the article â€œ[Creating the Natural Numbers from First Principles]({% post_u
 1.) We need to implement exponentiation for `Nat`. Switching on `a` and `b` we have:
 
 ```swift
-func exp (a: Nat, _ b: Nat) -> Nat {
+func exp(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Succ, .Zero):
     ???
@@ -28,7 +28,7 @@ func exp (a: Nat, _ b: Nat) -> Nat {
 The first case is asking for the value of `a^0`. A positive integer raised to the zeroth power is just `1`. The next case is asking for `0^b`, which clearly is `0`. We can fill in those cases now:
 
 ```swift
-func exp (a: Nat, _ b: Nat) -> Nat {
+func exp(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Succ, .Zero):
     return .Succ(.Zero)
@@ -45,7 +45,7 @@ func exp (a: Nat, _ b: Nat) -> Nat {
 Next we need `a^b` where we know `a` and `b` are positive natual numbers. We can reduce this to our base cases by observing that `a^b = a^(b-1) * a`:
 
 ```swift
-func exp (a: Nat, _ b: Nat) -> Nat {
+func exp(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Succ, .Zero):
     return .Succ(.Zero)
@@ -63,7 +63,7 @@ Now, this last case: `0^0`. In math this is left as an undefined value, so techn
 
 
 ```swift
-func exp (a: Nat, _ b: Nat) -> Nat {
+func exp(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (_, .Zero):
     return .Succ(.Zero)
@@ -130,7 +130,7 @@ func < (a: Nat, b: Nat) -> Bool {
 4.) Now we want to implement the distance function:
 
 ```swift
-func distance (a: Nat, _ b: Nat) -> Nat {
+func distance(_ a: Nat, _ b: Nat) -> Nat {
   ???
 }
 ```
@@ -138,7 +138,7 @@ func distance (a: Nat, _ b: Nat) -> Nat {
 This should return the absolute value of the difference between `a` and `b`. Our base cases are derived from the fact that `distance(n, .Zero) == distance(.Zero, n) == n`:
 
 ```swift
-func distance (a: Nat, _ b: Nat) -> Nat {
+func distance(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Zero, _):
     return b
@@ -154,7 +154,7 @@ Now the last case can reduce `a` and `b` so that we get closer to the base case:
 
 
 ```swift
-func distance (a: Nat, _ b: Nat) -> Nat {
+func distance(_ a: Nat, _ b: Nat) -> Nat {
   switch (a, b) {
   case (.Zero, .Zero):
     return .Zero
@@ -173,7 +173,7 @@ I explicity put every case instead of wildcards because the Swift compiler didnâ
 5.) Using the `distance` function from above we can write this quite easily:
 
 ```swift
-func modulus (a: Nat, _ m: Nat) -> Nat {
+func modulus(_ a: Nat, _ m: Nat) -> Nat {
   if a < m {
     return a
   }
@@ -189,7 +189,7 @@ Notice that `distance` is simulating subtraction in `Nat`.
 6.) This function is quite simple to implement:
 
 ```swift
-func pred (n: Nat) -> Nat? {
+func pred(_ n: Nat) -> Nat? {
   switch n {
   case .Zero:
     return nil

@@ -46,7 +46,7 @@ protocol Semigroup {
   // Binary semigroup operation
   // **AXIOM** Should be associative:
   //   a.op(b.op(c)) == (a.op(b)).op(c)
-  func op (g: Self) -> Self
+  func op(_ g: Self) -> Self
 }
 ```
 
@@ -54,7 +54,7 @@ We have called this function `op`, short for “operation.” Any type that can 
 
 ```swift
 extension Int : Semigroup {
-  func op (n: Int) -> Int {
+  func op(_ n: Int) -> Int {
     return self + n
   }
 }
@@ -64,7 +64,7 @@ We can also make `Bool` implement this protocol via `||`:
 
 ```swift
 extension Bool : Semigroup {
-  func op (b: Bool) -> Bool {
+  func op(_ b: Bool) -> Bool {
     return self || b
   }
 }
@@ -101,7 +101,7 @@ The pseudo code above, where we theoretically looped through every value of a ty
 For example, suppose we wanted to confirm that multiplication in `Int` is indeed commutative, i.e. `a * b == b * a` for any `a` and `b` in `Int`. A predicate that verifies this for a particular case looks like:
 
 ```swift
-func multiplicationIsCommutative (a: Int, b: Int) -> Bool {
+func multiplicationIsCommutative(_ a: Int, _ b: Int) -> Bool {
   return (a * b) == (b * a)
 }
 ```
@@ -138,13 +138,13 @@ Two other types in the Swift standard library that immediately lend themselves t
 
 ```swift
 extension String : Semigroup {
-  func op (b: String) -> String {
+  func op(_ b: String) -> String {
     return self + b
   }
 }
 
 extension Array : Semigroup {
-  func op (b: Array) -> Array {
+  func op(_ b: Array) -> Array {
     return self + b
   }
 }
@@ -171,7 +171,7 @@ false <> true         // true
 These four lines of code are quite amazing. We have distilled a general principle of composition (two objects combining into one) into a protocol, and allowed types to publicize when they are capable of this fundamental unit of computation. For example, we can write a shorter version of `reduce` for arrays over semigroups since there is a distinguished accumulation function:
 
 ```swift
-func sconcat <S: Semigroup> (xs: [S], _ initial: S) -> S {
+func sconcat <S: Semigroup> (_ xs: [S], _ initial: S) -> S {
   return xs.reduce(initial, combine: <>)
 }
 
@@ -205,7 +205,7 @@ protocol Monoid : Semigroup {
   // **AXIOM** Should satisfy:
   //   Self.e() <> a == a <> Self.e() == a
   // for all values a
-  static func e () -> Self
+  static func e() -> Self
 }
 ```
 
@@ -215,25 +215,25 @@ All of the semigroups we have defined so far can be enhanced to monoids quite ea
 
 ```swift
 extension Int : Monoid {
-  static func e () -> Int {
+  static func e() -> Int {
     return 0
   }
 }
 
 extension Bool : Monoid {
-  static func e () -> Bool {
+  static func e() -> Bool {
     return false
   }
 }
 
 extension String : Monoid {
-  static func e () -> String {
+  static func e() -> String {
     return ""
   }
 }
 
 extension Array : Monoid {
-  static func e () -> Array {
+  static func e() -> Array {
     return []
   }
 }
@@ -249,7 +249,7 @@ There should of course be corresponding QuickCheck tests to verifty that each of
 The fact that monoids have a distinguished element means that we can provide an even simpler reduce:
 
 ```swift
-func mconcat <M: Monoid> (xs: [M]) -> M {
+func mconcat <M: Monoid> (_ xs: [M]) -> M {
   return xs.reduce(M.e(), combine: <>)
 }
 
@@ -290,7 +290,7 @@ protocol Group : Monoid {
   // **AXIOM** Should satisfy:
   //   a <> a.inv() == a.inv() <> a == Self.e()
   // for each value a.
-  func inv () -> Self
+  func inv() -> Self
 }
 ```
 
@@ -300,7 +300,7 @@ We can make `Int` into a group:
 
 ```swift
 extension Int {
-  func inv () -> Int {
+  func inv() -> Int {
     return -self
   }
 }
@@ -317,7 +317,7 @@ In mathematics there is the concept of the “[commutator](http://en.wikipedia.o
 This gives us a nice example of something we can write in Swift to show how to deal with groups:
 
 ```swift
-func commutator <G: Group> (a: G, b: G) -> G {
+func commutator <G: Group>(_ a: G, _ b: G) -> G {
   return a <> b <> a.inv() <> b.inv()
 }
 ```
@@ -351,7 +351,7 @@ We can combine this protocol with `Monoid` and `Group` to get the commutative ve
 An example of how these protocols combine:
 
 ```swift
-func f <M: Monoid where M: CommutativeSemigroup> (a: M, b: M) -> M {
+func f <M: Monoid where M: CommutativeSemigroup> (_ a: M, _ b: M) -> M {
   return a <> b <> a <> b
 }
 ```
@@ -378,11 +378,11 @@ enum M <S: Semigroup> {
 }
 
 extension M : Monoid {
-  static func e () -> M {
+  static func e() -> M {
     return .Identity
   }
 
-  func op (b: M) -> M {
+  func op(_ b: M) -> M {
     switch (self, b) {
     case (.Identity, .Identity):
       return .Identity
@@ -427,7 +427,7 @@ Make this type into a monoid. Can it be a group?
 
 ```swift
 struct Endomorphism <A> {
-  let f: A -> A
+  let f: (A) -> A
 }
 ```
 
@@ -438,7 +438,7 @@ Make this type into a monoid. Can it be a group?
 
 ```swift
 struct Predicate <A> {
-  let p: A -> Bool
+  let p: (A) -> Bool
 }
 ```
 
@@ -448,7 +448,7 @@ This is a type representation of a predicate, i.e. a function from a type to `Bo
 
 ```swift
 struct FunctionM <A, M: Monoid> {
-  let f: A -> M
+  let f: (A) -> M
 }
 ```
 
@@ -458,7 +458,7 @@ Make `FunctionM` into a monoid.
 
 ```swift
 struct FunctionG <A, G: Group> {
-  let f: A -> G
+  let f: (A) -> G
 }
 ```
 

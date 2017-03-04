@@ -408,7 +408,7 @@ func f <A, B> (f: (A) -> B) -> A {
 2.) Find an implementation of:
 
 ```swift
-func f <A, B, C> (f: (A) -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: @escaping (A) -> B) -> (@escaping (C, B) -> C) -> ((C, A) -> C) {
   ???
 }
 ```
