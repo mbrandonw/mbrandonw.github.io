@@ -59,7 +59,7 @@ func f <A, B> (x: A, y: B) -> A {
 Let’s try something a little more difficult. How might we implement the following generic function?
 
 ```swift
-func f <A, B> (x: A, g: A -> B) -> B {
+func f <A, B> (x: A, g: (A) -> B) -> B {
   ???
 }
 ```
@@ -67,7 +67,7 @@ func f <A, B> (x: A, g: A -> B) -> B {
 It takes a value in `A` and a function from `A` to `B` and needs to produce something in `B`. We should notice that two types match up quite nicely: we have a value in `A` and a function that accepts things in `A`. When types align like that it’s probably a good idea to just compose them. In fact, the compiler likes that quite a bit:
 
 ```swift
-func f <A, B> (x: A, g: A -> B) -> B {
+func f <A, B> (x: A, g: (A) -> B) -> B {
   return g(x)
 }
 ```
@@ -77,7 +77,8 @@ This all seems so simple, but take a moment to reflect on how strange it is that
 Now that we are getting the hang of this we’ll breeze through more of these.
 
 ```swift
-func f <A, B, C> (g: A -> B, h: B -> C) -> A -> C {
+func f <A, B, C> (g: @escaping (A) -> B,
+                  h: @escaping (B) -> C) -> (A) -> C {
   return { a in
     return h(g(a))
   }
@@ -101,7 +102,7 @@ Let’s try implementing some generic functions with this new type. First, an ea
 
 ```swift
 func f <A, B> (x: A) -> Or<A, B> {
-  return Or.left(x)
+  return .left(x)
 }
 ```
 
@@ -110,7 +111,7 @@ This is saying that given something in `A` we want to produce something in `Or<A
 A more difficult one that we will break down in more detail:
 
 ```swift
-func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
+func f <A, B, C> (x: Or<A, B>, g: (A) -> C, h: (B) -> C) -> C {
   ???
 }
 ```
@@ -118,7 +119,7 @@ func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
 We now have a value in `Or<A, B>`, a function from `A` to `C` and a function from `B` to `C`, and we want to produce a value in `C`. Well, the only way to really deal with enum values is to switch on them and deal with each case separately:
 
 ```swift
-func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
+func f <A, B, C> (x: Or<A, B>, g: (A) -> C, h: (B) -> C) -> C {
   switch x {
   case .left:
     ???
@@ -131,7 +132,7 @@ func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
 Now, how to fill in each case? In the left case we will have a value in `A`. Huh, but we also have a function that takes things in `A` so we might as well feed it into the function. Oh, and hey, that function outputs a value in `C` which is where we are trying to get anyway! The right case works the exact same way:
 
 ```swift
-func f <A, B, C> (x: Or<A, B>, g: A -> C, h: B -> C) -> C {
+func f <A, B, C> (x: Or<A, B>, g: (A) -> C, h: (B) -> C) -> C {
   switch x {
   case let .left(a):
     return g(a)
@@ -154,7 +155,7 @@ It needs to take a value in `A` and return a value in `B`. Hm. Well, we know abs
 Here’s another:
 
 ```swift
-func f <A, B, C> (g: A -> C, h: B -> C) -> C {
+func f <A, B, C> (g: (A) -> C, h: (B) -> C) -> C {
   ???
 }
 ```
@@ -195,7 +196,7 @@ func f <A, B> (x: A, y: B) -> A {
 }
 
 // (P ⇒ Q ∧ Q ⇒ R) ⇒ (P ⇒ R)
-func f <A, B, C> (g: A -> B, h: B -> C) -> (A -> C) {
+func f <A, B, C> (g: (A) -> B, h: (B) -> C) -> (A) -> C {
   return { a in h(g(a)) }
 }
 ```
@@ -249,7 +250,7 @@ Other parts of De Morgan’s law include \\(\lor\\) and \\(\land\\). We already 
 struct And <A, B> {
   let left: A
   let right: B
-  init (_ left: A, _ right: B) {
+  init(_ left: A, _ right: B) {
     self.left = left
     self.right = right
   }
@@ -394,20 +395,20 @@ Below you will find some exercises to help you explore these ideas a little deep
 1.) Two of the following functions can be implemented and one cannot. Provide the implementations and explain why the un-implementable one is different.
 
 ```swift
-func f <A, B> (x: A) -> B -> A {
+func f <A, B> (x: A) -> (B) -> A {
 }
 
 func f <A, B> (x: A, y: B) -> A {
 }
 
-func f <A, B> (f: A -> B) -> A {
+func f <A, B> (f: (A) -> B) -> A {
 }
 ```
 
 2.) Find an implementation of:
 
 ```swift
-func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
+func f <A, B, C> (f: (A) -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
   ???
 }
 ```
@@ -415,7 +416,7 @@ func f <A, B, C> (f: A -> B) -> ((C, B) -> C) -> ((C, A) -> C) {
 3.) Find an implementation of:
 
 ```swift
-func f <A, B, C> (x: A, g: A -> B, h: A -> C) -> (B, C) {
+func f <A, B, C> (x: A, g: (A) -> B, h: (A) -> C) -> (B, C) {
   ???
 }
 ```
@@ -449,7 +450,7 @@ If you are having trouble, don’t worry. It’s not possible to implement this 
 6.) The following is a function that will “curry” another function:
 
 ```swift
-func curry <A, B, C> (f: (A, B) -> C) -> A -> B -> C {
+func curry <A, B, C> (f: @escaping (A, B) -> C) -> (A) -> (B) -> C {
   return { a in
     return {b in
       return f(a, b)
