@@ -233,8 +233,13 @@ typealias Comparator<A> = FunctionM<(A, A), Ordering>
 It is easy enough to cook up instances of comparators:
 
 ```swift
-let intComparator = Comparator<Int> { $0 < $1 }
-let stringComparator = Comparator<String> { $0 < $1 }
+let intComparator = Comparator<Int> {
+  $0 < $1 ? .lt : $0 > $1 ? .gt : .eq
+}
+
+let stringComparator = Comparator<String> {
+  $0 < $1 ? .lt : $0 > $1 ? .gt : .eq
+}
 ```
 
 More generally, anything conforming to `Comparable` can be used to derive a comparator:
@@ -323,10 +328,7 @@ users.sorted(
 
 If you look closely you’ll notice that the array is sorted first by last name, and then in the places there are equal last names it will be sorted by first name, and finally in the one instance there are equal names (“Ightrayu Rylye”) it is sorted by `id`.
 
-
-
-
-
+## Conclusion
 
 
 
@@ -334,14 +336,25 @@ If you look closely you’ll notice that the array is sorted first by last name,
 
 1. Define `filtered(by:)` on the more generic `Sequence` type.
 
-1. Define the function `not<A>: Predicate<A> -> Predicate<A>` that reverses a predicate:
+2. Define `sorted(by:)` on the more generic `Sequence` type.
 
-1. Define the functions `isGreaterThan`, `isLessThanOrEqualTo`, `isGreaterThanOrEqualTo` for generating predicates on a comparable, similarly to how we defined `isLessThan`.
+3. Define the function `not<A>: Predicate<A> -> Predicate<A>` that reverses a predicate:
 
-1. Define the functions `isEqualTo` and `isNotEqualTo` for generating predicates on a equatable.
+4. Define the functions `isGreaterThan`, `isLessThanOrEqualTo`, `isGreaterThanOrEqualTo` for generating predicates on a comparable, similarly to how we defined `isLessThan`.
 
+5. Define the functions `isEqualTo` and `isNotEqualTo` for generating predicates on a equatable.
 
+6. Define a method `reversed() -> Ordering` on `Ordering` that does the most sensible thing you can think of (hint: the name is telling).
 
+7. Define a method `reversed() -> Comparator` on `Comparator` by using the `reversed()` method above. What does it represent? **Note**: Due to a [limitation](https://twitter.com/dgregor79/status/847975206538813440) of Swift 3.1 you cannot extend `Comparator` directly. Instead, define the method on:
+
+```swift
+extension FunctionM where M == Ordering {
+  func reversed() -> FunctionM {
+    // implementation
+  }
+}
+```
 
 
 
