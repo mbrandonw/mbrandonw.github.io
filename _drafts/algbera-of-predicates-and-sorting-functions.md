@@ -207,7 +207,125 @@ enum Ordering {
 }
 ```
 
-This type encapsulates the ideas of “less than”, “equal” and “greater than”.
+This type encapsulates the ideas of “less than”, “equal” and “greater than”. We can turn it into a monoid quite simply, but unfortunately it takes some malice aforethought to get it right, so hopefully it will become clear to the reader soon:
+
+
+```swift
+extension Ordering: Monoid {
+  func op(_ s: Ordering) -> Ordering {
+    switch (self, s) {
+    case (.lt, _): return .lt
+    case (.gt, _): return .gt
+    case (.eq, _): return s
+    }
+  }
+
+  static let e = Ordering.eq
+}
+```
+
+Functions of the form `(A, A) -> Ordering` are precisely the types of functions that allow us to sort collections of values of `A`, for they map pairs `(lhs, rhs)` to `.lt`, `.gt` and `.eq` values to describe the order `lhs` and `rhs` are currently in. A sorting algorithm can use those values to figure out how to rearrange the values in a collection. Since `Ordering` is a monoid, the type of functions `(A, A) -> Ordering` is also a monoid, which is precisely `FunctionM<(A, A), Ordering>`. We give this the name `Comparator<A>` and define it with a typealias:
+
+```swift
+typealias Comparator<A> = FunctionM<(A, A), Ordering>
+```
+
+It is easy enough to cook up instances of comparators:
+
+```swift
+let intComparator = Comparator<Int> { $0 < $1 }
+let stringComparator = Comparator<String> { $0 < $1 }
+```
+
+More generally, anything conforming to `Comparable` can be used to derive a comparator:
+
+```swift
+extension Comparable {
+  static func comparator() -> Comparator<Self> {
+    return Comparator.init { $0 < $1 ? .lt : $0 > $1 ? .gt : .eq }
+  }
+}
+
+Int.comparator()
+String.comparator()
+```
+
+We can make use of comparators by extending `Array` so that it understands how to use them:
+
+```swift
+extension Array {
+  func sorted(by comparator: Comparator<Element>) -> Array {
+    return self.sorted { comparator.call($0, $1) == .lt }
+  }
+}
+
+[4, 6, 2, 8, 1, 2].sorted(by: Int.comparator())
+```
+
+This works, but it isn’t too impressive. We aren’t using the monoid structure on `Comparator` at all yet. To do that, let’s cook up a more interesting sorting challenge. Consider the following model:
+
+```swift
+struct User {
+  let id: Int
+  let firstName: String
+  let lastName: String
+}
+```
+
+We want to sort an array of users `[User]` first by their last name, then first name, and then finally in order to ensure a well-defined sorting of the array we will sort by `id` just case two users have the exact same name. To begin we define a few basic comparators to help us out:
+
+```swift
+let idComparator = Comparator<User> {
+  Int.comparator().call($0.id, $1.id)
+}
+
+let firstNameComparator = Comparator<User> {
+  String.comparator().call($0.firstName, $1.firstName)
+}
+
+let lastNameComparator = Comparator<User> {
+  String.comparator().call($0.lastName, $1.lastName)
+}
+```
+
+These can be combined together to build the comparator we previously described. To test it out, we build a large array of users and sort it:
+
+```swift
+let users = [
+  User(id: 1,  firstName: "Denuy",    lastName: "Mosler"),
+  User(id: 2,  firstName: "Daror",    lastName: "Achia"),
+  User(id: 3,  firstName: "Achyk",    lastName: "Echsold"),
+  User(id: 4,  firstName: "Ightrayu", lastName: "Rylye"),
+  User(id: 5,  firstName: "Ageghao",  lastName: "Schohin"),
+  User(id: 6,  firstName: "Umath",    lastName: "Achia"),
+  User(id: 7,  firstName: "Risash",   lastName: "Radves"),
+  User(id: 8,  firstName: "Gaon",     lastName: "Tanes"),
+  User(id: 9,  firstName: "Rakgeng",  lastName: "Worirr"),
+  User(id: 10, firstName: "Ightwbel", lastName: "Loler"),
+  User(id: 11, firstName: "Ightrayu", lastName: "Rylye")
+]
+
+users.sorted(
+  by: lastNameComparator <> firstNameComparator <> idComparator
+)
+// => [ {id 2,  firstName "Daror",    lastName "Achia"},
+//      {id 6,  firstName "Umath",    lastName "Achia"},
+//      {id 3,  firstName "Achyk",    lastName "Echsold"},
+//      {id 10, firstName "Ightwbel", lastName "Loler"},
+//      {id 1,  firstName "Denuy",    lastName "Mosler"},
+//      {id 7,  firstName "Risash",   lastName "Radves"},
+//      {id 4,  firstName "Ightrayu", lastName "Rylye"},
+//      {id 11, firstName "Ightrayu", lastName "Rylye"},
+//      {id 5,  firstName "Ageghao",  lastName "Schohin"},
+//      {id 8,  firstName "Gaon",     lastName "Tanes"},
+//      {id 9,  firstName "Rakgeng",  lastName "Worirr"} ]
+```
+
+If you look closely you’ll notice that the array is sorted first by last name, and then in the places there are equal last names it will be sorted by first name, and finally in the one instance there are equal names (“Ightrayu Rylye”) it is sorted by `id`.
+
+
+
+
 
 
 
