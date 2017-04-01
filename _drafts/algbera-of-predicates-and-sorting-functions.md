@@ -301,12 +301,8 @@ let users = [
   User(id: 2,  firstName: "Daror",    lastName: "Achia"),
   User(id: 3,  firstName: "Achyk",    lastName: "Echsold"),
   User(id: 4,  firstName: "Ightrayu", lastName: "Rylye"),
-  User(id: 5,  firstName: "Ageghao",  lastName: "Schohin"),
   User(id: 6,  firstName: "Umath",    lastName: "Achia"),
-  User(id: 7,  firstName: "Risash",   lastName: "Radves"),
-  User(id: 8,  firstName: "Gaon",     lastName: "Tanes"),
   User(id: 9,  firstName: "Rakgeng",  lastName: "Worirr"),
-  User(id: 10, firstName: "Ightwbel", lastName: "Loler"),
   User(id: 11, firstName: "Ightrayu", lastName: "Rylye")
 ]
 
@@ -316,13 +312,9 @@ users.sorted(
 // => [ {id 2,  firstName "Daror",    lastName "Achia"},
 //      {id 6,  firstName "Umath",    lastName "Achia"},
 //      {id 3,  firstName "Achyk",    lastName "Echsold"},
-//      {id 10, firstName "Ightwbel", lastName "Loler"},
 //      {id 1,  firstName "Denuy",    lastName "Mosler"},
-//      {id 7,  firstName "Risash",   lastName "Radves"},
 //      {id 4,  firstName "Ightrayu", lastName "Rylye"},
 //      {id 11, firstName "Ightrayu", lastName "Rylye"},
-//      {id 5,  firstName "Ageghao",  lastName "Schohin"},
-//      {id 8,  firstName "Gaon",     lastName "Tanes"},
 //      {id 9,  firstName "Rakgeng",  lastName "Worirr"} ]
 ```
 
