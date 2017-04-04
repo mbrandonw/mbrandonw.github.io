@@ -233,12 +233,12 @@ typealias Comparator<A> = FunctionM<(A, A), Ordering>
 It is easy enough to cook up instances of comparators:
 
 ```swift
-let intComparator = Comparator<Int> {
-  $0 < $1 ? .lt : $0 > $1 ? .gt : .eq
+let intComparator = Comparator<Int> { lhs, rhs in
+  lhs < rhs ? .lt : lhs > rhs ? .gt : .eq
 }
 
-let stringComparator = Comparator<String> {
-  $0 < $1 ? .lt : $0 > $1 ? .gt : .eq
+let stringComparator = Comparator<String> { lhs, rhs in
+  lhs < rhs ? .lt : lhs > rhs ? .gt : .eq
 }
 ```
 
@@ -247,7 +247,9 @@ More generally, anything conforming to `Comparable` can be used to derive a comp
 ```swift
 extension Comparable {
   static func comparator() -> Comparator<Self> {
-    return Comparator.init { $0 < $1 ? .lt : $0 > $1 ? .gt : .eq }
+    return Comparator.init { lhs, rhs in
+      lhs < rhs ? .lt : lhs > rhs ? .gt : .eq
+    }
   }
 }
 
@@ -277,7 +279,7 @@ struct User {
 }
 ```
 
-We want to sort an array of users `[User]` first by their last name, then first name, and then finally in order to ensure a well-defined sorting of the array we will sort by `id` just case two users have the exact same name. To begin we define a few basic comparators to help us out:
+We want to sort an array of users `[User]` first by their last name, then first name, and then finally to ensure a well-defined sorting of the array we will sort by `id` just case two users have the exact same name. To begin we define a few basic comparators to help us out:
 
 ```swift
 let idComparator = Comparator<User> {
@@ -306,9 +308,7 @@ let users = [
   User(id: 11, firstName: "Ightrayu", lastName: "Rylye")
 ]
 
-users.sorted(
-  by: lastNameComparator <> firstNameComparator <> idComparator
-)
+users.sorted(by: lastNameComparator <> firstNameComparator <> idComparator)
 // => [ {id 2,  firstName "Daror",    lastName "Achia"},
 //      {id 6,  firstName "Umath",    lastName "Achia"},
 //      {id 3,  firstName "Achyk",    lastName "Echsold"},
@@ -320,7 +320,20 @@ users.sorted(
 
 If you look closely you’ll notice that the array is sorted first by last name, and then in the places there are equal last names it will be sorted by first name, and finally in the one instance there are equal names (“Ightrayu Rylye”) it is sorted by `id`.
 
+You can also imagine that there is a interface that allows a user to specify any number of sorts, which you could accommodate by using an array of sorts. Then you can use the `mconcat` method to apply all of the sorts at once:
+
+```swift
+let sorts = [
+  lastNameComparator,
+  lastNameComparator,
+  idComparator
+]
+
+users.sorted(by: mconcat(sorts))
+```
+
 ## Conclusion
+
 
 
 
