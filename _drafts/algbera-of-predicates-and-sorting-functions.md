@@ -309,6 +309,7 @@ let users = [
 ]
 
 users.sorted(by: lastNameComparator <> firstNameComparator <> idComparator)
+
 // => [ {id 2,  firstName "Daror",    lastName "Achia"},
 //      {id 6,  firstName "Umath",    lastName "Achia"},
 //      {id 3,  firstName "Achyk",    lastName "Echsold"},
@@ -360,6 +361,8 @@ extension FunctionM where M == Ordering {
   }
 }
 ```
+
+
 
 
 
