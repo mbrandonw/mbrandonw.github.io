@@ -7,7 +7,7 @@ categories: swift fp
 
 An important aspect of functional programming languages is the use of immutable data. Applications written using immutable data tend to be easier to reason about, but some may argue that it comes at the cost of ease of use. For example, in order to change one field of an immutable value, one is forced to construct a whole new copy of the value leaving all fields fixed except for the one being changed. Compared to the simple getters and setters of mutable values, that does seem needlessly complicated. However, in the search to find a better way to handle these annoyances we can cook up an elegant construction to handle functional getters and setters. Further, it opens the doors to additional constructions that are hard to see from the mutable world.
 
-# Immutable data
+## Immutable data
 
 In Swift we model immutable with `struct`s, `enum`s and the `let` keyword:
 
@@ -61,7 +61,7 @@ let newUser = User(
 
 At this point we must ask “is there is a better way?”
 
-# Lenses
+## Lenses
 
 Stepping back for a moment, we can distill the essence of getters and setters into two functions. A getter on type `A` returns some subpart of type `B`, and hence can be thought of as a function `A -> B`. A setter produces a new value of type `A` by replacing some subpart of it with a value of `B`, hence a function `(B, A) -> A`.
 
@@ -124,7 +124,7 @@ struct Location {
 Location.lens.name.set("Brooklyn, NY", brooklyn)
 ```
 
-# Composition of lenses
+## Composition of lenses
 
 In its current form, lenses do not help with the messy situation of setting a value in a deeply nested value, e.g. `user.location.name`. We have two lenses at our disposal:
 
@@ -157,7 +157,7 @@ Now we can construct new lenses from existing ones:
 
 
 
-# Improving composition with protocol extensions
+## Improving composition with protocol extensions
 
 We can make the syntax of lens composition look nicer by using protocol extensions. In particular, we can extend the `Lens` type with constrained `Whole` and `Part` generics, and add computed variables to expose composed lenses:
 
@@ -175,7 +175,7 @@ And now we can use composed lenses much like regular dot syntax:
 User.lens.location.name.set("Brooklyn, NY", user)
 ```
 
-# Operators for better lensing
+## Operators for better lensing
 
 We can define operators to make working with lenses more pleasant. They not only reduce visual noise when expressing a lens, but also satisfy nice algebraic properties that can be used rewrite code in a more understandable form, much like we can rewrite `a && b || a && c` as `a && (b || c)`. The first operator `.~` (I like to read this as “dot twiddle”) binds the `Part` of a lens with a value, giving a function to transform `Whole`s:
 
@@ -226,7 +226,7 @@ let transform =
 Now `transform` is a function `(User) -> User` that can transform any user by the rules described above.
 
 
-# Induced structure
+## Induced structure
 
 By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. For example, if `Part` is `Equatable`, we can _induce_ a function on `Whole`s by lensing in:
 
@@ -251,7 +251,7 @@ Here we have filtered an array of users to just the subset that are located in B
 
 This type of construction is quite universal. In general, any structure that `Part` has, you can usually induce that structure onto `Whole` by lensing into wholes and exploiting the structure of the parts. In the exercises we encourage the reader to do this for `Comparable`, and in future articles we will go deeper into predicates and comparators induced by lenses and how they interact with monoids.
 
-# Reducing boilerplate
+## Reducing boilerplate
 
 Creating new lenses requires a bit of boilerplate. It can be particularly annoying when adding new fields to your types, or re-arranging fields, causing all of your lenses not to compile. There is a small compromise you can make to help with this. Instead of making all fields of your model be `let`s, you can mark them as `var private(set)`, which effectively makes your value immutable to the outside world, but inside you can create copies to mutate.
 
@@ -276,7 +276,7 @@ struct Location {
 Now the compiler won’t complain if you add/arrange the fields in your type, and it’s mechanical exercise to implement new lenses.
 
 
-# Exercises
+## Exercises
 
 1.) Write lens instances for tuples of 2-elements:
 
