@@ -49,7 +49,7 @@ struct User {
 let user = User(id: 1, location: brooklyn, name: "Blob")
 ```
 
-Now if we want to change the user’s location’s name we to do quite a bit more work:
+Now if we want to change the user’s location’s name we to do a bit more work:
 
 ```swift
 let newUser = User(
@@ -59,7 +59,7 @@ let newUser = User(
 )
 ```
 
-At this point we must ask “is there is a better way?”
+At this point we must ask: “is there is a better way?”
 
 ## Lenses
 
@@ -73,6 +73,8 @@ struct Lens<Whole, Part> {
   let set: (Part, Whole) -> Whole
 }
 ```
+
+The name comes from the analogy that a getter/setter is like focusing in on a part of a whole.
 
 These functions must satisfying some axioms in order to be considered a lens:
 
@@ -133,13 +135,13 @@ User.lens.location: Lens<User, Location>
 Location.lens.name: Lens<Location, String>
 ```
 
-Notice that there is some overlap in the types: `Lens<User, Location>` and `Lens<Location, String>`. The “part” of the first lens is the same as the “whole” of the second lens. Whenever types align so nicely like that it should tickle something in the back of your brain: a composition could be hiding somewhere! Turns out we can compose lenses quite easily:
+Notice that there is some overlap in the types: `Lens<User, Location>` and `Lens<Location, String>`. The “part” of the first lens is the same as the “whole” of the second lens. Whenever types align so nicely like that it should tickle something in the back of your brain: a composition could be hiding somewhere! Turns out we can compose lenses quite easily, and we will express this via an operator:
 
 ```swift
-infix operator •
-func • <A, B, C> (_ lhs: Lens<A, B>, _ rhs: Lens<B, C>) -> Lens<A, C> {
+infix operator ..
+func .. <A, B, C> (_ lhs: Lens<A, B>, _ rhs: Lens<B, C>) -> Lens<A, C> {
   return Lens(
-    view: { rhs.view(lhs.view($0)) },
+    view: { whole in rhs.view(lhs.view(whole)) },
     set: { subPart, whole in
       let part = self.view(whole)
       let newPart = rhs.set(subPart, part)
@@ -149,13 +151,15 @@ func • <A, B, C> (_ lhs: Lens<A, B>, _ rhs: Lens<B, C>) -> Lens<A, C> {
 }
 ```
 
+<!-- The `view` part is straightforward: we first use the `lhs` lens to view into the whole, and then use the `rhs` lens to further view into the part. This is precisely function composition of the `view`s. -->
+
+<!-- The `set` part takes a bit more time to understand. Here we’ve broken it up into multiple steps. First we `view` into the part of the whole. Then we set -->
+
 Now we can construct new lenses from existing ones:
 
 ```swift
-(User.lens.location • Location.lens.name).set("Brooklyn, NY", user)
+(User.lens.location..Location.lens.name).set("Brooklyn, NY", user)
 ```
-
-
 
 ## Improving composition with protocol extensions
 
@@ -164,12 +168,14 @@ We can make the syntax of lens composition look nicer by using protocol extensio
 ```swift
 extension Lens where Whole == User, Part == Location {
   var name: Lens<Whole, String> {
-    return User.lens.location • Location.lens.name
+    return User.lens.location..Location.lens.name
   }
 }
 ```
 
-And now we can use composed lenses much like regular dot syntax:
+Note: this kind of extension with concrete constraints is only possible in Swift 3.1+.
+
+Now we can use composed lenses much like regular dot syntax:
 
 ```swift
 User.lens.location.name.set("Brooklyn, NY", user)
@@ -177,7 +183,7 @@ User.lens.location.name.set("Brooklyn, NY", user)
 
 ## Operators for better lensing
 
-We can define operators to make working with lenses more pleasant. They not only reduce visual noise when expressing a lens, but also satisfy nice algebraic properties that can be used rewrite code in a more understandable form, much like we can rewrite `a && b || a && c` as `a && (b || c)`. The first operator `.~` (I like to read this as “dot twiddle”) binds the `Part` of a lens with a value, giving a function to transform `Whole`s:
+We can define operators to make working with lenses more pleasant. They not only reduce visual noise when using a lens, but also satisfy nice algebraic properties that can be used rewrite code in a more readable form, much like we can rewrite `a && b || a && c` as `a && (b || c)`. The first operator `.~` (I like to read this as “dot twiddle”) binds the `Part` of a lens with a value, giving a function to transform `Whole`s:
 
 ```swift
 infix operator .~
@@ -186,18 +192,18 @@ func .~ <Whole, Part> (lhs: Lens<A, B>, part: B) -> (A) -> A {
 }
 ```
 
-Now we can cook up transformations of `Location`s very easily:
+Now we can cook up transformations of a model easily:
 
 ```swift
 // Transform (User) -> User that changes a user’s name to “Blob”.
 User.lens.name .~ "Blob"
 ```
 
-If we introduce the “pipe-forward” operator `|>` for function application, then we can apply multiple transformations at once:
+If we introduce the “pipe-forward” operator `|>` for function application, then we can apply the transformation to a value, and do multiple transformations at once:
 
 ```swift
 infix operator |>
-func |> <A, B> (f: (A) -> B, x: A) -> B {
+func |> <A, B> (x: A, f: (A) -> B) -> B {
   return f(x)
 }
 
@@ -228,7 +234,7 @@ Now `transform` is a function `(User) -> User` that can transform any user by th
 
 ## Induced structure
 
-By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. For example, if `Part` is `Equatable`, we can _induce_ a function on `Whole`s by lensing in:
+By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. For example, if `Part` is `Equatable`, we can _induce_ a kind of equality on `Whole`s by lensing in:
 
 ```swift
 extension Lens where Part: Equatable {
@@ -238,7 +244,7 @@ extension Lens where Part: Equatable {
 }
 ```
 
-For any `lens: Lens<Whole, Part>`, `lens.isEqual(to:)` is a curried function that allows you to bind one value to obtain a function `(Whole) -> Bool`. Such functions are called predicates, and precisely the things you can feed into the `filter` method on arrays:
+For any `lens: Lens<Whole, Part>`, `lens.isEqual(to:)` is a curried function that allows you to bind one value to obtain a function `(Whole) -> Bool`. Such functions are called predicates, and are precisely the things you can feed into the `filter` method on arrays:
 
 ```swift
 let users: [User] = [...]
@@ -249,7 +255,46 @@ users
 
 Here we have filtered an array of users to just the subset that are located in Brooklyn, NY.
 
-This type of construction is quite universal. In general, any structure that `Part` has, you can usually induce that structure onto `Whole` by lensing into wholes and exploiting the structure of the parts. In the exercises we encourage the reader to do this for `Comparable`, and in future articles we will go deeper into predicates and comparators induced by lenses and how they interact with monoids.
+Another example of induced structure is when `Part` is `Comparable`, and how that can be used to induce a compare function on the `Whole`. We do this by lensing into the part and doing the comparison there:
+
+```swift
+extension Lens where Part: Comparable {
+  func compare(_ lhs: Whole, _ rhs: Whole) -> Bool {
+    return self.view(lhs) < self.view(rhs)
+  }
+}
+```
+
+If we have an array of users `[user]`, we can use any lens on `User` to sort it, e.g.:
+
+```swift
+let users: [User] = [...]
+
+// Sort by user’s id
+users.sorted(User.lens.id.compare)
+
+// Sort by user’s location’s name
+users.sorted(User.lens.location.name.compare)
+```
+
+We can also use lenses to cook up predicates on `Whole`s, for example:
+
+```swift
+extension Lens where Part: Comparable {
+  func isLessThan(_ value: Part) -> (Whole) -> Bool {
+    return { whole in self.view(whole) < value }
+  }
+}
+```
+
+This could be used to filter an array of users in various ways:
+
+```swift
+// All users whose location id is less than 100
+users.filter(User.lens.location.id.isLessThan(100))
+```
+
+This type of construction is quite universal. In general, any structure that `Part` has, you can usually induce that structure onto `Whole` by lensing into wholes and exploiting the structure of the parts.
 
 ## Reducing boilerplate
 
@@ -275,49 +320,26 @@ struct Location {
 
 Now the compiler won’t complain if you add/arrange the fields in your type, and it’s mechanical exercise to implement new lenses.
 
+## Real life use cases
+
+At my [day job](https://www.kickstarter.com)
+
 
 ## Exercises
 
 1.) Write lens instances for tuples of 2-elements:
 
 ```swift
-func first <A, B> () -> Lens<(A, B), A> {
+func _1 <A, B> () -> Lens<(A, B), A> {
   // implement
 }
 
-func second <A, B> () -> Lens<(A, B), B> {
+func _2 <A, B> () -> Lens<(A, B), B> {
   // implement
 }
 ```
 
-2.) If `Part` is `Comparable`, show that a lens `Lens<Whole, Part>`, for any `Whole`, can induce a function
-
-```swift
-extension Lens where Part: Comparable {
-  func compare: (Whole, Whole) -> Bool {
-    // implement
-  }
-}
-```
-
-and a curried function
-
-```swift
-extension Lens where Part: Comparable {
-  func isLessThan: (Part) -> (Whole) -> Bool {
-    // implement
-  }
-}
-```
-
-Explore how you can use these functions to expressing sorting and filtering arrays, e.g.
-
-```swift
-users.sorted(User.lens.location.name.compare)
-users.filter(User.lens.location.id.isLessThan(100))
-```
-
-3.) Implement the lens operator `%~` that allows you to replace a part of a whole by applying a transformation to the current value of the part:
+2.) Implement the lens operator `%~` that allows you to replace a part of a whole by applying a transformation to the current value of the part:
 
 ```swift
 infix operator %~
@@ -325,6 +347,8 @@ func %~ <Whole, Part> (lens: Lens<Whole, Part>, f: (Part) -> Part) -> (Whole) ->
   // implement
 }
 ```
+
+3.) Given an array `users: [User]`, express a new array that finds all users based in “Austin, TX” and transform the users’ names to uppercase.
 
 4.) Define a `NonEmptyList` type via:
 
