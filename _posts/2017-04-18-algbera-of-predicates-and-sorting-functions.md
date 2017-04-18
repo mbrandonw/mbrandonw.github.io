@@ -9,7 +9,7 @@ In the article “[Algebraic Structure and Protocols]({% post_url 2015-02-17-alg
 
 ## Recall from last time…
 
-…that we defined a semigroup and monoid as protocols satisfying some axioms:
+…that we [defined a semigroup and monoid]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) as protocols satisfying some axioms:
 
 ```swift
 infix operator <>: AdditionPrecedence
