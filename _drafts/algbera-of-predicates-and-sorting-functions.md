@@ -17,7 +17,7 @@ infix operator <>: AdditionPrecedence
 protocol Semigroup {
   // **AXIOM** Associativity
   // For all a, b, c in Self:
-  //    a <> (b <> c) == (a. <> b) <> c
+  //    a <> (b <> c) == (a <> b) <> c
   static func <> (lhs: Self, rhs: Self) -> Self
 }
 
@@ -28,8 +28,6 @@ protocol Monoid: Semigroup {
   static var e: Self { get }
 }
 ```
-
-Note that monoids are automatically semigroups by simply _forgetting_ that they have a distinguished identity element `e`.
 
 Types that conform to these protocols have some of the simplest forms of computation around. They know how to take two values of the type, and combine them into a single value. We know of quite a few types that are monoids:
 
@@ -115,7 +113,7 @@ In words, the computation `f <> g` of two functions `f, g: (A) -> M` produces a 
 
 ## Predicates
 
-This construction pops up quite a bit in computer science. For example, functions of the form `(A) -> Bool` are called _predicates_, and they are precisely the functions you give to `filter` in order to obtain a subset of elements satisfying the predicate:
+The `FunctionM` construction pops up quite a bit in computer science. For example, functions of the form `(A) -> Bool` are called _predicates_, and they are precisely the functions you give to `filter` in order to obtain a subset of elements satisfying the predicate:
 
 ```swift
 let isEven = { $0 % 2 == 0 }
@@ -123,7 +121,7 @@ let isEven = { $0 % 2 == 0 }
 Array(0...10).filter(isEven) // => [0, 2, 4, 6, 8, 10]
 ```
 
-However, we saw that `Bool` is a monoid with `&&` as its operation and `true` as its identity. This means that `FunctionM<A, Bool>` is also a monoid. We can use Swift’s [generic typealiases](https://github.com/apple/swift-evolution/blob/master/proposals/0048-generic-typealias.md) to define quite simply:
+However, we saw that `Bool` is a monoid with `&&` as its operation and `true` as its identity. This means that `FunctionM<A, Bool>` is also a monoid. We can use Swift’s [generic typealiases](https://github.com/apple/swift-evolution/blob/master/proposals/0048-generic-typealias.md) to give a name to this:
 
 ```swift
 typealias Predicate<A> = FunctionM<A, Bool>
@@ -144,7 +142,7 @@ let isLessThan10AndEven = isLessThan10 <> isEven
 
 Note that we did not have to define `<>` for predicates. We got it for free by the fact that `Predicate` is automatically a `Monoid`.
 
-Recall that `FunctionM` has a `call` field for getting access to the underlying function the type represents and that `Predicate` is just a specialization of `FunctionM`, therefore `Predicate` similarly has a `call` field. That function is precisely what can be used with `Array`’s `filter` method:
+Recall that `FunctionM` has a `call` field for getting access to the underlying function the type represents and that `Predicate` is just a specialization of `FunctionM`, therefore `Predicate` similarly has a `call` field. That function is what can be used with `Array`s `filter` method:
 
 ```swift
 Array(0...100).filter(isLessThan10AndEven.call) // => [0, 2, 4, 6, 8]
@@ -162,13 +160,13 @@ extension Array {
 
 Note that this `filtered(by:)` method could also be defined on the more general `Sequence` with minimal extra effort (see the exercises).
 
-Now we can use `Predicate` more naturally with `Array`’s:
+Now we can use `Predicate` more naturally with `Array`s:
 
 ```swift
 Array(0...100).filtered(by: isLessThan10AndEven) // => [0, 2, 4, 6, 8]
 ```
 
-In fact, this first class support for `Predicate` means there’s no reason to define one off compositions of small predicates as we might as well use them inline:
+In fact, this first class support for `Predicate` means there’s no reason to define one-off compositions of small predicates as we might as well use them inline:
 
 ```swift
 Array(0...100).filtered(by: isLessThan10 <> isEven)
@@ -271,7 +269,7 @@ struct User {
 }
 ```
 
-We want to sort an array of users `[User]` first by their last name, then first name, and then finally to ensure a well-defined sorting of the array we will sort by `id` just case two users have the exact same name. To begin we define a few basic comparators to help us out:
+We want to sort an array of users `[User]` first by their last name, then first name, and then finally to ensure a well-defined sorting of the array we will sort by `id` just in case two users have the exact same name. To begin we define a few basic comparators to help us out:
 
 ```swift
 let idComparator = Comparator<User> {
@@ -378,3 +376,8 @@ extension FunctionM {
 ```
 
 Use this construction to show how `reversed` on `Comparator` could have been induced by `reversed` on `Ordering`.
+
+----
+<br>
+
+##### _Thanks to [Stephen Celis](http://www.twitter.com/stephencelis) for reading a draft of this article._
