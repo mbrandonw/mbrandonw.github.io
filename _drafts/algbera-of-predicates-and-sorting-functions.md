@@ -29,7 +29,7 @@ protocol Monoid: Semigroup {
 }
 ```
 
-Note that monoids are automatically semigroups by simply _forgetting_ that they has a distinguished identity element `e`.
+Note that monoids are automatically semigroups by simply _forgetting_ that they have a distinguished identity element `e`.
 
 Types that conform to these protocols have some of the simplest forms of computation around. They know how to take two values of the type, and combine them into a single value. We know of quite a few types that are monoids:
 
@@ -115,7 +115,7 @@ In words, the computation `f <> g` of two functions `f, g: (A) -> M` produces a 
 
 ## Predicates
 
-This construction pops up quite a bit in computer science. For example, functions of the form `(A) -> Bool` are called _predicates_, and they are precisely the types of functions you give `Array`’s `filter` method in order to obtain a subset of elements satisfying the predicate:
+This construction pops up quite a bit in computer science. For example, functions of the form `(A) -> Bool` are called _predicates_, and they are precisely the functions you give to `filter` in order to obtain a subset of elements satisfying the predicate:
 
 ```swift
 let isEven = { $0 % 2 == 0 }
@@ -141,6 +141,8 @@ Using the monoid operation to combine the predicates produces a new predicate wh
 ```swift
 let isLessThan10AndEven = isLessThan10 <> isEven
 ```
+
+Note that we did not have to define `<>` for predicates. We got it for free by the fact that `Predicate` is automatically a `Monoid`.
 
 Recall that `FunctionM` has a `call` field for getting access to the underlying function the type represents and that `Predicate` is just a specialization of `FunctionM`, therefore `Predicate` similarly has a `call` field. That function is precisely what can be used with `Array`’s `filter` method:
 
@@ -182,8 +184,7 @@ func isLessThan <C: Comparable> (_ x: C) -> Predicate<C> {
 Array(0...100)
   .filtered(by: isLessThan(10) <> isEven) // => [0, 2, 4, 6, 8]
 
-["foo", "bar", "baz", "qux"]
-  .filtered(by: isLessThan("f")) // => ["bar", "baz"]
+["foo", "bar", "baz", "qux"].filtered(by: isLessThan("f")) // => ["bar", "baz"]
 ```
 
 ## Sorting functions
@@ -312,12 +313,12 @@ users.sorted(by: lastNameComparator <> firstNameComparator <> idComparator)
 
 If you look closely you’ll notice that the array is sorted first by last name, and then in the places there are equal last names it will be sorted by first name, and finally in the one instance there are equal names (“Ightrayu Rylye”) it is sorted by `id`.
 
-You can also imagine that there is a interface that allows a user to specify any number of sorts, which you could accommodate by using an array of sorts. Then you can use the `concat` method to apply all of the sorts at once:
+You can also imagine that there is a interface that allows a user to specify any number of sorts, which you could accommodate by using an array of sorts. Then you can use the `concat` function to apply all of the sorts at once:
 
 ```swift
 let sorts = [
   lastNameComparator,
-  lastNameComparator,
+  firstNameComparator,
   idComparator
 ]
 
@@ -326,7 +327,9 @@ users.sorted(by: concat(sorts))
 
 ## Conclusion
 
+By starting with the simplest idea of computation, the monoid, we were able to derive an expressive algebra of predicates and sorting functions. This is largely possible due to the simplicity of monoids since it leaves a lot of wiggle room for opportunities of composition in places we might not expect. In the exercises you will dig a little deeper into this topic by constructing more operators on predicates and comparators, ending in a general construction for inducing monoid morphisms.
 
+In a future article we will show how these ideas can be extended even further. One example is thinking of `Bool` as not only a monoid but a semiring: a structure that combines the conjuctive (`&&`) _and_ disjunctive (`||`) aspects of `Bool` into one object. Another example is using [lenses](https://www.youtube.com/watch?v=ofjehH9f-CU) to induce comparators for free by leveraging the getters you already have.
 
 
 ## Exercises:
