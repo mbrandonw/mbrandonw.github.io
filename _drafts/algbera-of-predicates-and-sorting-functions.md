@@ -12,17 +12,19 @@ In the article “[Algebraic Structure and Protocols]({% post_url 2015-02-17-alg
 …that we defined a semigroup and monoid as protocols satisfying some axioms:
 
 ```swift
+infix operator <>: AdditionPrecedence
+
 protocol Semigroup {
   // **AXIOM** Associativity
   // For all a, b, c in Self:
-  //    a.op(b.op(c)) == (a.op(b)).op(c)
-  func op(_ s: Self) -> Self
+  //    a <> (b <> c) == (a. <> b) <> c
+  static func <> (lhs: Self, rhs: Self) -> Self
 }
 
 protocol Monoid: Semigroup {
   // **AXIOM** Identity
   // For all a in Self:
-  //    a.op(e) == e.op(a) == a
+  //    a <> e == e <> a == a
   static var e: Self { get }
 }
 ```
@@ -33,44 +35,33 @@ Types that conform to these protocols have some of the simplest forms of computa
 
 ```swift
 extension Bool: Monoid {
-  func op(_ a: Bool) -> Bool {
-    return self && a
+  static func <>(lhs: Bool, rhs: Bool) -> Bool {
+    return lhs && rhs
   }
   static let e = true
 }
 
 extension Int: Monoid {
-  func op(_ a: Int) -> Int {
-    return self + a
+  static func <>(lhs: Int, rhs: Int) -> Int {
+    return lhs + rhs
   }
   static let e = 0
 }
 
 extension String: Monoid {
-  func op(_ a: String) -> String {
-    return self + a
+  static func <>(lhs: String, rhs: String) -> String {
+    return lhs + rhs
   }
   static let e = ""
 }
 
 extension Array: Monoid {
-  func op(_ a: Array) -> Array {
-    return self + a
+  static func <>(lhs: Array, rhs: Array) -> Array {
+    return lhs + rhs
   }
   static var e: Array { return [] }
   //      ^-- Static properties are not allowed on generics in
   //          Swift 3.1, so we must store it as a computed variable.
-}
-```
-
-Then we defined a special operator that can act on values of a semigroup:
-
-```swift
-precedencegroup SemigroupPrecedence { associativity: right }
-infix operator <>: SemigroupPrecedence
-
-func <> <S: Semigroup> (lhs: S, rhs: S) -> S {
-  return lhs.op(rhs)
 }
 ```
 
@@ -85,13 +76,13 @@ This allows us to abstract the idea of computation (two things combining into on
 We were even able to write a form of `reduce` for monoids that didn’t need to take an initial value or accumulator because those concepts are already built into a monoid:
 
 ```swift
-func mconcat <M: Monoid> (_ xs: [M]) -> M {
+func concat <M: Monoid> (_ xs: [M]) -> M {
   return xs.reduce(M.e, <>)
 }
 
-mconcat([1, 2, 3])              // => 6
-mconcat(["foo", "bar"])         // => "foobar"
-mconcat([[1, 3, 5], [2, 4, 6]]) // => [1, 3, 5, 2, 4, 6]
+concat([1, 2, 3])              // => 6
+concat(["foo", "bar"])         // => "foobar"
+concat([[1, 3, 5], [2, 4, 6]]) // => [1, 3, 5, 2, 4, 6]
 ```
 
 ## Constructing new monoids from old
@@ -108,9 +99,9 @@ This can be naturally made into a monoid:
 
 ```swift
 extension FunctionM: Monoid {
-  func op(_ s: FunctionM) -> FunctionM {
+  static func <>(lhs: FunctionM, rhs: FunctionM) -> FunctionM {
     return FunctionM { x in
-      return self.call(x) <> s.call(x)
+      return lhs.call(x) <> rhs.call(x)
     }
   }
 
@@ -212,11 +203,11 @@ This type encapsulates the ideas of “less than”, “equal” and “greater 
 
 ```swift
 extension Ordering: Monoid {
-  func op(_ s: Ordering) -> Ordering {
-    switch (self, s) {
+  static func <>(lhs: Ordering, rhs: Ordering) -> Ordering {
+    switch (lhs, rhs) {
     case (.lt, _): return .lt
     case (.gt, _): return .gt
-    case (.eq, _): return s
+    case (.eq, _): return rhs
     }
   }
 
@@ -321,7 +312,7 @@ users.sorted(by: lastNameComparator <> firstNameComparator <> idComparator)
 
 If you look closely you’ll notice that the array is sorted first by last name, and then in the places there are equal last names it will be sorted by first name, and finally in the one instance there are equal names (“Ightrayu Rylye”) it is sorted by `id`.
 
-You can also imagine that there is a interface that allows a user to specify any number of sorts, which you could accommodate by using an array of sorts. Then you can use the `mconcat` method to apply all of the sorts at once:
+You can also imagine that there is a interface that allows a user to specify any number of sorts, which you could accommodate by using an array of sorts. Then you can use the `concat` method to apply all of the sorts at once:
 
 ```swift
 let sorts = [
@@ -330,7 +321,7 @@ let sorts = [
   idComparator
 ]
 
-users.sorted(by: mconcat(sorts))
+users.sorted(by: concat(sorts))
 ```
 
 ## Conclusion
@@ -340,19 +331,21 @@ users.sorted(by: mconcat(sorts))
 
 ## Exercises:
 
-1. Define `filtered(by:)` on the more generic `Sequence` type.
+1.) Define `filtered(by:)` on the more generic `Sequence` type.
 
-2. Define `sorted(by:)` on the more generic `Sequence` type.
+2.) Define `sorted(by:)` on the more generic `Sequence` type.
 
-3. Define the function `not<A>: Predicate<A> -> Predicate<A>` that reverses a predicate:
+3.) Define the function `not<A>: Predicate<A> -> Predicate<A>` that reverses a predicate:
 
-4. Define the functions `isGreaterThan`, `isLessThanOrEqualTo`, `isGreaterThanOrEqualTo` for generating predicates on a comparable, similarly to how we defined `isLessThan`.
+4.) Define the functions `isGreaterThan`, `isLessThanOrEqualTo`, `isGreaterThanOrEqualTo` for generating predicates on a comparable, similarly to how we defined `isLessThan`.
 
-5. Define the functions `isEqualTo` and `isNotEqualTo` for generating predicates on a equatable.
+5.) Define the function `isEqualTo` for generating predicates on an equatable.
 
-6. Define a method `reversed() -> Ordering` on `Ordering` that does the most sensible thing you can think of (hint: the name is telling).
+6.) Define a method `reversed() -> Ordering` on `Ordering` that does the most sensible thing you can think of (hint: the name is telling).
 
-7. Define a method `reversed() -> Comparator` on `Comparator` by using the `reversed()` method above. What does it represent? **Note**: Due to a [limitation](https://twitter.com/dgregor79/status/847975206538813440) of Swift 3.1 you cannot extend `Comparator` directly. Instead, define the method on:
+7.) The method `reversed` in the previous exercise is not simply any old function. It is known as a “monoid morphism” because it preserves the monoidal structure of `Ordering`, i.e. `(a <> b).reversed() == a.reversed() <> b.reversed()` for all `a` and `b` in `Ordering`. Verify this in code by looping over all combinations of `a` and `b` and checking the equality.
+
+8.) Define a method `reversed() -> Comparator` on `Comparator` by using the `reversed()` method above. What does it represent? **Note**: Due to a [limitation](https://twitter.com/dgregor79/status/847975206538813440) of Swift 3.1 you cannot extend `Comparator` directly. Instead, define the method on:
 
 ```swift
 extension FunctionM where M == Ordering {
@@ -362,9 +355,23 @@ extension FunctionM where M == Ordering {
 }
 ```
 
+9.) Generalizing exercises #6-8 we can define the type of morphisms between monoids:
 
+```swift
+struct MorphismM<M: Monoid, N: Monoid> {
+  // AXIOM: call(a <> b) == call(a) <> call(b)
+  let call: (M) -> N
+}
+```
 
+Any morphism of monoids can be used to induce a morphism on the corresponding monoid of functions. Show this by implementing the function:
 
+```swift
+extension FunctionM {
+  func induced<N: Monoid>(_ morphism: MorphismM<M, N>) -> FunctionM<A, N> {
+    // implementation
+  }
+}
+```
 
-
-
+Use this construction to show how `reversed` on `Comparator` could have been induced by `reversed` on `Ordering`.
