@@ -375,7 +375,7 @@ extension FunctionM {
 }
 ```
 
-Use this construction to show how `reversed` on `Comparator` could have been induced by `reversed` on `Ordering`.
+Use this construction to show how `reversed` on `Comparator` could have been induced by `reversed` on `Ordering`. Further, the `not` transformation on `Predicate` could have been induced by negation on `Bool`.
 
 ----
 <br>
