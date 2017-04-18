@@ -9,16 +9,19 @@ permalink: /talks/
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/A0VaIKK2ijM" frameborder="0" allowfullscreen></iframe>
 
+<br>
 ## Lenses in Swift
 **Dec 2015:** At the [2015 Functional Swift Conference](http://2015.funswiftconf.com) in Brooklyn I described the basics of lenses and how to implement them in Swift.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ofjehH9f-CU" frameborder="0" allowfullscreen></iframe>
 
+<br>
 ## Proof in Functions
 **Feb 2015:** At the [Brooklyn Swift Meetup](https://www.meetup.com/Brooklyn-Swift-Developers/events/220352273/) I described how we can use the Swift type system to prove simple mathematical theorems. This talk coveres most of everything I discussed in my post [“Proof in Functions”](http://www.fewbutripe.com/swift/math/2015/01/06/proof-in-functions.html).
 
 <iframe src="https://player.vimeo.com/video/121953811" width="560" height="315" style="max-width: 100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
+<br>
 ## Functional Programming in a Playground
 **Dec 2014:** At the [2014 Functional Swift Conference](http://2014.funswiftconf.com) in Brooklyn I used Swift playgrounds as a highly interactive way for exploring functional programming ideas. In particular, I developed the ideas of transducers and show how they lead to highly composable data transformations.
 
