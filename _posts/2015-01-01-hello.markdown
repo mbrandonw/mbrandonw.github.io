@@ -2,6 +2,7 @@
 layout: post
 title:  "Hello"
 date:   2015-01-01
+author: Brandon Williams
 ---
 
 Just testing some stuff. Here's some code for Haskell's `Functor` typeclass:

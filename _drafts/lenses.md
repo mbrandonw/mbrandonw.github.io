@@ -3,6 +3,7 @@ layout: post
 title:  "Lenses"
 date:   2017-04-28
 categories: swift fp
+author: Brandon Williams
 ---
 
 An important aspect of functional programming languages is the use of immutable data. Applications written using immutable data tend to be easier to reason about, but some may argue that it comes at the cost of ease of use. For example, in order to change one field of an immutable value, one is forced to construct a whole new copy of the value leaving all fields fixed except for the one being changed. Compared to the simple getters and setters of mutable values, that does seem needlessly complicated. However, in the search to find a better way to handle these annoyances we can cook up an elegant construction to handle functional getters and setters. Further, it opens the doors to additional constructions that are hard to see from the mutable world.

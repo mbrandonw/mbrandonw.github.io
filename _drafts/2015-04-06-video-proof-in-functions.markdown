@@ -3,6 +3,7 @@ layout: post
 title:  "[Video] Proof in Functions"
 date:   2015-04-06
 categories: swift
+author: Brandon Williams
 ---
 
 Things have been quiet here because I spent a couple of weeks camping in [Patagonia](https://instagram.com/mbrandonw/). Just before leaving for vacation I gave a talk at the [Brooklyn Swift Meetup](http://www.meetup.com/Brooklyn-Swift-Developers/) that was essentially a live version of my “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” article. The video is now available and embedded below.

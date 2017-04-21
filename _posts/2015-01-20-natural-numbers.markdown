@@ -4,6 +4,7 @@ title:      "Creating the Natural Numbers from First Principles"
 date:       2015-01-20
 categories: swift math
 summary:    "Learn how to construct the natural numbers from first principles in Swift."
+author: Brandon Williams
 ---
 
 > “God made the natural numbers; all else is the work of man.”

@@ -3,6 +3,7 @@ layout: post
 title:  "Functional Data Structures in Swift"
 date:   2015-03-01
 categories: swift fp
+author: Brandon Williams
 ---
 
 In a previous [article]({% post_url 2015-01-20-natural-numbers %}) we explored the idea of constructing the natural numbers from first principles. We ended up with a data structure that looked like this:

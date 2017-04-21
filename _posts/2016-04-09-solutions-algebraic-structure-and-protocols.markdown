@@ -4,6 +4,7 @@ title:      "[Solutions to Exercises] Algebraic Structure and Protocols"
 date:       2016-04-09
 categories: swift math algebra
 summary:    ""
+author: Brandon Williams
 ---
 
 In the article “[Algebraic Structure and Protocols]({% post_url 2015-02-17-algebraic-structure-and-protocols %})” we explored the idea of abstracting algebraic properties of types through protocols. Exercises were provided at the end in order to delve deeper into the topic. Here we present some solutions

@@ -3,6 +3,7 @@ layout: post
 title:  "The Algebra of Predicates and Sorting Functions"
 date:   2017-04-18
 categories: swift math algebra monoid
+author: Brandon Williams
 ---
 
 In the article “[Algebraic Structure and Protocols]({% post_url 2015-02-17-algebraic-structure-and-protocols %})” we described how to use Swift protocols to describe some basic algebraic structures, such as semigroups and monoids, provided some simple examples, and then provided  constructions to build new instances from existing. Here we apply those ideas to the concrete ideas of predicates and sorting functions, and show how they build a wonderful little algebra that is quite expressive.

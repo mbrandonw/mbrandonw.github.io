@@ -3,6 +3,7 @@ layout: post
 title:  "Functional programming in a playground"
 date:   2015-01-01
 categories: swift
+author: Brandon Williams
 ---
 
 Last December I helped organize a single-day [conference](http://2014.funswiftconf.com) for exploring the ideas of functional programming using Apple’s new language, Swift. The conference went amazingly well, mostly thanks to my co-organizer [Chris Eidhof](http://www.eidhof.nl). Each talk is only 30 minutes and highly recommended.

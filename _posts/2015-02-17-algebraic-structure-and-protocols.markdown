@@ -4,6 +4,7 @@ title:      "Algebraic Structure and Protocols"
 date:       2015-02-17
 categories: swift math algebra
 summary:    ""
+author: Brandon Williams
 ---
 
 Protocols in Swift allow us to abstractly work with types that we know very little about. We distill the smallest piece of an interface that we want a type to conform to, and then we can write functions that are highly reusable. Apple provides a nice description in their “[The Swift Programming Language](https://itun.es/us/jEUH0.l)” book:

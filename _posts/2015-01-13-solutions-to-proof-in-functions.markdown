@@ -3,6 +3,7 @@ layout: post
 title:  "[Solutions to Exercises] “Proof in Functions”"
 date:   2015-01-13
 categories: swift math
+author: Brandon Williams
 ---
 
 In the article “[Proof in Functions]({% post_url 2015-01-06-proof-in-functions %})” I provided some exercises at the end. I got a lot of tweets and emails about those exercises, so I decided to provide some solutions.

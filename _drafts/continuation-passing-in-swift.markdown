@@ -3,6 +3,7 @@ layout: post
 title:  "Continuation-passing style in Swift"
 date:   2015-01-01
 categories: swift
+author: Brandon Williams
 ---
 
 We will explore the idea of **continuation-passing style** (**CPS**) in Swift and show how this leads to a form of computing that can be paused and resumed at will.
