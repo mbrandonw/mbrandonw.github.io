@@ -109,7 +109,7 @@ extension FunctionM: Monoid {
 }
 ```
 
-In words, the computation `f <> g` of two functions `f, g: (A) -> M` produces a third function `(A) -> M` by mapping a value `a: A` into two values `f(a)`, `g(a)` in `M`, and then we combine them `f(a) <> f(b)`. We call this the _point-wise_ combining of `f` and `g`.
+In words, the computation `f <> g` of two functions `f, g: (A) -> M` produces a third function `(A) -> M` by mapping a value `a: A` into two values `f(a)`, `g(a)` in `M`, and then we combine them `f(a) <> g(a)`. We call this the _point-wise_ combining of `f` and `g`.
 
 ## Predicates
 
