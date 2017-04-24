@@ -123,10 +123,41 @@ struct FunctionS: Semigroup {
 }
 ```
 
+## A better definition of predicate
 
+Rather than defining `Predicate` as the monoid of functions `(A) -> Bool`, we are going to defined as the semiring of functions `(A) -> Bool`:
 
+```swift
+typealias Predicate<A> = FunctionS<A, Bool>
+```
 
+Now we can combine predicates using both conjunctive and disjunctive operations:
 
+```swift
+let isEven = Predicate { $0 % 2 == 0 }
+let isLessThan10 = Predicate { $0 < 10 }
+let isMagic = Predicate { $0 == 42 }
+
+Array(0...100).filtered(by: isEven |*| isLessThan10 |+| isMagic)
+```
+
+This last expression describes getting only the integers from `0` to `100` that are even and less than 10, _or_ are the magic number. The operators are a bit of an eye-sore right now, so to remedy that we will leverage the boolean operators that are more familiar to us:
+
+```swift
+func || <A> (lhs: Predicate<A>, rhs: Predicate<A>) -> Predicate<A> {
+	return lhs |+| rhs
+}
+
+func && <A> (lhs: Predicate<A>, rhs: Predicate<A>) -> Predicate<A> {
+	return lhs |*| rhs
+}
+```
+
+Now we can write:
+
+```swift
+Array(0...100).filtered(by: isEven && isLessThan10 || isMagic)
+```
 
 
 

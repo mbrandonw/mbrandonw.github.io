@@ -8,6 +8,13 @@ I’m available to speak at conferences and meetups, so please feel free to drop
 
 <br>
 
+## Monoids, Predicates and Sorting Functions
+**April 2017**: At the [2017 Functional Swift Conference](http://2017.funswiftconf.com) in Brooklyn I spoke about small atomic units of abstractions can piece together to build surprisingly complex, yet expressive, components. In particular, I used semigroups and monoids to build an expressive algebra for predicates and sorting functions. This talk is roughly based on the article I wrote “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})”.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/VFPhPOnPiTY" frameborder="0" allowfullscreen></iframe>
+
+<br>
+
 ## Finding Happiness in Functional Programming
 **Oct 2016:** At the [2016 Functional Swift Conference](http://2016.funswiftconf.com) in Budapest I spoke about how embracing simple, pure functions above all other abstractions has enabled my colleagues and me to build a well-tested, well-understood [codebase](https://kickstarter.engineering/open-sourcing-our-android-and-ios-apps-6891be909fcd). I first covered the basics of pure functions and the ideas of identifying effects and separating them from your functions. I then described how these ideas allowed us better our testing suites, enabled us to replace simulators and storyboards with Swift playgrounds, and ultimately a better working relationship with engineers, designers and product managers.
 
