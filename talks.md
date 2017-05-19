@@ -8,6 +8,14 @@ I’m available to speak at conferences and meetups, so please feel free to drop
 
 <br>
 
+## Anything you can do, I can do better
+
+**May 2017**: My colleague [Lisa Luo](http://www.twitter.com/luoser) and I gave a talk at [UIKonf](http://www.uikonf.com) about how we unify our foundations across iOS and Android by building off of functional programming in Swift and Kotlin. 
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_DuGaAkQSnM" frameborder="0" allowfullscreen></iframe>
+
+<br>
+
 ## Monoids, Predicates and Sorting Functions
 **April 2017**: At the [2017 Functional Swift Conference](http://2017.funswiftconf.com) in Brooklyn I spoke about small atomic units of abstractions can piece together to build surprisingly complex, yet expressive, components. In particular, I used semigroups and monoids to build an expressive algebra for predicates and sorting functions. This talk is roughly based on the article I wrote “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})”.
 
