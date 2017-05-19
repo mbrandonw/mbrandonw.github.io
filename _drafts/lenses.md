@@ -235,7 +235,23 @@ Now `transform` is a function `(User) -> User` that can transform any user by th
 
 ## Induced structure
 
-By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. For example, if `Part` is `Equatable`, we can _induce_ a kind of equality on `Whole`s by lensing in:
+By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. We previously saw in “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})” that we could define types `Predicate<A>` and `Comparator<A>` that encompass the ideas of filtering and sorting arrays, and that they carry a rich algebraic structure given by a monoid. We will now see how lenses allow us to construct these objects very easily, giving us an abundance of algebraic objects to compose in interesting ways.
+
+For example, if `Part` is comparable, we can induce a predicate on the `Whole` by expressing the idea that whole values are less 
+
+```swift
+extension Lens where Part: Comparable {
+  func isLessThan(_ x: Part) -> Predicate<Whole> {
+    return Predicate { self.view($0) < x }
+  }
+}
+```
+
+
+
+## Induced structure – old
+
+ For example, if `Part` is `Equatable`, we can _induce_ a kind of equality on `Whole`s by lensing in:
 
 ```swift
 extension Lens where Part: Equatable {
@@ -375,6 +391,11 @@ extension NonEmptyList {
 
 
 
+
+### Sources
+
+09 The Unreasonable Effectiveness of Lenses for Business Applications
+https://www.youtube.com/watch?v=T88TDS7L5DY
 
 
 
