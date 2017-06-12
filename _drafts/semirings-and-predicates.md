@@ -6,7 +6,7 @@ categories: swift math algebra semiring
 author: Brandon Williams
 ---
 
-In the article “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})” we should how predicates can be made into a monoid. In short, we considered `Bool` to be a monoid with its operation given by `&&` and identity `true`, and then defined `Predicate<A>` to be the type of functions `(A) -> Bool`. This allowed us to combine existing predicates in an expressive way, e.g. `isEven <> isLessThan(10)`.
+In the article “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})” we showed how predicates can be made into a monoid. In short, we considered `Bool` to be a monoid with its operation given by `&&` and identity `true`, and then defined `Predicate<A>` to be the type of functions `(A) -> Bool`. This allowed us to combine existing predicates in an expressive way, e.g. `isEven <> isLessThan(10)`.
 
 One thing missing from that discussion is that `Bool` has another monoidal structure, `||` with `false`. 
 
