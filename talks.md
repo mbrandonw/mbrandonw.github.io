@@ -4,7 +4,7 @@ title: Talks
 permalink: /talks/
 ---
 
-I’m available to speak at conferences and meetups, so please feel free to drop me an email mbw234@gmail.com.
+I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbw234@gmail.com](mailto:mbw234@gmail.com).
 
 <br>
 
