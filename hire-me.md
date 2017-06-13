@@ -5,6 +5,10 @@ permalink: /hire-me/
 published: true
 ---
 
+<center style="margin: auto; width: 150px; height: 150px; overflow: hidden; border-radius: 50%;">
+![It me]({{ site.url }}/assets/it-me.jpg)
+</center>
+
 > Howdy!
 
 I’m Brandon Williams, and I’m [available](emailto:mbw234+hireme@gmail.com) for part-time consulting work in iOS. I’m mostly focused on teaching and applying functional programming to everyday work as a means of gaining more understanding, testability and sharing of code.
