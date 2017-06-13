@@ -6,7 +6,7 @@ published: true
 ---
 
 <center style="margin: auto; width: 150px; height: 150px; overflow: hidden; border-radius: 50%;">
-![It me]({{ site.url }}/assets/it-me.jpg)
+<img src="{{ site.url }}/assets/it-me.jpg">
 </center>
 
 > Howdy!
