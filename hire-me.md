@@ -11,7 +11,7 @@ published: true
 
 > Howdy!
 
-I’m Brandon Williams, and I’m [available](emailto:mbw234+hireme@gmail.com) for part-time consulting work in iOS. I’m mostly focused on teaching and applying functional programming to everyday work as a means of gaining more understanding, testability and sharing of code.
+I’m Brandon Williams, and I’m [available](mailto:mbw234+hireme@gmail.com) for part-time consulting work in iOS. I’m mostly focused on teaching and applying functional programming to everyday work as a means of gaining more understanding, testability and sharing of code.
 
 
 ## My services
@@ -41,7 +41,7 @@ I am available to speak at meet ups and conferences on a variety of topics.
 
 # Contact me
 
-If any of this sounds interesting to you and your team, please get in touch! My email is [mbw234@gmail.com](emailto:mbw234+hireme@gmail.com) and I have availability immediately.
+If any of this sounds interesting to you and your team, please get in touch! My email is [mbw234@gmail.com](mailto:mbw234+hireme@gmail.com) and I have availability immediately.
 
 <br>
 
