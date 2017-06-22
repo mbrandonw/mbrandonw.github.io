@@ -241,7 +241,7 @@ For the elements which you do have attributes, using the shorthand `.init("id", 
 
 ```swift
 infix operator =>
-func => <V: Value> (lhs: String, rhs: String) -> Attribute {
+func => (key: String, value: String) -> Attribute {
   return .init(key, value)
 }
 ```
@@ -274,7 +274,7 @@ Not bad! If we create helpers for the rest of the tags in our sample HTML docume
 
 ```swift
 let document: Node = header([
-  h1(["id" => "Welcome"], ["Welcome!"]),
+  h1(["id" => "welcome"], ["Welcome!"]),
   p([
     "Welcome to you, who has come here. See ",
     a(["href" => "/more"], ["more"]),
@@ -285,9 +285,84 @@ let document: Node = header([
 
 Whoa! That's even shorter than the HTML document since we don’t have to worry about closing tags!
 
-References:
+## Safer Attributes
+
+Right now our `Attribute` type is just a pair of strings representing the key and value. This allows for non-sensical pairs, such as `width="foo"`. We can encode the fact that attributes require specific types of values into the type system, and get additional safety on this aspect.
+
+We start by creating a type specifically to model keys that can be used in attributes. This type has two parts: the name of the key as a string (e.g. `"id"`, `"href"`, etc...), and the _type_ of value this key is allowed to hold. There is a wonderful way to encode this latter requirement into the type system: you make the key’s type a generic parameter of `AttributeKey`, but you don’t actually use it! Such a type is called a [_phantom type_](https://wiki.haskell.org/Phantom_type). We define our type as such:
+
+```swift
+struct AttributeKey<A: C> {
+  let key: String
+  init (_ key: String) { self.key = key }
+}
+```
+
+Here `A` is our phantom type, and notice that it is never used. This allows you to create keys that also specify the types they expect:
+
+```swift
+let id = AttributeKey<String>("id")
+let width = AttributeKey<Int>("width")
+```
+
+The first is the key `id` with it’s expected value type encoded as `String`, and the second is the key `width` with it’s expected value type as `Int`.
+
+To enforce this contract we change `Attribute`s initializer to be private so that no one is allowed to create instances, and force the creation of attributes through the `=>` operator, which we redefine to take advantage of the phantom type:
+
+```swift
+func => <A> (key: AttributeKey<A>, value: A) -> Attribute {
+  return .init(key.key, "\(value)")
+}
+```
+
+This function is what enforces the type-safety of pairings between attribute keys and values. The only possible way to create an `Attribute` value is through this function, and the compiler ensures that the types match up correctly. We can make use of it easily enough:
+
+```swift
+h1([id => "welcome"], ["Welcome!"])
+a([href => "/more"], ["See more"])
+img([width => 100, height => 100, src => "img.png"])
+```
+
+If you misuse these types, you even get a pretty straight forward error message from the Swift compiler:
+
+```swift
+width => "foo"
+// error: cannot convert value of type 'String' to expected argument
+// type 'Int'
+// width => "foo"
+//          ^
+```
+
+## Conclusion and next steps
+
+Amazingly we have now created a very simple HTML DSL, all in about 80 lines of code. We of course don’t have the full set of HTML tags and attributes, but that is simple enough to add.
+
+Further, because we have just embraced simple value types and pure functions, we can feel pretty confident that we haven’t backed ourselves into a corner with respect to future developments. In fact, this approach has opened many doors for us! Here is just a small sample of the next features we will implement in upcoming articles:
+
+* If you’re _really_ strict with yourself, then you can think of views as just pure functions from some piece of data to an array of nodes, i.e. `view: (Data) -> [Node]`. In a previous [article]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) we saw that arrays form what is known as a monoid, and in another [article]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the set of functions from any type into a monoid also forms a monoid. This gives a form of composition on views that can help form complicated views from simple building blocks
+
+* 
+
+* HTML escaping
+
+## Playground
+
+All of the code developed in this article is available in a playground you can download <a href="/assets/html-dsl-pt1.playground.zip">here</a>.
+
+## Exercises
+
+1.) Implement more common tags and attributes like we did with `h1` and `id`.
+
+### References:
 
 https://wiki.haskell.org/Embedded_domain_specific_language
+
 https://en.wikipedia.org/wiki/Domain-specific_language
+
 http://wiki.c2.com/?EmbeddedDomainSpecificLanguage
+
 https://en.wikipedia.org/wiki/Abstract_syntax_tree
+
+https://wiki.haskell.org/Phantom_type
+
+https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/
