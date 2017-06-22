@@ -66,7 +66,7 @@ An alternative approach to views is using [“embedded domain specific languages
 
 We will define some terms:
 
-* **Element**: tags that are opened with `<>` and closed with `</>`, e.g. `header`, `h1`, `p` and `a`. They are defined by their name (i.e. `header`), the attributes applied (see below for more, i.e. `id="welcome"`), and their children nodes (see below for more).
+* **Element**: tags that are opened with `<>` and closed with `</>`, e.g. `header`, `h1`, `p` and `a`. They are defined by their name (e.g. `header`), the attributes applied (see below for more, e.g. `id="welcome"`), and their children nodes (see below for more).
 * **Attribute**: a key value pair that is associated to an element, e.g. `id="welcome"` and `href="/more"`.
 * **Node**: the unit with which the HTML tree is built. All elements are nodes, but also free text fragments are nodes. You can think of all free text in the document as having imaginary `<text></text>` tags around it. For example, if we inserted these imaginary tags into our sample document, and added plenty of newlines, we could really expose the underlying tree structure of nodes:
 
@@ -116,7 +116,7 @@ enum Node {
 }
 ```
 
-A few things to note about these types. I have provided convenience initializers for `Attribute` and `Element` to omit their named arguments, because fully specify those can become a pain. I also made the children nodes in `Element` optional, because some elements are not allowed to have any children, such as `img`, and this is an instance of Swift’s type system giving us a nice way to model that possibility.
+A few things to note about these types. I have provided convenience initializers for `Attribute` and `Element` to omit their named arguments, because fully specifying those can be a pain. I also made the children nodes in `Element` optional, because some elements are not allowed to have any children, such as `img`, and this is an instance of Swift’s type system giving us a nice way to model that possibility.
 
 This is already enough to model our simple HTML document:
 
@@ -191,7 +191,7 @@ These kinds of transformations are completely hidden from you in the template wo
 
 ## Making the EDSL easier to use
 
-Currently our EDSL is not super friendly to work with. It’s quite a bit more verbose than the plain HTML, and it’s hard to see the underlying HTML from looking at the DLS. Fortunately, these problems are easily fixed with a couple of helper functions and some nice features of Swift!
+Currently our EDSL is not super friendly to work with. It’s quite a bit more verbose than the plain HTML, and it’s hard to see the underlying HTML from looking at the code. Fortunately, these problems are easily fixed with a couple of helper functions and some nice features of Swift!
 
 To begin with, we can make `Node` conform to `ExpressibleByStringLiteral` by simply embedding a string into the `.text` case of the `Node` enum:
 
@@ -289,10 +289,10 @@ Whoa! That's even shorter than the HTML document since we don’t have to worry 
 
 Right now our `Attribute` type is just a pair of strings representing the key and value. This allows for non-sensical pairs, such as `width="foo"`. We can encode the fact that attributes require specific types of values into the type system, and get additional safety on this aspect.
 
-We start by creating a type specifically to model keys that can be used in attributes. This type has two parts: the name of the key as a string (e.g. `"id"`, `"href"`, etc...), and the _type_ of value this key is allowed to hold. There is a wonderful way to encode this latter requirement into the type system: you make the key’s type a generic parameter of `AttributeKey`, but you don’t actually use it! Such a type is called a [_phantom type_](https://wiki.haskell.org/Phantom_type). We define our type as such:
+We start by creating a type specifically to model keys that can be used in attributes. This type has two parts: the name of the key as a string (e.g. `"id"`, `"href"`, etc...), and the _type_ of value this key is allowed to hold. There is a wonderful way to encode this latter requirement into the type system: you make the key’s type a generic parameter, but you don’t actually use it! Such a type is called a [_phantom type_](https://wiki.haskell.org/Phantom_type). We define our type as such:
 
 ```swift
-struct AttributeKey<A: C> {
+struct AttributeKey<A> {
   let key: String
   init (_ key: String) { self.key = key }
 }
@@ -333,25 +333,34 @@ width => "foo"
 //          ^
 ```
 
+## Rendering HTML
+
+There are still even more improvements we can make to our EDSL, but before this article gets too long we should probably cut it off and address how to render the EDSL to a string of HTML that can actually be sent to the browser. Ideally one wants to implement the following function:
+
+```swift
+func render(node: Node) -> String {
+}
+```
+
+This is a straightforward exercise, though subtle and can take a few tries to get right. The details, however, are not particularly important for the main point of this article, type-safe HTML. Therefore I’ve put the details in another article, which you can find [here](todo).
+
 ## Conclusion and next steps
 
 Amazingly we have now created a very simple HTML DSL, all in about 80 lines of code. We of course don’t have the full set of HTML tags and attributes, but that is simple enough to add.
 
 Further, because we have just embraced simple value types and pure functions, we can feel pretty confident that we haven’t backed ourselves into a corner with respect to future developments. In fact, this approach has opened many doors for us! Here is just a small sample of the next features we will implement in upcoming articles:
 
-* If you’re _really_ strict with yourself, then you can think of views as just pure functions from some piece of data to an array of nodes, i.e. `view: (Data) -> [Node]`. In a previous [article]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) we saw that arrays form what is known as a monoid, and in another [article]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the set of functions from any type into a monoid also forms a monoid. This gives a form of composition on views that can help form complicated views from simple building blocks
+* If you’re _really_ strict with yourself, then you can think of views as just pure functions from some piece of data to an array of nodes, i.e. `view: (Data) -> [Node]`. In a previous [article]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) we saw that arrays form what is known as a monoid, and in another [article]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the set of functions from any type into a monoid also forms a monoid. This gives a form of composition on views that can help form complicated views from simple building blocks.
 
-* 
+* The set of functions between two types `(A) -> B` carries two structures. One is called a “functor” and the other is called a “co-functor”. These structures allow you to take transformations on `A` and `B` and lift them up to transformations on functions. Without knowing what these terms mean just yet, it pertains to views `(Data) -> [Node]` by lifting transformations of `Data` or `Node`s to transformations on views! This provides us with two additional forms of composition of views!
 
-* HTML escaping
+* These kinds of views are incredibly easy to test. Since they are just pure functions you can feed them some data and then make assertions on the output of HTML. You can even build up a little infrastructure so that output is saved to a plain text file in your test directory, and then future test runs will make assertions against the contents of that file. This is known as snapshot testing and is very popular in React.
+
+* Once you go down the road to thinking of views as functions `(Data) -> [Node]`, you start to build up lots of lil helper views that can be re-used in (hopefully) any which way. However, you soon find out that the data these subviews demand needs to be threaded all the way through the view hierarchy all the way back to the root view.
 
 ## Playground
 
 All of the code developed in this article is available in a playground you can download <a href="/assets/html-dsl-pt1.playground.zip">here</a>.
-
-## Exercises
-
-1.) Implement more common tags and attributes like we did with `h1` and `id`.
 
 ### References:
 
