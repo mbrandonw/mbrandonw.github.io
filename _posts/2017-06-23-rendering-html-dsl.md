@@ -1,7 +1,13 @@
+---
+layout: post
+title:  "Rendering an HTML DSL"
+categories: swift html dsl
+author: Brandon Williams
+---
 
-## Rendering to HTML
+## Rendering an HTML DSL
 
-There are still even more improvements we can make to our EDSL, but before doing that let’s create a function that will actually render a `Node` to a string. We do this by recursively walking the node tree, and rendering out the various parts in the most naive way possible. We begin by make a skeleton of such a function:
+In our previous [article]({% post_url 2017-06-22-type-safe-html-in-swift %}) we described how to build an EDSL to model HTML in Swift. Here we describe how to take our `Node` value type and render it to a string that can actually be served to the browser. We do this by recursively walking the node tree, and rendering out the various parts in the most naive way possible. We begin by make a skeleton of such a function:
 
 ```swift
 func render(_ node: Node) -> String {
@@ -21,8 +27,8 @@ func render(node: Node) -> String {
   switch node {
   case let .element(e):
     // ???
-  case let .text(t):
-    return t
+  case let .text(text):
+    return text
   }
 }
 ```
@@ -35,7 +41,7 @@ func render(element: Element) -> String {
 }
 ```
 
-An element value has three components: the name of the element, the attributes, and the children nodes. The name is easy enough to render as it’s just the opened and closed tags, e.g. `<a...</a>`. The attributes get rendered out to pairs of `key="value"` strings. This is straightforward to do, and let’s do it in a new function:
+An element value has three components: the name of the element, the attributes, and the children nodes. The attributes get rendered out to pairs of `key="value"` strings. This is straightforward to do, and let’s do it in a new function:
 
 ```swift
 func render(attributes: [Attribute]) -> String {
@@ -63,7 +69,7 @@ func render(element: Element) -> String {
 }
 ```
 
-A couple of things to note about this. In the case that the element has no attributes we make sure to not accidentally render an additional space, i.e. we want `<a>`, not `<a >`. Also, if the element cannot have children, we close the tag with `/>` instead of a full tag, i.e. we want `<img />`, not `<img></img>`.
+A couple of things to note about this. In the case that the element has no attributes we make sure to not accidentally render an additional space, i.e. we want `<p>`, not `<p >`. Also, if the element cannot have children, we close the tag with `/>` instead of a full tag, i.e. we want `<img />`, not `<img></img>`.
 
 We are now only left with rendering the children, which we can do by calling the `render(node:)` function recursively on each node, and then joining the results. The `render(element:)` function now looks like this in its entirety:
 
@@ -91,8 +97,8 @@ func render(node: Node) -> String {
   switch node {
   case let .element(e):
     return render(element: e)
-  case let .text(t):
-    return t
+  case let .text(text):
+    return text
   }
 }
 ```
@@ -100,16 +106,29 @@ func render(node: Node) -> String {
 And applying it to our document we’ve been building we recover the HTML we wanted to model:
 
 ```swift
+let document = header([
+  h1([id => "welcome"], ["Welcome!"]),
+  p([
+    "Welcome to you, who has come here. See ",
+    a([href => "/more"], ["more"]),
+    "."
+    ])
+  ]
+)
+
 render(node: document)
   // => "<header><h1 id=\"welcome\">Welcome!</h1><p>Welcome to you, who has come here. See <a href=\"/more\">more</a>.</p></header>"
 ```
 
 This renders the entire document into a single line, because HTML doesn’t care about newlines and formatting. But, it’s a fun exercise (and in fact, check out the exercises down below!) to update our `render(node:)` function to also allow pretty rendering.
 
+## Conclusion
+
+Hopefully this rendering exercise will convince you that work with an EDSL can be very straightforward. Getting comfortable with making transformations to the `Node` type is the first step towards unlocking all types of hidden compositions lurking in the shadows!
+
 ## Exercises
 
-
-2.) Create an `AttributeValue` protocol to be the counterpart of our `AttributeKey` type. It’s job is to have a `render(withKey:)` method that knows how to render a single key/value pair. This will allow us to provide custom logic for rendering attributes. For example, boolean attributes either render their presence or not at all: one uses `<input>` and `<input disabled>` for enabled/disabled states, not `<input disabled="false">` and `<input disabled="true">`.
+1.) Create an `AttributeValue` protocol to be the counterpart of our `AttributeKey` type. It’s job is to have a `render(withKey:)` method that knows how to render a single key/value pair. This will allow us to provide custom logic for rendering attributes. For example, boolean attributes either render their presence or not at all: one uses `<input>` and `<input disabled>` for enabled/disabled states, not `<input disabled="false">` and `<input disabled="true">`.
 
 2.) Make a pretty renderer for `Node`. It should insert a newline after every opened tag, and indent its contents based on how deeply you are nested into the tags.
 

@@ -1,15 +1,15 @@
 ---
 layout: post
 title:  "Type-Safe HTML in Swift"
-categories: swift html typesafety
+categories: swift html dsl
 author: Brandon Williams
 ---
 
-As server-side Swift becomes more popular and widely adopted, it will be important to re-examine some of the past “best-practices” of web frameworks to see how Swift’s type system can improve them. One important job of a web server is to produce the HTML that will be served up to the browser. We claim that by using types and pure functions, we can enhance this part of the web request lifecycle.
+As server-side Swift becomes more popular and widely adopted, it will be important to re-examine some of the past “best-practices” of web frameworks to see how Swift’s type system can improve upon them. One important job of a web server is to produce the HTML that will be served up to the browser. We claim that by using types and pure functions, we can enhance this part of the web request lifecycle.
 
 ## Template Languages
 
-A popular method for generating HTML is using so-called “templating languages”, for example [Mustache](http://mustache.github.io) and  [Handlebars](http://handlebarsjs.com). There is even one written in Swift for use with the [Vapor](https://github.com/vapor/) web framework called [Leaf](https://github.com/vapor/leaf). These libraries ingest plain text that you provide, and interpolate values into it using a token. For example, here is a Mustache (and Handlebar) template:
+A popular method for generating HTML is using so-called “templating languages”, for example [Mustache](http://mustache.github.io) and  [Handlebars](http://handlebarsjs.com). There is even one written in Swift for use with the [Vapor](https://github.com/vapor/) web framework called [Leaf](https://github.com/vapor/leaf). These libraries ingest plain text that you provide and interpolate values into it using tokens. For example, here is a Mustache (and Handlebar) template:
 
 ```html
 {% raw %}
@@ -46,15 +46,15 @@ Templating languages will also provide simple constructs for injecting small amo
 
 The advantages of approaching views like this is that you get support for all that HTML has to offer out of the gate, and focus on building a small language for interpolating values into the templates. Some claim also that these templates lead to “logic-less” views, though confusingly they all support plenty of constructs for logic such as “if” statements and loops. A more accurate description might be “less logic” views since you are necessarily constricted by what logic you can use by the language.
 
-The downsides, however, far outweigh the ups. Most errors in templating languages appear at runtime since they are usually not compiled. One can adopt a linting tool to find some (but not all) errors, but that is also an extra dependency that you need to manage. Some templating languages are compiled (like [HAML](http://haml.info)), but even then the tooling basic and does not provide good error messages. In general, it is on you to make these languages safe for you to deploy with confidence.
+The downsides, however, far outweigh the ups. Most errors in templating languages appear at runtime since they are usually not compiled. One can adopt a linting tool to find some (but not all) errors, but that is also an extra dependency that you need to manage. Some templating languages are compiled (like [HAML](http://haml.info)), but even then the tooling basic and can return confusing error messages. In general, it is on you to make these languages safe for you to deploy with confidence.
 
-Further, a templating language is just that: a language! It needs to be robust enough to handle what most users what to do with a language. That means it should support logical flow expressions, loops, IDE autocomplete, IDE syntax highlighting, and more. It also needs to solve all of the new problems that appear, like escaping characters that are ambiguous with respect to HTML and the template language.
+Furthermore, a templating language is just that: a language! It needs to be robust enough to handle what most users what to do with a language. That means it should support expressions, logical flow, loops, IDE autocomplete, IDE syntax highlighting, and more. It also needs to solve all of the new problems that appear, like escaping characters that are ambiguous with respect to HTML and the template language.
 
 We claim that rather than embracing “logic-less” templates, and instead embracing pure functions and types, we will get a far more expressive, safer and composable view layer that can be compiled directly in Swift with no extra tooling or dependencies.
 
 ## Embedded Domain Specific Language
 
-An alternative approach to views is using [“embedded domain specific languages”](https://wiki.haskell.org/Embedded_domain_specific_language) (EDSL’s). In this approach we use an existing programming language (e.g. Swift), to build a system of types and functions that models the [structure](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the domain we are modeling (e.g. HTML). Let’s take a fragment of HTML that we will use as inspiration to build in an EDSL:
+An alternative approach to views is using [“embedded domain specific languages”](https://wiki.haskell.org/Embedded_domain_specific_language) (EDSLs). In this approach we use an existing programming language (e.g. Swift), to build a system of types and functions that models the [structure](https://en.wikipedia.org/wiki/Abstract_syntax_tree) of the domain we are modeling (e.g. HTML). Let’s take a fragment of HTML that we will use as inspiration to build in an EDSL:
 
 ```html
 <header>
@@ -67,7 +67,7 @@ An alternative approach to views is using [“embedded domain specific languages
 
 We define some terms:
 
-* **Element**: tags that are opened with `<>` and closed with `</>`, e.g. `header`, `h1`, `p` and `a`. They are defined by their name (e.g. `header`), the attributes applied (see below for more, e.g. `id="welcome"`), and their children nodes (see below for more).
+* **Element**: tags that are opened with `<…>` and closed with `</…>`, e.g. `header`, `h1`, `p` and `a`. They are defined by their name (e.g. `header`), the attributes applied (see below for more, e.g. `id="welcome"`), and their children nodes (see below for more).
 * **Attribute**: a key value pair that is associated to an element, e.g. `id="welcome"` and `href="/more"`.
 * **Node**: the unit with which the HTML tree is built. All elements are nodes, but also free text fragments are nodes. You can think of all free text in the document as having imaginary `<text></text>` tags around it. For example, if we inserted these imaginary tags into our sample document, and added plenty of newlines, we could expose the underlying tree structure of nodes:
 
@@ -147,7 +147,7 @@ let document: Node = .element(
 This ain’t pretty, but there are some nice things about it!
 
 * We can use Swift’s type inference to remove gratuitous uses of `Node` and `Element` everywhere, i.e. we could use `.element` everywhere instead of `Node.element`.
-* The compiler holds our hand while we write this out, providing error messages any time the types didn't match up or a brace was forgotten. This provides safety at compile-time, whereas most templating languages discover errors only at runtime.
+* The compiler holds our hand while we write this out, providing error messages any time the types didn’t match up or a brace was forgotten. This provides safety at compile-time, whereas most templating languages discover errors only at runtime.
 * This simple value type models the HTML, and so can be transformed in some interesting ways. For example, we could write a function that walks this node tree looking for any elements with an attribute `"remove-me": "true"`, and remove those from the tree!
 
 ```swift
@@ -156,17 +156,18 @@ This ain’t pretty, but there are some nice things about it!
 func removeCertainElements(_ node: Node) -> Node? {
   switch node {
   case let .element(element):
+    // If the element’s attribute’s contain the key we are looking
+    // for, return `nil` to remove it!
     guard !element.attribs
       .contains(where: { $0.key == "remove-me" && $0.value == "true" }) else {
       return nil
     }
 
+    // Recursive search the children for elements to remove.
     return .element(
-      .init(
-        element.name,
-        element.attribs,
-        element.children.map { $0.flatMap(removeCertainElements) }
-      )
+      .init(element.name,
+            element.attribs,
+            element.children.map { $0.flatMap(removeCertainElements) })
     )
   case .text:
     return node
@@ -174,7 +175,7 @@ func removeCertainElements(_ node: Node) -> Node? {
 }
 ```
 
-In fact, everything Swift has to offer us can be freely used to build HTML. For example, here we can use `Array`’s `map` to build an HTML list:
+In fact, everything Swift has to offer us can be freely used to build HTML. We can use `map` to build an HTML list from an array of strings:
 
 ```swift
 let items: [String] = ["Foo", "Bar", "Baz"]
@@ -188,7 +189,7 @@ let list: Node = .element(
 )
 ```
 
-Template languages hide this world of transformations from you, and they unlock all types of surprising compositions.
+These kinds of transformations are completely hidden from you in the template world, and these are the kinds of things that unlock all types of surprising compositions.
 
 ## Making the EDSL easier to use
 
@@ -204,7 +205,7 @@ extension Node: ExpressibleByStringLiteral {
 }
 ```
 
-This allows us to omit `.text("string")` from our code and use a string, for example our heading element now becomes:
+This allows us to omit `.text("string")` from our code and use a string literal. Our heading element can now be written as:
 
 ```swift
 Element("h1", [.init("id", "welcome")], ["Welcome!"])
@@ -224,21 +225,7 @@ Now our heading tag simplifies to:
 node("h1", [.init("id", "welcome")], ["Welcome!"])
 ```
 
-It is common to have node elements with no attributes (like our `p` tag in our example from before), and so we can provide an overload of `node` for that case:
-
-```swift
-func node(_ name: String, _ children: [Node]?) -> Node {
-  return node(name, [], children)
-}
-```
-
-And now a simple node element could be expressed as simply as:
-
-```swift
-node("p", ["Welcome to you, who has come here."])
-```
-
-For the elements which you do have attributes, using the shorthand `.init("id", "welcome")` doesn’t seem short enough, and so we could cook up an operator that makes this a bit nicer and mimics the raw HTML a little more closely:
+The shorthand for creating attributes, `.init("id", "welcome")`, doesn’t seem short enough, and so we can cook up an operator that makes this a bit nicer and mimics the raw HTML a little more closely:
 
 ```swift
 infix operator =>
@@ -251,6 +238,20 @@ And now our heading becomes:
 
 ```swift
 node("h1", ["id" => "welcome"], ["Welcome!"])
+```
+
+It is common to have node elements with no attributes (like our `p` tag in our example from before), and so we can provide an overload of `node` for that case:
+
+```swift
+func node(_ name: String, _ children: [Node]?) -> Node {
+  return node(name, [], children)
+}
+```
+
+And now a simple node element could be expressed as simply as:
+
+```swift
+node("p", ["Welcome to you, who has come here."])
 ```
 
 Our final addition to make the DSL a little nicer to use will be to create additional `node` helpers that are specific to the type of element they create. For example, we can create an `h1` function:
@@ -274,7 +275,7 @@ h1(["id" => "welcome"], ["Welcome!"])
 Not bad! If we create helpers for the rest of the tags in our sample HTML document (i.e. `a`, `header` and `p`), the DSL for our document becomes:
 
 ```swift
-let document: Node = header([
+let document = header([
   h1(["id" => "welcome"], ["Welcome!"]),
   p([
     "Welcome to you, who has come here. See ",
@@ -284,7 +285,7 @@ let document: Node = header([
 ])
 ```
 
-Whoa! That's even shorter than the HTML document since we don’t have to worry about closing tags!
+Whoa! That’s about as short as the original HTML document!
 
 ## Safer Attributes
 
@@ -320,7 +321,9 @@ This function is what enforces the type-safety of pairings between attribute key
 
 ```swift
 h1([id => "welcome"], ["Welcome!"])
+
 a([href => "/more"], ["See more"])
+
 img([width => 100, height => 100, src => "img.png"])
 ```
 
@@ -343,7 +346,7 @@ func render(node: Node) -> String {
 }
 ```
 
-This is a straightforward exercise, though subtle and can take a few tries to get right. The details, however, are not particularly important for the main point of this article, type-safe HTML. Therefore I’ve put the details in another article, which you can find [here](todo).
+This is a straightforward exercise, though subtle and can take a few tries to get right. The details, however, are not particularly important for the main point of this article, type-safe HTML. Therefore I’ve put the details in another article, which you can find [here]({% post_url 2017-06-23-rendering-html-dsl %}).
 
 ## Conclusion and next steps
 
@@ -351,28 +354,38 @@ Amazingly we have now created a very simple HTML DSL, all in about 80 lines of c
 
 Further, because we have just embraced simple value types and pure functions, we can feel pretty confident that we haven’t backed ourselves into a corner with respect to future developments. In fact, this approach has opened many doors for us! Here is just a small sample of the next features we will implement in upcoming articles:
 
+* We can use the type system to provide safety around how plain text is encoded for use with HTML. It allows us to prove that non-encoded strings never make it into our HTML.
+
 * If you’re _really_ strict with yourself, then you can think of views as just pure functions from some piece of data to an array of nodes, i.e. `view: (Data) -> [Node]`. In a previous [article]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) we saw that arrays form what is known as a monoid, and in another [article]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the set of functions from any type into a monoid also forms a monoid. This gives a form of composition on views that can help form complicated views from simple building blocks.
 
 * The set of functions between two types `(A) -> B` carries two structures. One is called a “functor” and the other is called a “co-functor”. These structures allow you to take transformations on `A` and `B` and lift them up to transformations on functions. Without knowing what these terms mean just yet, it pertains to views `(Data) -> [Node]` by lifting transformations of `Data` or `Node`s to transformations on views! This provides us with two additional forms of composition of views!
 
 * These kinds of views are incredibly easy to test. Since they are just pure functions you can feed them some data and then make assertions on the output of HTML. You can even build up a little infrastructure so that output is saved to a plain text file in your test directory, and then future test runs will make assertions against the contents of that file. This is known as snapshot testing and is very popular in React.
 
-* Once you go down the road to thinking of views as functions `(Data) -> [Node]`, you start to build up lots of lil helper views that can be re-used in (hopefully) any which way. However, you soon find out that the data these subviews demand needs to be threaded all the way through the view hierarchy all the way back to the root view.
+* Once you go down the road to thinking of views as functions `(Data) -> [Node]`, you start to build up lots of lil helper views that can be reused in (hopefully) any which way. However, you soon find out that the data these subviews demand needs to be threaded all the way through the view hierarchy all the way back to the root view. This naturally leads one to something known as a [`Reader`](https://hackage.haskell.org/package/mtl-2.2.1/docs/Control-Monad-Reader.html) and solves this problem in a beautiful way.
+
+All of these topics and more will be coming in future articles.
 
 ## Playground
 
-All of the code developed in this article is available in a playground you can download <a href="/assets/html-dsl-pt1.playground.zip">here</a>.
+All of the code developed in this article is available in a playground you can download <a href="/assets/html-dsl/html-dsl-pt1.playground.zip">here</a>.
 
-### References:
+## Exercises
 
-https://wiki.haskell.org/Embedded_domain_specific_language
+1.) In HTML5, the `<strike>` tag for styling strikethrough text was removed from the standard. Instead one is supposed to use `<del>` or `<s>`. Write a function `updatedStrikes(node: Node) -> Node` that replaces all `<strike>`’s with `<s>`’s
 
-https://en.wikipedia.org/wiki/Domain-specific_language
+2.) Enhance the EDSL by adding support for HTML comments.
 
-http://wiki.c2.com/?EmbeddedDomainSpecificLanguage
+## References:
 
-https://en.wikipedia.org/wiki/Abstract_syntax_tree
+* https://wiki.haskell.org/Embedded_domain_specific_language
 
-https://wiki.haskell.org/Phantom_type
+* https://en.wikipedia.org/wiki/Domain-specific_language
 
-https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/
+* http://wiki.c2.com/?EmbeddedDomainSpecificLanguage
+
+* https://en.wikipedia.org/wiki/Abstract_syntax_tree
+
+* https://wiki.haskell.org/Phantom_type
+
+* https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/

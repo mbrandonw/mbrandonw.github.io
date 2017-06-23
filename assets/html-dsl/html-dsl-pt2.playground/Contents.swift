@@ -30,7 +30,7 @@ enum Node {
   case text(String)
 }
 
-let sampleDoc: Node = .element(
+let verboseDoc: Node = .element(
   .init("header", [],  [
     .element(
       .init("h1", [.init("id", "welcome")],  [
@@ -50,30 +50,6 @@ let sampleDoc: Node = .element(
     )]
   )
 )
-
-
-// Removes all nodes that are an element with a `"remove-me": "true"` attribute
-func removeCertainElements(_ node: Node) -> Node? {
-
-  switch node {
-  case let .element(element):
-    guard !element.attribs
-      .contains(where: { $0.key == "remove-me" && $0.value == "true" }) else {
-        return nil
-    }
-
-    return .element(
-      .init(
-        element.name,
-        element.attribs,
-        element.children.map { $0.flatMap(removeCertainElements) }
-      )
-    )
-  case .text:
-    return node
-  }
-
-}
 
 func node(_ name: String, _ attribs: [Attribute], _ children: [Node]?) -> Node {
   return .element(.init(name, attribs, children))
