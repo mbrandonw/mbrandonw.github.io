@@ -124,7 +124,7 @@ This renders the entire document into a single line, because HTML doesn’t care
 
 ## Conclusion
 
-Hopefully this rendering exercise will convince you that work with an EDSL can be very straightforward. Getting comfortable with making transformations to the `Node` type is the first step towards unlocking all types of hidden compositions lurking in the shadows!
+Hopefully this rendering exercise will convince you that work with an EDSL can be very straightforward. Getting comfortable with making transformations to the `Node` type is the first step towards unlocking all types of hidden compositions lurking in the shadows! You can find a playground with all of this code <a href="/assets/html-dsl/html-dsl-pt2.playground.zip">here</a>.
 
 ## Exercises
 
