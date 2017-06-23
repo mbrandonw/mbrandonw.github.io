@@ -30,7 +30,7 @@ enum Node {
   case text(String)
 }
 
-let sampleDoc: Node = .element(
+let verboseDocument: Node = .element(
   .init("header", [],  [
     .element(
       .init("h1", [.init("id", "welcome")],  [

@@ -5,7 +5,7 @@ categories: swift html typesafety
 author: Brandon Williams
 ---
 
-As server-side Swift becomes more popular and widely adopted, it will be important to re-examine some of the past “best-practices” of web frameworks to see how Swift’s type system can improve them. One important job of a web server is to produce the HTML that will be served up to the browser. We claim that by using types and pure functions, we can enhance this portion of the web request lifecycle.
+As server-side Swift becomes more popular and widely adopted, it will be important to re-examine some of the past “best-practices” of web frameworks to see how Swift’s type system can improve them. One important job of a web server is to produce the HTML that will be served up to the browser. We claim that by using types and pure functions, we can enhance this part of the web request lifecycle.
 
 ## Template Languages
 
@@ -44,12 +44,13 @@ Templating languages will also provide simple constructs for injecting small amo
 }
 ```
 
-The advantages of approaching views like this is that you get support for all that HTML has to offer out of the gate, and instead focus on building a small language for interpolating values into the templates. Some claim also that these templates lead to “logic-less” views, though confusingly they all support plenty of constructs for logic such as “if” statements and loops. A more accurate description might be “less logic” views since you are necessarily constricted by what logic you can use by the language.
+The advantages of approaching views like this is that you get support for all that HTML has to offer out of the gate, and focus on building a small language for interpolating values into the templates. Some claim also that these templates lead to “logic-less” views, though confusingly they all support plenty of constructs for logic such as “if” statements and loops. A more accurate description might be “less logic” views since you are necessarily constricted by what logic you can use by the language.
 
-The downsides, however, far outweigh the ups. (more here)
+The downsides, however, far outweigh the ups. Most errors in templating languages appear at runtime since they are usually not compiled. One can adopt a linting tool to find some (but not all) errors, but that is also an extra dependency that you need to manage. Some templating languages are compiled (like [HAML](http://haml.info)), but even then the tooling basic and does not provide good error messages. In general, it is on you to make these languages safe for you to deploy with confidence.
 
-We claim that rather than embracing “logic-less” templates, and instead embracing pure functions and types, we will get a far more expressive, safer and composable view layer.
+Further, a templating language is just that: a language! It needs to be robust enough to handle what most users what to do with a language. That means it should support logical flow expressions, loops, IDE autocomplete, IDE syntax highlighting, and more. It also needs to solve all of the new problems that appear, like escaping characters that are ambiguous with respect to HTML and the template language.
 
+We claim that rather than embracing “logic-less” templates, and instead embracing pure functions and types, we will get a far more expressive, safer and composable view layer that can be compiled directly in Swift with no extra tooling or dependencies.
 
 ## Embedded Domain Specific Language
 
@@ -64,11 +65,11 @@ An alternative approach to views is using [“embedded domain specific languages
 </header>
 ```
 
-We will define some terms:
+We define some terms:
 
 * **Element**: tags that are opened with `<>` and closed with `</>`, e.g. `header`, `h1`, `p` and `a`. They are defined by their name (e.g. `header`), the attributes applied (see below for more, e.g. `id="welcome"`), and their children nodes (see below for more).
 * **Attribute**: a key value pair that is associated to an element, e.g. `id="welcome"` and `href="/more"`.
-* **Node**: the unit with which the HTML tree is built. All elements are nodes, but also free text fragments are nodes. You can think of all free text in the document as having imaginary `<text></text>` tags around it. For example, if we inserted these imaginary tags into our sample document, and added plenty of newlines, we could really expose the underlying tree structure of nodes:
+* **Node**: the unit with which the HTML tree is built. All elements are nodes, but also free text fragments are nodes. You can think of all free text in the document as having imaginary `<text></text>` tags around it. For example, if we inserted these imaginary tags into our sample document, and added plenty of newlines, we could expose the underlying tree structure of nodes:
 
 ```html
 <header>
@@ -85,7 +86,7 @@ We will define some terms:
 </header>
 ```
 
-This dictionary of terms is already enough to build up types that will model this tree. The tree is naturally recursive, since nodes contain elements and elements can contain nodes, so it may seem a little tricky at first. However, by translating our definitions, almost verbatim, we can define some value types:
+This dictionary of terms is already enough to build up types that will model this tree. The tree is naturally recursive, since nodes contain elements and elements can contain nodes, so it may seem a little tricky at first. By translating our definitions, almost verbatim, we can define some value types:
 
 ```swift
 struct Attribute {
@@ -143,11 +144,11 @@ let document: Node = .element(
 )
 ```
 
-This definitely ain’t pretty, but there are some nice things about it!
+This ain’t pretty, but there are some nice things about it!
 
-* We can use Swift’s type inference in order to remove gratuitous uses of `Node` and `Element` everywhere, i.e. we could use `.element` everywhere instead of `Node.element`.
+* We can use Swift’s type inference to remove gratuitous uses of `Node` and `Element` everywhere, i.e. we could use `.element` everywhere instead of `Node.element`.
 * The compiler holds our hand while we write this out, providing error messages any time the types didn't match up or a brace was forgotten. This provides safety at compile-time, whereas most templating languages discover errors only at runtime.
-* The HTML is modeled as a simple value type, and so can be transformed in some interesting ways. For example, we could easily write a function that walks this node tree looking for any elements with an attribute `"remove-me": "true"`, and remove those from the tree!
+* This simple value type models the HTML, and so can be transformed in some interesting ways. For example, we could write a function that walks this node tree looking for any elements with an attribute `"remove-me": "true"`, and remove those from the tree!
 
 ```swift
 // Removes all nodes that are an element with a `"remove-me": "true"`
@@ -187,13 +188,13 @@ let list: Node = .element(
 )
 ```
 
-These kinds of transformations are completely hidden from you in the template world, and these are the kinds of things that unlock all types of surprising compositions.
+Template languages hide this world of transformations from you, and they unlock all types of surprising compositions.
 
 ## Making the EDSL easier to use
 
-Currently our EDSL is not super friendly to work with. It’s quite a bit more verbose than the plain HTML, and it’s hard to see the underlying HTML from looking at the code. Fortunately, these problems are easily fixed with a couple of helper functions and some nice features of Swift!
+Currently our EDSL is not super friendly to work with. It’s a bit more verbose than the plain HTML, and it’s hard to see the underlying HTML from looking at the code. Fortunately, these problems are fixed with a couple of helper functions and some nice features of Swift!
 
-To begin with, we can make `Node` conform to `ExpressibleByStringLiteral` by simply embedding a string into the `.text` case of the `Node` enum:
+To begin with, we can make `Node` conform to `ExpressibleByStringLiteral` by embedding a string into the `.text` case of the `Node` enum:
 
 ```swift
 extension Node: ExpressibleByStringLiteral {
@@ -203,13 +204,13 @@ extension Node: ExpressibleByStringLiteral {
 }
 ```
 
-This allows us to omit `.text("string")` from all of our code and just use a string, for example our heading element could be created with:
+This allows us to omit `.text("string")` from our code and use a string, for example our heading element now becomes:
 
 ```swift
 Element("h1", [.init("id", "welcome")], ["Welcome!"])
 ```
 
-Next, we often had code like `.element(.init(name:attribs:children:))` for creating element nodes, but that can be flattened down to one level of parentheses by using a little helper `node` function:
+Next, we often had code like `.element(.init(name:attribs:children:))` for creating element nodes, but that is now flattened down to one level of parentheses by using a little helper `node` function:
 
 ```swift
 func node(_ name: String, _ attribs: [Attribute], _ children: [Node]?) -> Node {
@@ -217,13 +218,13 @@ func node(_ name: String, _ attribs: [Attribute], _ children: [Node]?) -> Node {
 }
 ```
 
-Now our heading tag can be created with:
+Now our heading tag simplifies to:
 
 ```swift
 node("h1", [.init("id", "welcome")], ["Welcome!"])
 ```
 
-It is quite common to have node elements with no attributes (like our `p` tag in our example from before), and so we can provide an overload of `node` for that case:
+It is common to have node elements with no attributes (like our `p` tag in our example from before), and so we can provide an overload of `node` for that case:
 
 ```swift
 func node(_ name: String, _ children: [Node]?) -> Node {
