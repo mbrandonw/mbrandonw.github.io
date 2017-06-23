@@ -5,7 +5,7 @@ date:   2017-06-22
 categories: swift html dsl
 author: Brandon Williams
 summary: We build a type-safe DSL for modeling HTML in Swift, and discuss the advantages this has over templating languages.
-image: /assets/pt1-preview-img.jpg
+image: /assets/html-dsl/pt1-preview-img.jpg
 ---
 
 As server-side Swift becomes more popular and widely adopted, it will be important to re-examine some of the past “best-practices” of web frameworks to see how Swift’s type system can improve upon them. One important job of a web server is to produce the HTML that will be served up to the browser. We claim that by using types and pure functions, we can enhance this part of the web request lifecycle.
