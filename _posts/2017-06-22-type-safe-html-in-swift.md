@@ -374,14 +374,14 @@ All of the code developed in this article is available in a playground you can d
 
 ## References:
 
-* https://wiki.haskell.org/Embedded_domain_specific_language
+* [https://wiki.haskell.org/Embedded_domain_specific_language](https://wiki.haskell.org/Embedded_domain_specific_language)
 
-* https://en.wikipedia.org/wiki/Domain-specific_language
+* [https://en.wikipedia.org/wiki/Domain-specific_language](https://en.wikipedia.org/wiki/Domain-specific_language)
 
-* http://wiki.c2.com/?EmbeddedDomainSpecificLanguage
+* [http://wiki.c2.com/?EmbeddedDomainSpecificLanguage](http://wiki.c2.com/?EmbeddedDomainSpecificLanguage)
 
-* https://en.wikipedia.org/wiki/Abstract_syntax_tree
+* [https://en.wikipedia.org/wiki/Abstract_syntax_tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
 
-* https://wiki.haskell.org/Phantom_type
+* [https://wiki.haskell.org/Phantom_type](https://wiki.haskell.org/Phantom_type)
 
-* https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/
+* [https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/](https://www.objc.io/blog/2014/12/29/functional-snippet-13-phantom-types/)
