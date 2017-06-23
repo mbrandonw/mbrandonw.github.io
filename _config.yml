@@ -2,7 +2,7 @@
 title: "Few, but ripe..."
 author: Brandon Williams
 email: mbw234@gmail.com
-description: > #
+description: "Articles about math, functional programming and the Swift programming language."
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://www.fewbutripe.com" # the base hostname & protocol for your site
 twitter_username: mbrandonw

@@ -106,7 +106,7 @@ extension Node: ExpressibleByStringLiteral {
   }
 }
 
-let document: Node = header([
+let document = header([
   h1([id => "welcome"], ["Welcome!"]),
   p([
     "Welcome to you, who has come here. See ",
@@ -148,13 +148,6 @@ render(attributes: [id => "welcome"])
 render(element: Element("h1", [id => "Welcome"], ["Welcome!"]))
 
 render(node: document)
-
-
-// ==== Exercises ====
-
-func prettyRender(node: Node) -> String {
-  fatalError()
-}
 
 
 

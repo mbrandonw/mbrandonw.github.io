@@ -1,0 +1,25 @@
+<meta property="og:type" content="website" />
+<meta property="og:title"
+      content="{% if page.title %}
+        {{ page.title | truncate: 160 }}
+      {% else %}
+        {{ site.title }}
+      {% endif %}">
+<meta property="og:description"
+      content="{% if page.excerpt %}
+        {{ page.excerpt | truncate: 160 }}
+      {% else %}
+        {{ site.description }}
+      {% endif %}">
+<meta property="og:url"
+      content="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}" />
+
+<meta property="og:site_name" content="{{ site.title }}" />
+
+{% if page.image %}
+  <meta property="og:image" content="{{site.url}}{{page.image}}" />
+{% endif %}
+
+{% for tag in page.categories %}
+  <meta property="article:tag" content="{{tag}}" />
+{% endfor %}
