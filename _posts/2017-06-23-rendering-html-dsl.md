@@ -9,7 +9,7 @@ author: Brandon Williams
 
 In our previous [article]({% post_url 2017-06-22-type-safe-html-in-swift %}) we described how to build an EDSL to model HTML in Swift. Here we describe how to take our `Node` value type and render it to a string that can actually be served to the browser. We do this by recursively walking the node tree, and rendering out the various parts in the most naive way possible. We begin by make a skeleton of such a function:
 
-``` swift
+```swift
 func render(_ node: Node) -> String {
   switch node {
   case let .element(e):
