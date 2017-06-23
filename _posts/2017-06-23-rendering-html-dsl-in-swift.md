@@ -1,14 +1,12 @@
 ---
 layout: post
-title:  "Rendering an HTML DSL"
-categories: swift html dsl
+title:  "Rendering an HTML DSL in Swift"
 date:   2017-06-23
+categories: swift html dsl
 author: Brandon Williams
-summary: Building off the DSL from last time for modeling HTML, we will create a simple function to render a node to a string that can ultimately be served to a browser.
+summary: "Building off the DSL from last time for modeling HTML, we will create a simple function to render a node to a string that can ultimately be served to a browser."
 image: /assets/html-dsl/pt2-preview-img.jpg
 ---
-
-## Rendering an HTML DSL
 
 In our previous [article]({% post_url 2017-06-22-type-safe-html-in-swift %}) we described how to build an EDSL to model HTML in Swift. Here we describe how to take our `Node` value type and render it to a string that can actually be served to the browser. We do this by recursively walking the node tree, and rendering out the various parts in the most naive way possible. We begin by make a skeleton of such a function:
 

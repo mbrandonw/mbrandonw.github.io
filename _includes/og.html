@@ -6,8 +6,8 @@
         {{ site.title }}
       {% endif %}">
 <meta property="og:description"
-      content="{% if page.excerpt %}
-        {{ page.excerpt | truncate: 160 }}
+      content="{% if page.summary %}
+        {{ page.summary | truncate: 160 }}
       {% else %}
         {{ site.description }}
       {% endif %}">

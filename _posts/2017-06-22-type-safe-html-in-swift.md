@@ -4,7 +4,7 @@ title:  "Type-Safe HTML in Swift"
 date:   2017-06-22
 categories: swift html dsl
 author: Brandon Williams
-summary: We build a type-safe DSL for modeling HTML in Swift, and discuss the advantages this has over templating languages.
+summary: "We build a type-safe DSL for modeling HTML in Swift, and discuss the advantages this has over templating languages."
 image: /assets/html-dsl/pt1-preview-img.jpg
 ---
 
@@ -345,7 +345,7 @@ func render(node: Node) -> String {
 }
 ```
 
-This is a straightforward exercise, though subtle and can take a few tries to get right. The details, however, are not particularly important for the main point of this article, type-safe HTML. Therefore I’ve put the details in another article, which you can find [here]({% post_url 2017-06-23-rendering-html-dsl %}).
+This is a straightforward exercise, though subtle and can take a few tries to get right. The details, however, are not particularly important for the main point of this article, type-safe HTML. Therefore I’ve put the details in another article, which you can find [here]({% post_url 2017-06-23-rendering-html-dsl-in-swift %}).
 
 ## Conclusion and next steps
 
