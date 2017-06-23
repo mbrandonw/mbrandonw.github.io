@@ -12,9 +12,7 @@ As server-side Swift becomes more popular and widely adopted, it will be importa
 A popular method for generating HTML is using so-called “templating languages”, for example [Mustache](http://mustache.github.io) and  [Handlebars](http://handlebarsjs.com). There is even one written in Swift for use with the [Vapor](https://github.com/vapor/) web framework called [Leaf](https://github.com/vapor/leaf). These libraries ingest plain text that you provide and interpolate values into it using tokens. For example, here is a Mustache (and Handlebar) template:
 
 ```html
-{% raw %}
-<h1>{{title}}</h1>
-{% endraw %}
+{% raw %}<h1>{{title}}</h1>{% endraw %}
 ```
 
 and here is a Leaf template:
@@ -32,11 +30,9 @@ You can then render these templates by providing a dictionary of key/value pairs
 Templating languages will also provide simple constructs for injecting small amounts of logic into the templates. For example, an `if` statement can be used to conditionally show some elements:
 
 ```html
-{% raw %}
-{{#if show}}
+{% raw %}{{#if show}}
   <span>I’m here!</span>
-{{/if}}
-{% endraw %}
+{{/if}}{% endraw %}
 ```
 ```html
 #if(show) {
