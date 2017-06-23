@@ -5,7 +5,7 @@ categories: swift html dsl
 date:   2017-06-23
 author: Brandon Williams
 summary: Building off the DSL from last time for modeling HTML, we will create a simple function to render a node to a string that can ultimately be served to a browser.
-image: /assets/pt2-preview-img.jpg
+image: /assets/html-dsl/pt2-preview-img.jpg
 ---
 
 ## Rendering an HTML DSL
