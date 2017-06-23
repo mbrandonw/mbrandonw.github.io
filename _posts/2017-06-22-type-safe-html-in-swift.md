@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Type-Safe HTML in Swift"
+date:   2017-06-22
 categories: swift html dsl
 author: Brandon Williams
 summary: We build a type-safe DSL for modeling HTML in Swift, and discuss the advantages this has over templating languages.
