@@ -479,21 +479,17 @@ let combined: View<HomepageData, [Node]> =
 like most things in math, one concept is easy to define and understand (`map`), and then we can define the dual version (`contramap`) easily, yet somehow it is hard to understand. and often it's the more useful of the two concepts!
 -->
 
-### A little bit of math…
+## Bringing it all together
+
+
+
+## A little bit of math…
 
 I would be remiss if I didn’t take a brief moment to mention a bit of mathematical jargon so that you can research some of these topics more deeply. The fact that `View<D, N>` has a `map` on it means that `View` is a [_functor_](https://en.wikipedia.org/wiki/Functor) in the type parameter `N`. You are already familiar with some functors in Swift, like `Array<A>` and `Optional<A>`.
 
 The fact that `View<D, N>` has a `contramap` on it means that `View` is a [_contravariant functor_](https://en.wikipedia.org/wiki/Functor#Covariance_and_contravariance) in the type parameter `D`. If you read our previous article on [predicates and sorting functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) you would have seen us define `Predicate<A>` and `Comparator<A>`. Both of those types are contravariant functors.
 
 And finally, the fact that `View<D, N>` is a functor in `N` _and_ a contravariant functor in `D` at the same time, makes `View` a [_profunctor_](https://en.wikipedia.org/wiki/Profunctor).
-
-## Bringing it all together
-
-
-## Bonus
-
-
-since View<D, N> is fully generic, N can be anything... a string, a mark down DSL, ...
 
 
 .
