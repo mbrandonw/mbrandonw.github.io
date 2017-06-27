@@ -338,6 +338,15 @@ extension View {
   func contramap<B>(_ f: @escaping (B) -> D) -> View<B, N> {
     return .init { b in self.view(f(b)) }
   }
+
+  func flatMap<S>(_ f: @escaping (N) -> View<D, S>) -> View<D, S> {
+    return View<D, S> { d in
+      let tmp1 = self.view(d)
+      let tmp2 = f(tmp1)
+      let tmp3 = tmp2.view(d)
+      return tmp3
+    }
+  }
 }
 
 func pure<A>(_ a: A) -> [A] {
@@ -428,9 +437,30 @@ let homepageV3 = homepageView
 //
 //render(view: main.map(main >>> pure), with: [])
 
+let articleCallout = View<Article, [Node]> { article in
+  [
+    span([.text(article.date)]),
+    a([href => "#"], [.text(article.title)])
+  ]
+}
+
+func id<A>(_ a: A) -> A { return a }
+
+let _articlesList = View<[Article], [Node]> { articles in
+
+  let tmp2 = articles.map(articleCallout.map(li >>> pure).view).flatMap(id)
 
 
 
+
+  return [
+    ul(
+      tmp2
+    )
+  ]
+}
+
+render(view: _articlesList, with: data.articles)
 
 
 

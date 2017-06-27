@@ -237,7 +237,7 @@ Now `transform` is a function `(User) -> User` that can transform any user by th
 
 By giving functional getters/setters a first class type `Lens`, we are now able to construct new abstractions that would have previously been difficult to see in the mutable world. We previously saw in “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})” that we could define types `Predicate<A>` and `Comparator<A>` that encompass the ideas of filtering and sorting arrays, and that they carry a rich algebraic structure given by a monoid. We will now see how lenses allow us to construct these objects very easily, giving us an abundance of algebraic objects to compose in interesting ways.
 
-For example, if `Part` is comparable, we can induce a predicate on the `Whole` by expressing the idea that whole values are less 
+For example, if `Part` is comparable, we can induce a predicate on the `Whole` by expressing the idea that whole values are less
 
 ```swift
 extension Lens where Part: Comparable {
@@ -406,3 +406,53 @@ https://www.youtube.com/watch?v=T88TDS7L5DY
 
 
 
+
+
+
+
+
+<!--
+
+REMOVED FROM COMPOSABLE VIEWS POST
+
+
+
+We can make this even a bit nicer by using Swift 4’s new [keypath](https://github.com/apple/swift-evolution/blob/master/proposals/0161-key-paths.md) feature to pluck out the data from `HomepageData`. First we’ll need a helper function that converts a `KeyPath<Root, Value>` to a function `(Root) -> Value`, which is eaiser to plug into `contramap`:
+
+```swift
+func get<Root, Value>(_ keyPath: KeyPath<Root, Value>) -> (Root) -> Value {
+  return { root in
+    root[keyPath: keyPath]
+  }
+}
+```
+
+Which we can use like so:
+
+```swift
+let combined: View<HomepageData, [Node]> =
+  siteHeader.contramap { _ in () }
+    <> mainArticles.contramap(get(\.articles))
+    <> siteFooter.contramap(get(\.footerData))
+```
+
+Not bad! Though, part of me still doesn’t like that `{ _ in () }` that is used to signify that `siteHeader` doesn’t need any data, especially since it’s a pattern that might show up often. We can collapse that a bit with some more helpers:
+
+
+```swift
+// A function that returns a constant function on `A`.
+func const<A, B>(_ a: A) -> (B) -> A {
+  return { _ in a }
+}
+
+// A synonym for the unique void value ()
+let unit: Void = ()
+
+let combined: View<HomepageData, [Node]> =
+  siteHeader.contramap(const(unit))
+    <> mainArticles.contramap(get(\.articles))
+    <> siteFooter.contramap(get(\.footerData))
+```
+
+
+-->

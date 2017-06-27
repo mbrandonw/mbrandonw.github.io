@@ -82,9 +82,9 @@ let headerContent = View<(), [Node]> { _ in
   [
     h1(["Few, but ripe..."]),
     menu([
-      a([href => "#"], ["About"]),
-      a([href => "#"], ["Hire Me"]),
-      a([href => "#"], ["Talks"])
+      a([href => "/about"], ["About"]),
+      a([href => "/hire-me"], ["Hire Me"]),
+      a([href => "/talks"], ["Talks"])
       ])
   ]
 }
@@ -136,8 +136,7 @@ let articlesList = View<[Article], [Node]> { articles in
 
 Note that we first created a helper view `articleListItem` for rendering a single item, and then we used it to render the full list of articles. We have to `flatMap` onto `articleListItem.view` since it returns an array of nodes.
 
-We can now bring this all together to create a homepage view that composes these views together. Since the
-
+We can now bring this all together to create a homepage view that composes these views together. We will create a `HomepageData` struct to bundle up all of the data the page needs (for both the articles and footer).
 
 ```swift
 struct HomepageData {
@@ -160,7 +159,7 @@ let homepage = View<HomepageData, [Node]> {
 }
 ```
 
-It isn’t the prettiest code right now, but we’ll make it better soon. And it’s not _that_ bad right now! Some things to note:
+It isn’t the prettiest code, but we’ll make it better soon. And it’s not _that_ bad right now! Some things to note:
 
 * It’s just a pure function mapping an array of articles to some HTML nodes, which can be rendered to a string and then tested in a unit test.
 
@@ -173,7 +172,9 @@ We can take the homepage for a spin by creating some homepage data and rendering
 
 ```swift
 func render<D>(view: View<D, [Node]>, with data: D) -> String {
-  return view.view(data).map(render(node:)).reduce("", +)
+  return view.view(data)
+    .map(render(node:))
+    .reduce("", +)
 }
 ```
 
@@ -204,9 +205,9 @@ which will output the following HTML.
     <header>
       <h1>Few, but ripe...</h1>
       <menu>
-        <a href="#">About</a>
-        <a href="#">Hire Me</a>
-        <a href="#">Talks</a>
+        <a href="/about">About</a>
+        <a href="/hire-me">Hire Me</a>
+        <a href="/talks">Talks</a>
       </menu>
     </header>
     <main>
@@ -327,7 +328,7 @@ let articleCallout = View<Article, [Node]> { article in
 }
 ```
 
-And then it’s `articlesList` to properly wrap that subview in `li` tags:
+And then `articlesList` can wrap that subview in a `li` tag:
 
 ```swift
 let articlesList = View<[Article], [Node]> { articles in
@@ -343,7 +344,7 @@ This allows us to maximize reusability of our subviews. We will also soon be abl
 
 ### View Composition #2 – Monoid
 
-The next form of composition we will encounter is from our requirement that `N` be a monoid in the definition of `View<D, N>`. Recall from a [previous article](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})) we showed that the type of functions from a type into a monoid also forms a monoid. This means that `View` is a monoid, and so let’s implement its conformance:
+The next form of composition we will encounter is from our requirement that `N` be a monoid in the definition of `View<D, N>`. Recall from a [previous article](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the type of functions from a type into a monoid also forms a monoid. This means that `View` is a monoid, and so let’s implement its conformance:
 
 ```swift
 extension View: Monoid {
@@ -435,45 +436,6 @@ let combined: View<HomepageData, [Node]> =
 
 This allows views to take only the data they need to do their job, while remaining open to being plugged into views that take more data.
 
-We can make this even a bit nicer by using Swift 4’s new [keypath](https://github.com/apple/swift-evolution/blob/master/proposals/0161-key-paths.md) feature to pluck out the data from `HomepageData`. First we’ll need a helper function that converts a `KeyPath<Root, Value>` to a function `(Root) -> Value`, which is eaiser to plug into `contramap`:
-
-```swift
-func get<Root, Value>(_ keyPath: KeyPath<Root, Value>) -> (Root) -> Value {
-  return { root in
-    root[keyPath: keyPath]
-  }
-}
-```
-
-Which we can use like so:
-
-```swift
-let combined: View<HomepageData, [Node]> =
-  siteHeader.contramap { _ in () }
-    <> mainArticles.contramap(get(\.articles))
-    <> siteFooter.contramap(get(\.footerData))
-```
-
-Not bad! Though, part of me still doesn’t like that `{ _ in () }` that is used to signify that `siteHeader` doesn’t need any data, especially since it’s a pattern that might show up often. We can collapse that a bit with some more helpers:
-
-
-```swift
-// A function that returns a constant function on `A`.
-func const<A, B>(_ a: A) -> (B) -> A {
-  return { _ in a }
-}
-
-// A synonym for the unique void value ()
-let unit: Void = ()
-
-let combined: View<HomepageData, [Node]> =
-  siteHeader.contramap(const(unit))
-    <> mainArticles.contramap(get(\.articles))
-    <> siteFooter.contramap(get(\.footerData))
-```
-
-
-
 
 <!--
 like most things in math, one concept is easy to define and understand (`map`), and then we can define the dual version (`contramap`) easily, yet somehow it is hard to understand. and often it's the more useful of the two concepts!
@@ -492,7 +454,15 @@ The fact that `View<D, N>` has a `contramap` on it means that `View` is a [_cont
 And finally, the fact that `View<D, N>` is a functor in `N` _and_ a contravariant functor in `D` at the same time, makes `View` a [_profunctor_](https://en.wikipedia.org/wiki/Profunctor).
 
 
+
 .
+
+## Conlusion
+
+two more types of composition: flatMap and ap
+
+## Exercises
+
 
 ## References
 
