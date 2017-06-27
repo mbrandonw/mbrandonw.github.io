@@ -14,6 +14,15 @@ extension Array: Monoid {
   }
 }
 
+func concat<M: Monoid>(_ xs: [M]) -> M {
+  return xs.reduce(M.e, <>)
+}
+extension Array where Element: Monoid {
+  func concat() -> Element {
+    return self.reduce(Element.e, <>)
+  }
+}
+
 
 
 struct Attribute {
@@ -223,7 +232,7 @@ struct View<D, N: Monoid> {
   }
 }
 
-let siteHeader = View<(), [Node]> { _ in
+let headerContent = View<(), [Node]> { _ in
   [
     h1(["Few, but ripe..."]),
     menu([
@@ -239,7 +248,7 @@ struct FooterData {
   let email: String
   let twitter: String
 }
-let siteFooter = View<FooterData, [Node]> {
+let footerContent = View<FooterData, [Node]> {
   [
     ul([
       li([.text($0.authorName)]),
@@ -281,9 +290,9 @@ let homepage = View<HomepageData, [Node]> {
     html(
       [
         body(
-          siteHeader.view(())
+          [ header(headerContent.view(())) ]
             + [ main(articlesList.view($0.articles)) ]
-            + siteFooter.view($0.footerData)
+            + [ footer(footerContent.view($0.footerData)) ]
         )
       ]
     )
@@ -294,14 +303,12 @@ func render<D>(view: View<D, [Node]>, with data: D) -> String {
   return view.view(data).map(render(node:)).reduce("", +)
 }
 
-let articles = [
-  Article(date: "Jan 6, 2015", title: "Proof in Functions"),
-  Article(date: "Feb 17, 2015", title: "Algebraic Structure and Protocols"),
-  Article(date: "Jun 22, 2017", title: "Type-Safe HTML in Swift"),
-]
-
-let homepageData = HomepageData(
-  articles: articles,
+let data = HomepageData(
+  articles: [
+    Article(date: "Jun 22, 2017", title: "Type-Safe HTML in Swift"),
+    Article(date: "Feb 17, 2015", title: "Algebraic Structure and Protocols"),
+    Article(date: "Jan 6, 2015", title: "Proof in Functions"),
+    ],
   footerData: .init(
     authorName: "Brandon Williams",
     email: "mbw234@gmail.com",
@@ -310,7 +317,7 @@ let homepageData = HomepageData(
 )
 
 print(
-  render(view: homepage, with: homepageData)
+  render(view: homepage, with: data)
 )
 
 extension View: Monoid {
@@ -345,10 +352,22 @@ func >>> <A, B, C>(_ f: @escaping (A) -> B, g: @escaping (B) -> C) -> (A) -> C {
   return { g(f($0)) }
 }
 
+func const<A, B>(_ x: A) -> (B) -> A {
+  return { _ in x }
+}
+
+public func get<Root, Value>(_ keyPath: KeyPath<Root, Value>) -> (Root) -> Value {
+  return { root in
+    root[keyPath: keyPath]
+  }
+}
+
+let unit: Void = ()
+
 let homepageView: View<HomepageData, [Node]> =
-  siteHeader.map(header >>> pure).contramap { _ in () }
-    <> articlesList.contramap { $0.articles }
-    <> siteFooter.map(footer >>> pure).contramap { $0.footerData }
+  headerContent.map(header >>> pure).contramap(const(unit))
+    <> articlesList.contramap(get(\.articles))
+    <> footerContent.map(footer >>> pure).contramap(get(\.footerData))
 
 let homepage_v2 = homepageView
   .map(main >>> pure)
@@ -362,18 +381,46 @@ let homepage_v2 = homepageView
     ]
 }
 
+struct LayoutData<D> {
+  let footerData: FooterData
+  let data: D
+}
+
+func layout<D>(main: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
+
+  let _main: View<LayoutData<D>, [Node]> = main.contramap(get(\.data))
+  let _header: View<LayoutData<D>, [Node]> = headerContent.map(header >>> pure).contramap(const(unit))
+  let _footer: View<LayoutData<D>, [Node]> = footerContent.map(footer >>> pure).contramap(get(\.footerData))
+
+  let ___ = View { [ footer(footerContent.view($0)) ] }
+
+  fatalError()
+//  return main
+//    .map { nodes in
+//    html(
+//      [
+//        body(
+//          [
+//            headerContent.map(header >>> pure),
+//            main.con
+//          ]
+//        )
+//      ]
+//    )
+//  }
+}
+
 func layout(_ nodes: [Node]) -> [Node] {
   return [
     html(
       [
-        body(nodes)
+        body([main(nodes)])
       ]
     )
   ]
 }
 
 let homepageV3 = homepageView
-  .map(main >>> pure)
   .map(layout)
 
 //func layout<D>(main: View<D, [Node]>) -> View<D, [Node]> {
@@ -396,5 +443,35 @@ let homepageV3 = homepageView
 
 
 1
+
+
+
+
+let articleCallout = View<Article, [Node]> { article in
+  [
+    span([.text(article.date)]),
+    a([href => "#"], [.text(article.title)])
+  ]
+}
+
+
+let _articlesList = View<[Article], [Node]> { articles in
+  [
+    ul(
+      articles.flatMap(articleCallout.view >>> li >>> pure)
+    )
+  ]
+}
+
+
+//let __articlesList = View<[Article], [Node]> { articles in
+//
+//}
+
+let tmp1 = data.articles
+  .map(articleCallout.view)
+  .concat()
+
+
 
 
