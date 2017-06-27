@@ -234,7 +234,7 @@ This is complicated enough view that was quite simple to compose from smaller pi
 
 Since `View` is a function, we would expect that there are some nice ways to compose them. And indeed, there are at least 3 ways!
 
-### View Composition #1 – Map
+### View Composition #1 – `map`
 
 The first type of composition we will discuss is called `map`. It is closely related to `Array`’s `map`, so let us recall that definition. `Array<A>` has a method called `map` that takes a function `f: (A) -> B` and returns an `Array<B>`. You can think of `f: (A) -> B` has transforming `Array<A>`s to `Array<B>`s by just applying `f` to each element of the array.
 
@@ -341,11 +341,7 @@ let articlesList = View<[Article], [Node]> { articles in
 
 This allows us to maximize reusability of our subviews. We will also soon be able to use our other two forms of composition to even simplify that!
 
-### View Composition #2 or #3 – Contramap
-
-
-
-### View Composition #2 or #3 – Monoid
+### View Composition #2 – Monoid
 
 The next form of composition we will encounter is from our requirement that `N` be a monoid in the definition of `View<D, N>`. Recall from a [previous article](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})) we showed that the type of functions from a type into a monoid also forms a monoid. This means that `View` is a monoid, and so let’s implement its conformance:
 
@@ -384,13 +380,120 @@ And then later we could `map` on this view in order to wrap it in an `article` t
 fullArticle.map(article >>> pure)
 ```
 
+Views are now looking super composable! However, `<>` has one disadvantage in that all of the views you compose together need to take the same kind of data. So for example, we cannot `<>` together our `siteHeader`, `mainContent` and `siteFooter` together since they each take a different type of data:
 
+```swift
+siteHeader
+  <> mainContent
+  <> siteFooter
+// error: binary operator '<>' cannot be applied to operands of
+// type 'View<(), [Node]>' and 'View<[Article], [Node]>'
+```
+
+However, our last form of composition fixes this for us!
+
+### View Composition #3 – `contramap`
+
+The final form of composition we will discuss is kind of like the “dual” version of `map`. It’s called `contramap` and it has a very subtle difference from `map`. Whereas `map` performed a transformation on the nodes of the view `N` without touching the data `D`, `contramap` performs a transformation on the data of the view without touching the nodes.
+
+To build intuition for `contramap` we will first try to naively define it like we did `map` and see what goes wrong. We might approach `contramap` as a method that takes a function `f: (D) -> B` and produces a new view `View<B, N>`:
+
+```swift
+extension View {
+  func contramap<B>(_ f: @escaping (D) -> B) -> View<B, N> {
+    return View<B, N> { b in
+      ???
+    }
+  }
+}
+```
+
+What can we return in the `???` block? We have a `b: B`, `f: (D) -> B` and `self.view: (D) -> N`. None of these pieces fit together. We can’t plug `b` into anything, and we can’t compose `f` and `self.view`. This function is impossible to implement.
+
+Let’s consider why. The method as it is defined now is saying that if we have a function `(D) -> B` we can transform views of the form `View<D, N>` to the form `View<B, N>`. If `D` were `Article`, and `f: (Article) -> String` were the function that plucked out the title, it would mean we could convert a view of an article to a view of a string, all without making any changes to the nodes. That can’t possibly be right, for the view of the article could have used any fields of `Article`, not just the title.
+
+Turns out we are thinking of this in the reverse direction! `contramap` actually flips around the transformation of the views, so `f: (D) -> B` can transform views `View<B, N>` to `View<D, N>`. If `f: (Article) -> String` plucks out the title of the article, then the transformation `View<String, N> -> View<Article, N>` allows us to lift a view of a simple string up to a view of a whole article by just plucking the title out of the article and rendering!
+
+We can now write the correct definition of `contramap`:
+
+```swift
+extension View {
+  func contramap<B>(_ f: @escaping (B) -> D) -> View<B, N> {
+    return .init { b in self.view(f(b)) }
+  }
+}
+```
+
+This function is useful for turning a view on a “smaller” piece of a data to a view on a “larger” piece of data. You just `contramap` on the view of the smaller data to pluck out the piece you need from the bigger data. For example, we can instantly make our site header, articles and footer all understand the same data by `contramap`ing on them to pluck the parts they need from `HomepageData`:
+
+```swift
+let combined: View<HomepageData, [Node]> =
+  siteHeader.contramap { _ in () }
+    <> mainArticles.contramap { $0.articles }
+    <> siteFooter.contramap { $0.footerData }
+```
+
+This allows views to take only the data they need to do their job, while remaining open to being plugged into views that take more data.
+
+We can make this even a bit nicer by using Swift 4’s new [keypath](https://github.com/apple/swift-evolution/blob/master/proposals/0161-key-paths.md) feature to pluck out the data from `HomepageData`. First we’ll need a helper function that converts a `KeyPath<Root, Value>` to a function `(Root) -> Value`, which is eaiser to plug into `contramap`:
+
+```swift
+func get<Root, Value>(_ keyPath: KeyPath<Root, Value>) -> (Root) -> Value {
+  return { root in
+    root[keyPath: keyPath]
+  }
+}
+```
+
+Which we can use like so:
+
+```swift
+let combined: View<HomepageData, [Node]> =
+  siteHeader.contramap { _ in () }
+    <> mainArticles.contramap(get(\.articles))
+    <> siteFooter.contramap(get(\.footerData))
+```
+
+Not bad! Though, part of me still doesn’t like that `{ _ in () }` that is used to signify that `siteHeader` doesn’t need any data, especially since it’s a pattern that might show up often. We can collapse that a bit with some more helpers:
+
+
+```swift
+// A function that returns a constant function on `A`.
+func const<A, B>(_ a: A) -> (B) -> A {
+  return { _ in a }
+}
+
+// A synonym for the unique void value ()
+let unit: Void = ()
+
+let combined: View<HomepageData, [Node]> =
+  siteHeader.contramap(const(unit))
+    <> mainArticles.contramap(get(\.articles))
+    <> siteFooter.contramap(get(\.footerData))
+```
+
+
+
+
+<!--
+like most things in math, one concept is easy to define and understand (`map`), and then we can define the dual version (`contramap`) easily, yet somehow it is hard to understand. and often it's the more useful of the two concepts!
+-->
+
+### A little bit of math…
+
+I would be remiss if I didn’t take a brief moment to mention a bit of mathematical jargon so that you can research some of these topics more deeply. The fact that `View<D, N>` has a `map` on it means that `View` is a [_functor_](https://en.wikipedia.org/wiki/Functor) in the type parameter `N`. You are already familiar with some functors in Swift, like `Array<A>` and `Optional<A>`.
+
+The fact that `View<D, N>` has a `contramap` on it means that `View` is a [_contravariant functor_](https://en.wikipedia.org/wiki/Functor#Covariance_and_contravariance) in the type parameter `D`. If you read our previous article on [predicates and sorting functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) you would have seen us define `Predicate<A>` and `Comparator<A>`. Both of those types are contravariant functors.
+
+And finally, the fact that `View<D, N>` is a functor in `N` _and_ a contravariant functor in `D` at the same time, makes `View` a [_profunctor_](https://en.wikipedia.org/wiki/Profunctor).
+
+## Bringing it all together
 
 
 ## Bonus
 
-Using `get` helper we can use keypaths...
 
+since View<D, N> is fully generic, N can be anything... a string, a mark down DSL, ...
 
 
 .

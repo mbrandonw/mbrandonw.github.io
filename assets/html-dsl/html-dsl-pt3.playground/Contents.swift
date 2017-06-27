@@ -386,28 +386,23 @@ struct LayoutData<D> {
   let data: D
 }
 
-func layout<D>(main: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
+func layout<D>(content: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
 
-  let _main: View<LayoutData<D>, [Node]> = main.contramap(get(\.data))
-  let _header: View<LayoutData<D>, [Node]> = headerContent.map(header >>> pure).contramap(const(unit))
-  let _footer: View<LayoutData<D>, [Node]> = footerContent.map(footer >>> pure).contramap(get(\.footerData))
-
-  let ___ = View { [ footer(footerContent.view($0)) ] }
-
-  fatalError()
-//  return main
-//    .map { nodes in
-//    html(
-//      [
-//        body(
-//          [
-//            headerContent.map(header >>> pure),
-//            main.con
-//          ]
-//        )
-//      ]
-//    )
-//  }
+  return (
+    headerContent.map(header >>> pure).contramap(const(unit))
+      <> content.contramap(get(\.data))
+      <> footerContent.map(footer >>> pure).contramap(get(\.footerData))
+    )
+    .map(main >>> pure)
+    .map { nodes in
+      [
+        html(
+          [
+            body(nodes)
+          ]
+        )
+      ]
+  }
 }
 
 func layout(_ nodes: [Node]) -> [Node] {
@@ -437,40 +432,6 @@ let homepageV3 = homepageView
 
 
 
-
-
-
-
-
-1
-
-
-
-
-let articleCallout = View<Article, [Node]> { article in
-  [
-    span([.text(article.date)]),
-    a([href => "#"], [.text(article.title)])
-  ]
-}
-
-
-let _articlesList = View<[Article], [Node]> { articles in
-  [
-    ul(
-      articles.flatMap(articleCallout.view >>> li >>> pure)
-    )
-  ]
-}
-
-
-//let __articlesList = View<[Article], [Node]> { articles in
-//
-//}
-
-let tmp1 = data.articles
-  .map(articleCallout.view)
-  .concat()
 
 
 
