@@ -548,7 +548,7 @@ This generates the exact same HTML from the beginning of this article, but using
 
 We have now seen that by embracing views as simple, pure functions from data to nodes we are able to discover 3 different forms of composition: `map`, `contramap` and monoid append. These operations are either completely hidden or obfuscated from you in the templating language world. For example, the only way to do a `map` on a view is to create a whole new template file to enclose the existing view. And amazingly, these 3 simple compositions subsume all possible ways of combining views in templating languages, such as partials, layouts, `yield` blocks, collections, nested layouts, etc...!
 
-Believe it or not, there is still at least one more type of composition that can be done on views. It’s called `flatMap` and it’s useful for when you need to combine two views in a more complicated way than stacking them. We’ll save that for a future article.
+Believe it or not, there is still at least one more type of composition that can be done on views. It’s called `flatMap` and it’s useful for when you need to combine two views in a more complicated way than stacking them. We’ll save that for a future article. Until then, checkout this <a href="/assets/html-dsl/html-dsl-pt3.playground.zip">playground</a> of all the work we have done.
 
 ## Exercises
 
