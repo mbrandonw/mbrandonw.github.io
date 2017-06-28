@@ -553,7 +553,6 @@ Believe it or not, there is still at least one more type of composition that can
 1.) Define `flatMap` on `View<D, N>`:
 
 ```swift
-
 extension View {
   func flatMap<S>(_ f: @escaping (N) -> FunctionM<A, S>) -> FunctionM<A, S> {
     ???
