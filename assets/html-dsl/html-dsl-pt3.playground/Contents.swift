@@ -338,15 +338,6 @@ extension View {
   func contramap<B>(_ f: @escaping (B) -> D) -> View<B, N> {
     return .init { b in self.view(f(b)) }
   }
-
-  func flatMap<S>(_ f: @escaping (N) -> View<D, S>) -> View<D, S> {
-    return View<D, S> { d in
-      let tmp1 = self.view(d)
-      let tmp2 = f(tmp1)
-      let tmp3 = tmp2.view(d)
-      return tmp3
-    }
-  }
 }
 
 func pure<A>(_ a: A) -> [A] {
@@ -361,22 +352,10 @@ func >>> <A, B, C>(_ f: @escaping (A) -> B, g: @escaping (B) -> C) -> (A) -> C {
   return { g(f($0)) }
 }
 
-func const<A, B>(_ x: A) -> (B) -> A {
-  return { _ in x }
-}
-
-public func get<Root, Value>(_ keyPath: KeyPath<Root, Value>) -> (Root) -> Value {
-  return { root in
-    root[keyPath: keyPath]
-  }
-}
-
-let unit: Void = ()
-
 let homepageView: View<HomepageData, [Node]> =
-  headerContent.map(header >>> pure).contramap(const(unit))
-    <> articlesList.contramap(get(\.articles))
-    <> footerContent.map(footer >>> pure).contramap(get(\.footerData))
+  headerContent.map(header >>> pure).contramap { _ in () }
+    <> articlesList.contramap { $0.articles }
+    <> footerContent.map(footer >>> pure).contramap { $0.footerData }
 
 let homepage_v2 = homepageView
   .map(main >>> pure)
@@ -391,78 +370,39 @@ let homepage_v2 = homepageView
 }
 
 struct LayoutData<D> {
-  let footerData: FooterData
   let data: D
+  let footerData: FooterData
 }
 
 func layout<D>(content: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
 
   return (
-    headerContent.map(header >>> pure).contramap(const(unit))
-      <> content.contramap(get(\.data))
-      <> footerContent.map(footer >>> pure).contramap(get(\.footerData))
+    headerContent.map(header >>> pure).contramap { _ in () }
+      <> content.map(main >>> pure).contramap { $0.data }
+      <> footerContent.map(footer >>> pure).contramap { $0.footerData }
     )
-    .map(main >>> pure)
-    .map { nodes in
-      [
-        html(
-          [
-            body(nodes)
-          ]
-        )
-      ]
-  }
+    .map(body >>> pure >>> html >>> pure)
 }
 
-func layout(_ nodes: [Node]) -> [Node] {
-  return [
-    html(
-      [
-        body([main(nodes)])
-      ]
-    )
-  ]
-}
-
-let homepageV3 = homepageView
-  .map(layout)
-
-//func layout<D>(main: View<D, [Node]>) -> View<D, [Node]> {
-//  return siteHeader.map(header >>> pure).contramap { _ in () }
-//    <> main.map { $0.articles }
-//  <> siteFooter.map(footer >>> pure).contramap { $0.footerData }
-//}
-
-//let homepage_v3 = main.map(body >>> pure >>> html >>> pure)
-//
-//render(view: main.map(main >>> pure), with: [])
-
-let articleCallout = View<Article, [Node]> { article in
-  [
-    span([.text(article.date)]),
-    a([href => "#"], [.text(article.title)])
-  ]
-}
-
-func id<A>(_ a: A) -> A { return a }
-
-let _articlesList = View<[Article], [Node]> { articles in
-
-  let tmp2 = articles.map(articleCallout.map(li >>> pure).view).flatMap(id)
 
 
+let __data = LayoutData(
+  data: [
+    Article(date: "Jun 22, 2017", title: "Type-Safe HTML in Swift"),
+    Article(date: "Feb 17, 2015", title: "Algebraic Structure and Protocols"),
+    Article(date: "Jan 6, 2015", title: "Proof in Functions"),
+    ],
+  footerData: .init(
+    authorName: "Brandon Williams",
+    email: "mbw234@gmail.com",
+    twitter: "mbrandonw"
+  )
+)
 
-
-  return [
-    ul(
-      tmp2
-    )
-  ]
-}
-
-render(view: _articlesList, with: data.articles)
-
-
+render(
+  view: layout(content: articlesList),
+  with: __data
+)
 
 
 

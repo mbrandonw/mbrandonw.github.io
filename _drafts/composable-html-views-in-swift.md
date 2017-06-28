@@ -53,7 +53,7 @@ protocol Monoid: Semigroup {
 }
 
 extension Array: Monoid {
-  static var e: Array<Element> { return  [] }
+  static var e: Array { return  [] }
   static func <>(lhs: Array, rhs: Array) -> Array {
     return lhs + rhs
   }
@@ -77,7 +77,6 @@ struct View<D, N: Monoid> {
 All of our views will be mapping into `[Node]`, but that lil extra bit of generality will pay dividends later. With this simple type we can cook up a few views. Below I have roughly recreated some of the HTML on this very site:
 
 ```swift
-
 let headerContent = View<(), [Node]> { _ in
   [
     h1(["Few, but ripe..."]),
@@ -168,7 +167,7 @@ It isn’t the prettiest code, but we’ll make it better soon. And it’s not _
 * We were able to use subviews to clean up this view and make it clear that we are just stacking a header on top of main content on top of a footer.
 
 
-We can take the homepage for a spin by creating some homepage data and rendering. The `render(node:)` function we made [last time](%{ post_url 2017-06-23-rendering-html-dsl-in-swift %}) only works on nodes, not views. We can write a `render` for views like so:
+We can take the homepage for a spin by creating some homepage data and rendering. The `render(node:)` function we made [last time]({% post_url 2017-06-23-rendering-html-dsl-in-swift %}) only works on nodes, not views. We can write a `render` for views like so:
 
 ```swift
 func render<D>(view: View<D, [Node]>, with data: D) -> String {
@@ -358,7 +357,7 @@ extension View: Monoid {
 }
 ```
 
-This function allows us to combine two views by stacking them, as long as the type of data they each take matches up. For example, say we were building a view for a particular article on this site. It consists of a header (title, date, author), body (paragraphs, code snippets), and footer (contact info). All of those views can be rendered from an `Article` value:
+This function allows us to combine two views by stacking them, as long as the type of data they each take matches up. For example, say we were building a view for a particular article on this site. It consists of a header (title, date, author), body (paragraphs, code snippets), and footer (author contact info). All of those views can be rendered from an `Article` value:
 
 ```swift
 let articleHeader = View<Article, [Node]> { ... }
@@ -443,7 +442,132 @@ like most things in math, one concept is easy to define and understand (`map`), 
 
 ## Bringing it all together
 
+We can now use all of our new tools of composition to refactor our view of articles into a short and sweet code snippet. Let’s first remind ourselves of all the atomic units of views we have at our disposal:
 
+```swift
+let headerContent = View<(), [Node]> { _ in
+  [
+    h1(["Few, but ripe..."]),
+    menu([
+      a([href => "/about"], ["About"]),
+      a([href => "/hire-me"], ["Hire Me"]),
+      a([href => "/talks"], ["Talks"])
+      ])
+  ]
+}
+
+let footerContent = View<FooterData, [Node]> {
+  [
+    ul([
+      li([.text($0.authorName)]),
+      li([.text($0.email)]),
+      li([.text("@\($0.twitter)")]),
+      ]),
+    p(["Articles about math, functional programming and the Swift programming language."])
+  ]
+}
+
+let articleCallout = View<Article, [Node]> { article in
+  [
+    span([.text(article.date)]),
+    a([href => "#"], [.text(article.title)])
+  ]
+}
+
+let articlesList = View<[Article], [Node]> { articles in
+  [
+    ul(
+      articles.flatMap(articleCallout.view >>> li >>> pure)
+    )
+  ]
+}
+```
+
+From these pieces we want to create a `View<HomepageData, [Node]>` that assembles all the pieces and wraps it all in `html` and `body` tags. One approach would be to just take what we’ve done so far to combine the header/content/footer into a view, and then `map` on it for the enclosing tags. Remember that we also have to `map` on each of our subviews to properly enclose them in their semantic tags:
+
+```swift
+let homepage: View<HomepageData, [Node]> =
+  (
+    headerContent.map(header >>> pure).contramap { _ in () }
+      <> articlesList.map(main >>> pure).contramap { $0.articles }
+      <> footerContent.map(footer >>> pure).contramap { $0.footerData }
+  )
+  .map { nodes in
+    [
+      html(
+        [
+          body(nodes)
+        ]
+      )
+    ]
+  }
+```
+
+This looks quite nice! However, we probably want to render the header and footer on most pages, and be able to just plug in the middle content on a page-by-page basis. We may want to also render additional stuff into the pages, like stylesheets, javascripts and meta tags. Rails provides something called [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html) to solve this, but we can just use a plain ole function!
+
+```swift
+// A struct to hold all the data that the layout needs, in addition
+// to whatever the main content needs
+struct SiteLayoutData<D> {
+  let contentData: D
+  let footerData: FooterData
+}
+
+func siteLayout<D>(content: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
+  return (
+    headerContent.map(header >>> pure).contramap { _ in () }
+      <> content.map(main >>> pure).contramap { $0.data }
+      <> footerContent.map(footer >>> pure).contramap { $0.footerData }
+    )
+    .map(body >>> pure >>> html >>> pure)
+}
+```
+
+We got a little fancy in that last line by adding the `body` and `html` tags all in one mapping, but it still reads quite well! And now this can be used to render our list of articles very easily!
+
+```swift
+let data = SiteLayoutData(
+  contentData: [
+    Article(date: "Jun 22, 2017", title: "Type-Safe HTML in Swift"),
+    Article(date: "Feb 17, 2015", title: "Algebraic Structure and Protocols"),
+    Article(date: "Jan 6, 2015", title: "Proof in Functions"),
+  ],
+  footerData: .init(
+    authorName: "Brandon Williams",
+    email: "mbw234@gmail.com",
+    twitter: "mbrandonw"
+  )
+)
+
+render(view: siteLayout(content: articlesList), with: data)
+```
+
+This generates the exact same HTML from the beginning of this article, but using very small atomic pieces that plug together in beautiful ways.
+
+## Conlusion
+
+We have now seen that by embracing views as simple, pure functions from data to nodes we are able to discover 3 different forms of composition: `map`, `contramap` and monoid append. These operations are either completely hidden or obfuscated from you in the templating language world. For example, the only way to do a `map` on a view is to create a whole new template file to enclose the existing view. And amazingly, these 3 simple compositions subsume all possible ways of combining views in templating languages, such as partials, layouts, `yield` blocks, collections, nested layouts, etc...!
+
+Believe it or not, there is still at least one more type of composition that can be done on views. It’s called `flatMap` and it’s useful for when you need to combine two views in a more complicated way than stacking them. We’ll save that for a future article.
+
+## Exercises
+
+1.) Define `flatMap` on `View<D, N>`:
+
+```swift
+
+extension View {
+  func flatMap<S>(_ f: @escaping (N) -> FunctionM<A, S>) -> FunctionM<A, S> {
+    ???
+  }
+}
+```
+
+## References
+
+* [Type Safe HTML in Swift](http://www.fewbutripe.com/swift/html/dsl/2017/06/22/type-safe-html-in-swift.html)
+* [The Algebra of Predicates and Sorting Functions](http://www.fewbutripe.com/swift/math/algebra/monoid/2017/04/18/algbera-of-predicates-and-sorting-functions.html)
+* [Algebraic Structures and Protocols](http://www.fewbutripe.com/swift/math/algebra/2015/02/17/algebraic-structure-and-protocols.html)
 
 ## A little bit of math…
 
@@ -452,20 +576,3 @@ I would be remiss if I didn’t take a brief moment to mention a bit of mathemat
 The fact that `View<D, N>` has a `contramap` on it means that `View` is a [_contravariant functor_](https://en.wikipedia.org/wiki/Functor#Covariance_and_contravariance) in the type parameter `D`. If you read our previous article on [predicates and sorting functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) you would have seen us define `Predicate<A>` and `Comparator<A>`. Both of those types are contravariant functors.
 
 And finally, the fact that `View<D, N>` is a functor in `N` _and_ a contravariant functor in `D` at the same time, makes `View` a [_profunctor_](https://en.wikipedia.org/wiki/Profunctor).
-
-
-
-.
-
-## Conlusion
-
-two more types of composition: flatMap and ap
-
-## Exercises
-
-
-## References
-
-* http://www.fewbutripe.com/swift/html/dsl/2017/06/22/type-safe-html-in-swift.html
-* http://www.fewbutripe.com/swift/math/algebra/monoid/2017/04/18/algbera-of-predicates-and-sorting-functions.html
-* http://www.fewbutripe.com/swift/math/algebra/2015/02/17/algebraic-structure-and-protocols.html
