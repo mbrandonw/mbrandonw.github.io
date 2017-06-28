@@ -1,13 +1,11 @@
 ---
 layout: post
 title:  "Composable HTML Views in Swift"
-date:   2017-06-27
+date:   2017-06-29
 categories: swift html dsl
 author: Brandon Williams
 summary: "We define a view as a function from data to HTML nodes, and show how this results in three different types of compositions of views."
-
-
-image: TODO
+image: /assets/html-dsl/pt2-preview-img.jpg
 ---
 
 [Last time]({% post_url 2017-06-22-type-safe-html-in-swift %}) we defined a DSL in Swift for creating HTML documents. We accomplished this by creating some simple value types to describe the domain (nodes and attributes) and some helper functions for generating values. In the end it looked like this:
@@ -513,10 +511,10 @@ struct SiteLayoutData<D> {
   let footerData: FooterData
 }
 
-func siteLayout<D>(content: View<D, [Node]>) -> View<LayoutData<D>, [Node]> {
+func siteLayout<D>(content: View<D, [Node]>) -> View<SiteLayoutData<D>, [Node]> {
   return (
     headerContent.map(header >>> pure).contramap { _ in () }
-      <> content.map(main >>> pure).contramap { $0.data }
+      <> content.map(main >>> pure).contramap { $0.contentData }
       <> footerContent.map(footer >>> pure).contramap { $0.footerData }
     )
     .map(body >>> pure >>> html >>> pure)

@@ -153,7 +153,10 @@ struct SiteLayoutData<D> {
   let footerData: FooterData
 }
 
-func siteLayout<D>(content: View<D, [Node]>) -> View<SiteLayoutData<D>, [Node]> {
+func siteLayout<D>(
+  content: View<D, [Node]>
+  )
+  -> View<SiteLayoutData<D>, [Node]> {
   return (
     headerContent.map(header >>> pure).contramap { _ in () }
       <> content.map(main >>> pure).contramap { $0.contentData }
