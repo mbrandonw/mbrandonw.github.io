@@ -16,6 +16,42 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 <br>
 
+## Swift Talks
+
+**April 2017**: [Chris Eidhof](http://twitter.com/chriseidhof) and [Florian Kugler](http://www.twitter.com/floriankugler) of [objc.io](http://www.objc.io) invited me to record a few guest appearances on their “Swift Talks” series about Kickstarter’s [newly open-sourced](https://kickstarter.engineering/open-sourcing-our-android-and-ios-apps-6891be909fcd) code. It was a great opportunity to show how functional programming can be applied to a large codebase in real life.
+
+#### View Models at Kickstarter
+
+> Brandon from Kickstarter joins us and shows how the company uses view models to write highly testable code. We integrate Apple Pay payments and look at Kickstarter's open-source codebase.
+
+
+<video controls preload="none" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMzYvNTAvOTg2ZjI0N2UtZTU4YS00MTQzLTk4M2YtOGQxZDRiMDRkNGZhLzQ3IFZpZXcgTW9kZWxzIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=318940b4f059d474" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" width="560">
+  <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" type="application/x-mpegURL">
+</video>
+
+<br>
+
+#### Deep Linking at Kickstarter
+
+> Brandon from Kickstarter joins us to discuss deep linking into an iOS app. We show how to unify all potential entry points into the app using a common route enum, and then we take a look at this pattern in Kickstarter's open source codebase.
+
+
+<video controls playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMDYvMjgvZTlhNTE5NjgtYTJhNS00YzU0LTkzNjEtODMwNGIyOWIwODRhLzQ5IERlZXBsaW5raW5nIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=5060556c01a1ba8e" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" width="560">
+  <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" type="application/x-mpegURL">
+</video>
+
+<br>
+
+#### Playground-Driven Development at Kickstarter
+
+> Brandon from Kickstarter is back to show us how the company uses playgrounds to prototype and style individual view controllers.
+
+<video controls playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDUvMTkvMTkvMTEvNTAvZGMxOWIwZTktMDljYS00ODk4LWIyMmQtNzc1ZThmN2JkNjNlLzUxIFBsYXlncm91bmQtRHJpdmVuIERldmVsb3BtZW50IGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=6201e61a5cc75591" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" width="560">
+  <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" type="application/x-mpegURL">
+</video>
+
+<br>
+
 ## Monoids, Predicates and Sorting Functions
 **April 2017**: At the [2017 Functional Swift Conference](http://2017.funswiftconf.com) in Brooklyn I spoke about small atomic units of abstractions can piece together to build surprisingly complex, yet expressive, components. In particular, I used semigroups and monoids to build an expressive algebra for predicates and sorting functions. This talk is roughly based on the article I wrote “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})”.
 
@@ -37,18 +73,21 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 <iframe width="560" height="315" src="https://www.youtube.com/embed/A0VaIKK2ijM" frameborder="0" allowfullscreen></iframe>
 
 <br>
+
 ## Lenses in Swift
 **Dec 2015:** At the [2015 Functional Swift Conference](http://2015.funswiftconf.com) in Brooklyn I described the basics of lenses and how to implement them in Swift.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/ofjehH9f-CU" frameborder="0" allowfullscreen></iframe>
 
 <br>
+
 ## Proof in Functions
 **Feb 2015:** At the [Brooklyn Swift Meetup](https://www.meetup.com/Brooklyn-Swift-Developers/events/220352273/) I described how we can use the Swift type system to prove simple mathematical theorems. This talk coveres most of everything I discussed in my post [“Proof in Functions”](http://www.fewbutripe.com/swift/math/2015/01/06/proof-in-functions.html).
 
 <iframe src="https://player.vimeo.com/video/121953811" width="560" height="315" style="max-width: 100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
 <br>
+
 ## Functional Programming in a Playground
 **Dec 2014:** At the [2014 Functional Swift Conference](http://2014.funswiftconf.com) in Brooklyn I used Swift playgrounds as a highly interactive way for exploring functional programming ideas. In particular, I developed the ideas of transducers and show how they lead to highly composable data transformations.
 
