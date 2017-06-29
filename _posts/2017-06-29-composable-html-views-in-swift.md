@@ -34,6 +34,8 @@ to generate this HTML:
 
 Now we are going to tackle a problem that goes up one layer in the web-server request lifecycle: creating views. These are the things responsible for taking some data, say a list of articles, and creating the HTML to represent that data. It may sound easy, but there are a lot of difficult problems to solve with views. We want our views to be composable so that we can create small sub-views focused on rendering one piece of data and be able to reuse it. We also want our views to be flexible enough for future developments that are hard to see right now.
 
+You can [download a playground](/assets/html-dsl/html-dsl-pt3.playground.zip) of the code snippets in this article so that you can follow along at home.
+
 ## The View Function
 
 Like most topics discussed on this site, we are going to define view as a plain ole function. Also, like most topics in computer science, a monoid is involved. Luckily we’ve talked about these topics a lot on this site ([here](%{ post_url 2015-02-17-algebraic-structure-and-protocols %}) and [here](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})), and so there’s a lot of material to pull from. We will assume you are familiar with most of this content, and quickly recap the code that defines these objects:
@@ -306,7 +308,7 @@ func pure<A>(_ a: A) -> [A] { return [a] }
 let siteFooter = footerContent.map(footer >>> pure)
 ```
 
-This line says that `siteFooter` is made by mapping over `footerContent`’s nodes, wrapping those nodes in a `footer` tag, and then wrapping that in an array. We can use this for all 3 of our subviews:
+Here we have defined an operator `>>>` for composing functions, and a function `pure` for embedding any value into an array of one element. Then we defined `siteFooter` as mapping over `footerContent`’s nodes, wrapping those nodes in a `footer` tag, and then wrapping that in an array. We can use this for all 3 of our subviews:
 
 ```swift
 let siteHeader = headerContent.map(header >>> pure)
@@ -546,7 +548,7 @@ This generates the exact same HTML from the beginning of this article, but using
 
 We have now seen that by embracing views as simple, pure functions from data to nodes we are able to discover 3 different forms of composition: `map`, `contramap` and monoid append. These operations are either completely hidden or obfuscated from you in the templating language world. For example, the only way to do a `map` on a view is to create a whole new template file to enclose the existing view. And amazingly, these 3 simple compositions subsume all possible ways of combining views in templating languages, such as partials, layouts, `yield` blocks, collections, nested layouts, etc...!
 
-Believe it or not, there is still at least one more type of composition that can be done on views. It’s called `flatMap` and it’s useful for when you need to combine two views in a more complicated way than stacking them. We’ll save that for a future article. Until then, checkout this <a href="/assets/html-dsl/html-dsl-pt3.playground.zip">playground</a> of all the work we have done.
+Believe it or not, there is still at least one more type of composition that can be done on views. It’s called `flatMap` and it’s useful for when you need to combine two views in a more complicated way than stacking them. We’ll save that for a future article. Until then, checkout this [playground](/assets/html-dsl/html-dsl-pt3.playground.zip) of all the work we have done.
 
 ## Exercises
 
@@ -559,6 +561,41 @@ extension View<D, N> {
   }
 }
 ```
+
+2.) Explore the idea that [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html), as defined by Rails, is just a function between `(View<S<D>, N>) -> View<D, N>`, where `S<D>` is some type generic of your data `D` that adds whatever data is required by the layout. How do these layout functions compose?
+
+3.) Implement the following function:
+
+```swift
+func divide<A, B, C, N: Monoid>(_ f: @escaping (A) -> (B, C))
+  -> (View<B, N>)
+  -> (View<C, N>)
+  -> View<A, N> {
+
+    ???
+}
+```
+
+This allows you to take a function that splits a piece of data into two smaller pieces (`(A) -> (B, C)`), then take two views on the smaller pieces of data, and glues them together. This can also be achieved with `contramap` and `<>`, but this is a slightly shorter way of doing it. Also, this function can be seen as the contravariant analogue to [applicative functors](https://hackage.haskell.org/package/base-4.9.1.0/docs/Control-Applicative.html).
+
+4.) Implement the following function:
+
+```swift
+enum Either<A, B> {
+  case left(A)
+  case right(B)
+}
+
+func choose<A, B, C, N>(_ f: @escaping (A) -> Either<B, C>)
+  -> (View<B, N>)
+  -> (View<C, N>)
+  -> View<A, N> {
+
+    ???
+}
+```
+
+This allows you to choose between what views to use based on a function `(A) -> Either<B, C>`.This function can be seen as the contravariant analogue to [alternative functors](https://hackage.haskell.org/package/base-4.9.1.0/docs/Control-Applicative.html#g:2).
 
 ## References
 
