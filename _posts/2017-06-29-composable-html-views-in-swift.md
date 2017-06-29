@@ -503,7 +503,7 @@ let homepage: View<HomepageData, [Node]> =
   }
 ```
 
-This looks quite nice! However, we probably want to render the header and footer on most pages, and be able to just plug in the middle content on a page-by-page basis. We may want to also render additional stuff into the pages, like stylesheets, javascripts and meta tags. Rails provides something called [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html) to solve this, but we can just use a plain ole function!
+This looks quite nice! However, we probably want to render the header and footer on most pages, and be able to just plug in the middle content on a page-by-page basis. We may want to also render additional stuff into the pages, like stylesheets, javascripts and meta tags. Rails provides something called [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html) to solve this in a reusable way, but we can just use a plain ole function!
 
 ```swift
 // A struct to hold all the data that the layout needs, in addition
