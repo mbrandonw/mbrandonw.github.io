@@ -24,8 +24,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 > Brandon from Kickstarter joins us and shows how the company uses view models to write highly testable code. We integrate Apple Pay payments and look at Kickstarter's open-source codebase.
 
-
-<video controls preload="none" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMzYvNTAvOTg2ZjI0N2UtZTU4YS00MTQzLTk4M2YtOGQxZDRiMDRkNGZhLzQ3IFZpZXcgTW9kZWxzIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=318940b4f059d474" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMzYvNTAvOTg2ZjI0N2UtZTU4YS00MTQzLTk4M2YtOGQxZDRiMDRkNGZhLzQ3IFZpZXcgTW9kZWxzIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=318940b4f059d474" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" width="560">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" type="application/x-mpegURL">
 </video>
 
@@ -36,7 +35,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 > Brandon from Kickstarter joins us to discuss deep linking into an iOS app. We show how to unify all potential entry points into the app using a common route enum, and then we take a look at this pattern in Kickstarter's open source codebase.
 
 
-<video controls playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMDYvMjgvZTlhNTE5NjgtYTJhNS00YzU0LTkzNjEtODMwNGIyOWIwODRhLzQ5IERlZXBsaW5raW5nIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=5060556c01a1ba8e" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMDYvMjgvZTlhNTE5NjgtYTJhNS00YzU0LTkzNjEtODMwNGIyOWIwODRhLzQ5IERlZXBsaW5raW5nIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=5060556c01a1ba8e" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" width="560">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" type="application/x-mpegURL">
 </video>
 
@@ -46,7 +45,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 > Brandon from Kickstarter is back to show us how the company uses playgrounds to prototype and style individual view controllers.
 
-<video controls playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDUvMTkvMTkvMTEvNTAvZGMxOWIwZTktMDljYS00ODk4LWIyMmQtNzc1ZThmN2JkNjNlLzUxIFBsYXlncm91bmQtRHJpdmVuIERldmVsb3BtZW50IGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=6201e61a5cc75591" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDUvMTkvMTkvMTEvNTAvZGMxOWIwZTktMDljYS00ODk4LWIyMmQtNzc1ZThmN2JkNjNlLzUxIFBsYXlncm91bmQtRHJpdmVuIERldmVsb3BtZW50IGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=6201e61a5cc75591" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" width="560">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" type="application/x-mpegURL">
 </video>
 
