@@ -20,7 +20,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 **April 2017**: [Chris Eidhof](http://twitter.com/chriseidhof) and [Florian Kugler](http://www.twitter.com/floriankugler) of [objc.io](http://www.objc.io) invited me to record a few guest appearances on their “Swift Talks” series about Kickstarter’s [newly open-sourced](https://kickstarter.engineering/open-sourcing-our-android-and-ios-apps-6891be909fcd) code. It was a great opportunity to show how functional programming can be applied to a large codebase in real life.
 
-#### View Models at Kickstarter
+#### [View Models at Kickstarter](https://talk.objc.io/episodes/S01E47-view-models-at-kickstarter)
 
 > Brandon from Kickstarter joins us and shows how the company uses view models to write highly testable code. We integrate Apple Pay payments and look at Kickstarter's open-source codebase.
 
@@ -31,7 +31,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 <br>
 
-#### Deep Linking at Kickstarter
+#### [Deep Linking at Kickstarter](https://talk.objc.io/episodes/S01E49-deep-linking-at-kickstarter)
 
 > Brandon from Kickstarter joins us to discuss deep linking into an iOS app. We show how to unify all potential entry points into the app using a common route enum, and then we take a look at this pattern in Kickstarter's open source codebase.
 
@@ -42,7 +42,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 <br>
 
-#### Playground-Driven Development at Kickstarter
+#### [Playground-Driven Development at Kickstarter](https://talk.objc.io/episodes/S01E51-playground-driven-development-at-kickstarter)
 
 > Brandon from Kickstarter is back to show us how the company uses playgrounds to prototype and style individual view controllers.
 
