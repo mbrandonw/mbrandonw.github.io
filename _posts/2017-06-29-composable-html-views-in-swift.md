@@ -226,7 +226,7 @@ which will output the following HTML.
 </html>
 ```
 
-This is complicated enough view that was quite simple to compose from smaller pieces! (todo: more)
+This is complicated enough view that was simple to compose from smaller pieces! We could stop here and we would have a nice model for creating views, but there is so much more we can do. We need to explore the ways that views can be composed to unlock the next benefits of views…
 
 ## View Composition
 
@@ -378,7 +378,7 @@ And then later we could `map` on this view in order to wrap it in an `article` t
 fullArticle.map(article >>> pure)
 ```
 
-Views are now looking super composable! However, `<>` has one disadvantage in that all of the views you compose together need to take the same kind of data. So for example, we cannot `<>` together our `siteHeader`, `mainContent` and `siteFooter` together since they each take a different type of data:
+Views are now looking super composable! However, `<>` has one disadvantage in that all of the views you compose together need to take the same kind of data. So for example, we cannot `<>` our `siteHeader`, `mainContent` and `siteFooter` together since they each take different types of data:
 
 ```swift
 siteHeader
