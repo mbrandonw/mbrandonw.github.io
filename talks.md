@@ -62,7 +62,9 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 **March 2017**: There are precisely two things that make functions fully testable: the isolation of effects and the surfacing of ‘co-effects’. We will explore a bit of the formal theory behind these two sides, and show how they lead to code that can be easily tested. We will also show how we do this at Kickstarter by diving into our recently open sourced codebase.
 
-[![The two sides of writing testable code]({{ site.url }}/assets/two-sides-of-testing.jpg)](https://news.realm.io/news/try-swift-brandon-williams-writing-testable-code/)
+<a href="https://news.realm.io/news/try-swift-brandon-williams-writing-testable-code/">
+  <img src="/assets/two-sides-of-testing.jpg" width="560" alt="The two sides of writing testable code" />
+</a>
 
 <br>
 
