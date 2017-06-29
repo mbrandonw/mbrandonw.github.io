@@ -234,12 +234,12 @@ Since `View` is a function, we would expect that there are some nice ways to com
 
 ### View Composition #1 – `map`
 
-The first type of composition we will discuss is called `map`. It is closely related to `Array`’s `map`, so let us recall that definition. `Array<A>` has a method called `map` that takes a function `f: (A) -> B` and returns an `Array<B>`. You can think of `f: (A) -> B` has transforming `Array<A>`s to `Array<B>`s by just applying `f` to each element of the array.
+The first type of composition we will discuss is called `map`. It is closely related to `Array`’s `map`, so let us recall that definition. `Array<A>` has a method called `map` that takes a function `f: (A) -> B` and returns an `Array<B>`. You can think of `f: (A) -> B` as transforming `Array<A>`s to `Array<B>`s by just applying `f` to each element of the array.
 
 `View<D, N>` also has such a function, but it transforms the `N` part of the view. Let us first write the signature of how such a function would look:
 
 ```swift
-extension View {
+extension View<D, N> {
   func map<S>(_ f: @escaping (N) -> S) -> View<D, S> {
     ???
   }
@@ -249,7 +249,7 @@ extension View {
 We know that this method returns a `View<D, S>`, which is really just a function `(D) -> S`, so we can fill in a bit of this function body:
 
 ```swift
-extension View {
+extension View<D, N> {
   func map<S>(_ f: @escaping (N) -> S) -> View<D, S> {
     return View<D, S> { d in
       ???
@@ -261,7 +261,7 @@ extension View {
 Now we have at our disposal `d: D`, `f: (N) -> S`, and `self.view: (D) -> N`. Seems like we can just compose these two functions and feed `d` into em:
 
 ```swift
-extension View {
+extension View<D, N> {
   func map<S>(_ f: @escaping (N) -> S) -> View<D, S> {
     return View<D, S> { d in
       f(self.view(d))
@@ -314,7 +314,7 @@ let mainArticles = articlesList.map(main >>> pure)
 let siteFooter = footerContent.map(footer >>> pure)
 ```
 
-That is starting to look really nice! We can now have our subviews concentrate _only_ on the content they provide, and not worry about what their enclosing tag should be. For example, `articleListItem` rendered an `li` tag with the article date and title in it. We could generalize this so that we could potentially reuse that view in places that are not necessarily a list:
+That is starting to look nice! We can now have our subviews concentrate _only_ on the content they provide, and not worry about what their enclosing tag should be. For example, `articleListItem` rendered an `li` tag with the article date and title in it. We could generalize view by omitting the `li` tag so that it could be reused in places that are not necessarily a list:
 
 ```swift
 let articleCallout = View<Article, [Node]> { article in
@@ -325,7 +325,7 @@ let articleCallout = View<Article, [Node]> { article in
 }
 ```
 
-And then `articlesList` can wrap that subview in a `li` tag:
+And then `articlesList` can be responsible for wrapping that subview in a `li` tag:
 
 ```swift
 let articlesList = View<[Article], [Node]> { articles in
@@ -397,7 +397,7 @@ The final form of composition we will discuss is kind of like the “dual” ver
 To build intuition for `contramap` we will first try to naively define it like we did `map` and see what goes wrong. We might approach `contramap` as a method that takes a function `f: (D) -> B` and produces a new view `View<B, N>`:
 
 ```swift
-extension View {
+extension View<D, N> {
   func contramap<B>(_ f: @escaping (D) -> B) -> View<B, N> {
     return View<B, N> { b in
       ???
@@ -410,12 +410,12 @@ What can we return in the `???` block? We have a `b: B`, `f: (D) -> B` and `self
 
 Let’s consider why. The method as it is defined now is saying that if we have a function `(D) -> B` we can transform views of the form `View<D, N>` to the form `View<B, N>`. If `D` were `Article`, and `f: (Article) -> String` were the function that plucked out the title, it would mean we could convert a view of an article to a view of a string, all without making any changes to the nodes. That can’t possibly be right, for the view of the article could have used any fields of `Article`, not just the title.
 
-Turns out we are thinking of this in the reverse direction! `contramap` actually flips around the transformation of the views, so `f: (D) -> B` can transform views `View<B, N>` to `View<D, N>`. If `f: (Article) -> String` plucks out the title of the article, then the transformation `View<String, N> -> View<Article, N>` allows us to lift a view of a simple string up to a view of a whole article by just plucking the title out of the article and rendering!
+Turns out we are thinking of this in the reverse direction! `contramap` actually flips around the transformation of the views, so `f: (D) -> B` can transform views of the form `View<B, N>` to the form `View<D, N>`. If `f: (Article) -> String` plucks out the title of the article, then the induced transformation `View<String, N> -> View<Article, N>` allows us to lift a view of a simple string up to a view of a whole article by just plucking the title out of the article and rendering!
 
 We can now write the correct definition of `contramap`:
 
 ```swift
-extension View {
+extension View<D, N> {
   func contramap<B>(_ f: @escaping (B) -> D) -> View<B, N> {
     return .init { b in self.view(f(b)) }
   }
@@ -553,7 +553,7 @@ Believe it or not, there is still at least one more type of composition that can
 1.) Define `flatMap` on `View<D, N>`:
 
 ```swift
-extension View {
+extension View<D, N> {
   func flatMap<S>(_ f: @escaping (N) -> FunctionM<A, S>) -> FunctionM<A, S> {
     ???
   }
