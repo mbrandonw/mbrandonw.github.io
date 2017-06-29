@@ -562,7 +562,7 @@ extension View<D, N> {
 }
 ```
 
-2.) Explore the idea that [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html), as defined by Rails, is just a function between `(View<S<D>, N>) -> View<D, N>`, where `S<D>` is some type generic of your data `D` that adds whatever data is required by the layout. How do these layout functions compose?
+2.) Explore the idea that [“layouts”](http://guides.rubyonrails.org/layouts_and_rendering.html), as defined by Rails, is just a function between `(View<D, N>) -> View<S<D>, N>`, where `S<D>` is some type generic of your data `D` that adds whatever data is required by the layout. How do these layout functions compose?
 
 3.) Implement the following function:
 
