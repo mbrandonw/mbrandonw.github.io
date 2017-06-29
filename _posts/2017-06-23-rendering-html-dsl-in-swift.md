@@ -129,18 +129,8 @@ Hopefully this rendering exercise will convince you that work with an EDSL can b
 
 ## Exercises
 
-1.) Implement a function:
+1.) Create an `AttributeValue` protocol to be the counterpart of our `AttributeKey` type. It’s job is to have a `render(withKey:)` method that knows how to render a single key/value pair. This will allow us to provide custom logic for rendering attributes. For example, boolean attributes either render their presence or not at all: one uses `<input>` and `<input disabled>` for enabled/disabled states, not `<input disabled="false">` and `<input disabled="true">`.
 
-```swift
-func redacted(node: Node) -> Node {
-  ???
-}
-```
+2.) Make a pretty renderer for `Node`. It should insert a newline after every opened tag, and indent its contents based on how deeply you are nested into the tags.
 
-that walks the node tree, finds all `.text` nodes, and replaces every non-whitespace character in the string with “▉”.
-
-2.) Create an `AttributeValue` protocol to be the counterpart of our `AttributeKey` type. It’s job is to have a `render(withKey:)` method that knows how to render a single key/value pair. This will allow us to provide custom logic for rendering attributes. For example, boolean attributes either render their presence or not at all: one uses `<input>` and `<input disabled>` for enabled/disabled states, not `<input disabled="false">` and `<input disabled="true">`.
-
-3.) Make a pretty renderer for `Node`. It should insert a newline after every opened tag, and indent its contents based on how deeply you are nested into the tags.
-
-4.) Implement HTML escaping into our DSL and renderer. One approach is to model escaped strings as a new type, say `EncodedString`, and then require the DSL to only accept encoded strings. You will also need to provide a way to convert plain `String`s to `EncodedString`s. Once you fix the compiler errors, there’s a chance that everything will _just work_!
+3.) Implement HTML escaping into our DSL and renderer. One approach is to model escaped strings as a new type, say `EncodedString`, and then require the DSL to only accept encoded strings. You will also need to provide a way to convert plain `String`s to `EncodedString`s. Once you fix the compiler errors, there’s a chance that everything will _just work_!

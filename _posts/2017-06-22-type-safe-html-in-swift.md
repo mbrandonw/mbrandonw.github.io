@@ -373,7 +373,17 @@ All of the code developed in this article is available in a playground you can d
 
 1.) In HTML5, the `<strike>` tag for styling strikethrough text was removed from the standard. Instead one is supposed to use `<del>` or `<s>`. Write a function `updatedStrikes(node: Node) -> Node` that replaces all `<strike>`’s with `<s>`’s
 
-2.) Enhance the EDSL by adding support for HTML comments.
+2.) Implement a function:
+
+```swift
+func redacted(node: Node) -> Node {
+  ???
+}
+```
+
+that walks the node tree, finds all `.text` nodes, and replaces every non-whitespace character in the string with “▉”.
+
+3.) Enhance the EDSL by adding support for HTML comments.
 
 ## References:
 
