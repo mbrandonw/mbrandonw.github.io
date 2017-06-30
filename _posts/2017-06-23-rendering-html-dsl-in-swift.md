@@ -62,7 +62,7 @@ func render(element: Element) -> String {
   let openTagWithAttrs = openTag
     + (element.attribs.isEmpty ? "" : " ")
     + render(attributes: element.attribs)
-    + ">"
+    + (element.children != nil ? ">" : ""
   let children = // ???
   let closeTag = element.children == nil ? "/>" : "</\(element.name)>"
 
