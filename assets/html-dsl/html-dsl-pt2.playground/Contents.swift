@@ -130,7 +130,7 @@ func render(element: Element) -> String {
   let openTagWithAttrs = openTag
     + (element.attribs.isEmpty ? "" : " ")
     + render(attributes: element.attribs)
-    + ">"
+    + (element.children == nil ? ">" : "")
   let children = (element.children ?? []).map(render(node:)).joined()
   let closeTag = element.children == nil ? "/>" : "</\(element.name)>"
 
