@@ -64,7 +64,7 @@ func render(element: Element) -> String {
     + render(attributes: element.attribs)
     + (element.children != nil ? ">" : "")
   let children = // ???
-  let closeTag = element.children == nil ? "/>" : "</\(element.name)>"
+  let closeTag = element.children == nil ? " />" : "</\(element.name)>"
 
   return openTagWithAttrs + children + closeTag
 }
@@ -82,7 +82,7 @@ func render(element: Element) -> String {
     + render(attributes: element.attribs)
     + (element.children != nil ? ">" : "")
   let children = (element.children ?? []).map(render(node:)).joined()
-  let closeTag = element.children == nil ? "/>" : "</\(element.name)>"
+  let closeTag = element.children == nil ? " />" : "</\(element.name)>"
 
   return openTagWithAttrs + children + closeTag
 }
