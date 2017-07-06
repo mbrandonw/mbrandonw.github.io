@@ -38,7 +38,7 @@ You can [download a playground](/assets/html-dsl/html-dsl-pt3.playground.zip) of
 
 ## The View Function
 
-Like most topics discussed on this site, we are going to define view as a plain ole function. Also, like most topics in computer science, a monoid is involved. Luckily we’ve talked about these topics a lot on this site ([here](%{ post_url 2015-02-17-algebraic-structure-and-protocols %}) and [here](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})), and so there’s a lot of material to pull from. We will assume you are familiar with most of this content, and quickly recap the code that defines these objects:
+Like most topics discussed on this site, we are going to define view as a plain ole function. Also, like most topics in computer science, a monoid is involved. Luckily we’ve talked about these topics a lot on this site ([here]({% post_url 2015-02-17-algebraic-structure-and-protocols %}) and [here]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})), and so there’s a lot of material to pull from. We will assume you are familiar with most of this content, and quickly recap the code that defines these objects:
 
 ```swift
 precedencegroup Semigroup { associativity: left }
@@ -343,7 +343,7 @@ This allows us to maximize reusability of our subviews. We will also soon be abl
 
 ### View Composition #2 – Monoid
 
-The next form of composition we will encounter is from our requirement that `N` be a monoid in the definition of `View<D, N>`. Recall from a [previous article](%{ post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the type of functions from a type into a monoid also forms a monoid. This means that `View` is a monoid, and so let’s implement its conformance:
+The next form of composition we will encounter is from our requirement that `N` be a monoid in the definition of `View<D, N>`. Recall from a [previous article]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %}) we showed that the type of functions from a type into a monoid also forms a monoid. This means that `View` is a monoid, and so let’s implement its conformance:
 
 ```swift
 extension View: Monoid {
