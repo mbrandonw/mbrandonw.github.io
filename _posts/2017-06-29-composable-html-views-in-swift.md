@@ -8,6 +8,8 @@ summary: "We define a view as a function from data to HTML nodes, and show how t
 image: /assets/html-dsl/pt2-preview-img.jpg
 ---
 
+{% include server-side-series.html sequence="3" %}
+
 [Last time]({% post_url 2017-06-22-type-safe-html-in-swift %}) we defined a DSL in Swift for creating HTML documents. We accomplished this by creating some simple value types to describe the domain (nodes and attributes) and some helper functions for generating values. In the end it looked like this:
 
 ```swift

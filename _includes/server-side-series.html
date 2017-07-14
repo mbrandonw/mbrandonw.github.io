@@ -1,0 +1,40 @@
+
+<blockquote>
+  <p>
+    This post is just one in a series that aims to cover the foundations of server-side Swift from first principles. Please consider checking out the rest in the series:
+  </p>
+
+  <ul>
+    {% if include.sequence != "1" %}
+      <li>
+        <a href="{% post_url 2017-06-22-type-safe-html-in-swift %}">
+          Type-Safe HTML in Swift
+        </a>
+      </li>
+    {% endif %}
+
+    {% if include.sequence != "2" %}
+      <li>
+        <a href="{% post_url 2017-06-23-rendering-html-dsl-in-swift %}">
+          Rendering an HTML DSL in Swift
+        </a>
+      </li>
+    {% endif %}
+
+    {% if include.sequence != "3" %}
+      <li>
+        <a href="{% post_url 2017-06-29-composable-html-views-in-swift %}">
+          Composable HTML Views in Swift
+        </a>
+      </li>
+    {% endif %}
+
+    {% if include.sequence != "4" %}
+      <li>
+        <a href="#">
+          Pretty Printing HTML
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</blockquote>

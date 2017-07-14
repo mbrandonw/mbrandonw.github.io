@@ -8,7 +8,9 @@ summary: "TODO"
 image: TODO
 ---
 
-In a [previous article]({% post_url 2017-06-27-view-functions-vs-templates %}) we implemented a naive HTML renderer by recursively walking the node tree and rendering each atomic unit. The implementation was simple, and it produces a “minified” version of the HTML since there were no newlines or spaces to make the result more readable. Sometimes we want to produce a string representation that is easier to grok, for example in development mode of a server it can be helpful to have nicely formatted HTML, and it can be useful for doing [“snapshot testing”](https://facebook.github.io/jest/docs/snapshot-testing.html
+{% include server-side-series.html sequence="4" %}
+
+In a [previous article]({% post_url 2017-06-23-rendering-html-dsl-in-swift %}) we implemented a naive HTML renderer by recursively walking the node tree and rendering each atomic unit. The implementation was simple, and it produces a “minified” version of the HTML since there were no newlines or spaces to make the result more readable. Sometimes we want to produce a string representation that is easier to grok, for example in development mode of a server it can be helpful to have nicely formatted HTML, and it can be useful for doing [“snapshot testing”](https://facebook.github.io/jest/docs/snapshot-testing.html
 ) of documents.
 
 “Pretty printing” is the act of taking a piece of data, and printing it to a string that in some sense is aesthetically pleasing. For example, HTML is a tree of nodes that make up a document, and can be printed to a string in a variety of ways:
@@ -237,11 +239,72 @@ private func prettyPrintOpenTag(element: Element) -> Doc {
 }
 ```
 
-The most complicated part of this is how we checked if `children` is `nil` so that we can just close up immediately with ` />`, and otherwise we append `>` and a newline so that the children will be printed inside the tag.
+The most complicated part of this is how we checked if `children` is `nil` so that we can close up immediately with `/>`, and otherwise we append `>` and a newline so that the children will print inside the tag.
 
 ### Pretty printing an array of attributes
 
+Next we need to implement this function:
+
+```swift
+func prettyPrint(attributes attribs: [Attribute]) -> Doc {
+  ???
+}
+```
+
+Assume for a moment that we already have a function `prettyPrint(attribute:)` for rendering out a single attribute. Then we can use that function to `map` over the attributes to produce an array of `Doc` values. We want to concatenate these values together so that they are printed on one line if they fit, and otherwise are all on a newline. There is a combinator that does specifically this!
+
+```swift
+/// Concat all horizontally if it fits, but if not
+/// all vertical
+public func sep() -> Doc
+```
+
+Now, if we only apply `sep()` to our array of documents, when an attribute flows to a newline it will go back to the current indentation of the open tag. However, we want all the attributes to align. There’s a wonderful combinator called `hang` that does precisely this! It takes an argument for how much additional indentation you want to make, but in our case we want `0`.
+
+One last subtle detail before we can write out the implementation of `prettyPrint(attributes:)`. If there are attributes to render we want to prepend a single space to the document to space it from tag. This allows us to have `<p id="x">` without accidentally doing `<p >`. So, the final implementation is:
+
+```swift
+func prettyPrint(attributes attribs: [Attribute]) -> Doc {
+
+  return .text(attribs.count == 0 ? "" : " ")
+    <> attribs
+      .map(prettyPrint(attribute:))
+      .sep()
+      .hang(0)
+}
+```
+
+Finally we implement the helper `prettyPrint(attribute:)` for a single attribute:
+
+```swift
+func prettyPrint(attribute: Attribute) -> Doc {
+  return .text("\(attribute.key)=\"\(attribute.value)\"")
+}
+```
+
 ### Pretty printing children nodes
+
+Rendering the children nodes leans on recursively calling the `prettyPrint(node:)` function, with a few small additions. First, if the children array is `nil` (for tags that do not support children), then we want to just return the empty document so that we do not do any formatting.
+
+```swift
+func prettyPrintChildren(nodes: [Node]?) -> Doc {
+  guard let nodes = nodes else { return .empty }
+
+  ???
+}
+```
+
+To fill in the rest we can `map` over the nodes, `prettyPrint` each of them, and then apply the `vcat` operator to get a single document with all the children vertically stacked. We can also apply the `indent` operator to make sure that the children are indented inside their parent tag:
+
+```swift
+func prettyPrintChildren(nodes: [Node]?) -> Doc {
+  guard let nodes = nodes else { return .empty }
+
+  return nodes.map(prettyPrint(node:))
+    .vcat()
+    .indent(2)
+}
+```
 
 ### Pretty printing a close tag
 
@@ -262,6 +325,8 @@ Here we make sure to do nothing in the case that `children` is `nil`, and otherw
 ## Exercises
 
 * make this more robust by taking a `Config` value that describes pagewidth, indentation, hang style, etc...
+
+* pretty print style and class attributes
 
 ## References
 
