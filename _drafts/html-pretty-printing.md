@@ -76,7 +76,7 @@ Notice how `style` is aligned with `id` above and not simply indented two spaces
 </html>
 ```
 
-And just to make things even more interesting, let’s also require that if `class` or `style` values go beyond the page width, then they will also break out onto newlines:
+And just to make things even more interesting, let’s also require that if `class` or `style` values go beyond the page width, then their values will further be split into multiple lines:
 
 ```html
 <html>
@@ -143,7 +143,7 @@ Now, the real work is to implement those functions!
 
 ## Pretty printing a text node
 
-The `text` node is the easiest to deal with, so let’s start with that. A text node can fill the entire line up to the page width, and then wrap back to where the text node started but on a new line. We can’t just break a newline at any point in the text though, it should happen at a space in the text. So, we can build an array of `Doc.text` values by splitting on a space and mapping:
+The `text` node is the easiest to deal with, so let’s start with that. A text node can fill the entire line up to the page width, and then wrap back to where the text node started but on a new line. We can’t just break the text onto a new line at any point, it should happen at a space in the text. So, we can build an array of `Doc.text` values by splitting on a space and mapping:
 
 ```swift
 let textParts: [Doc] = text
@@ -179,8 +179,8 @@ prettyPrint(text: "Articles about math, functional programming and the Swift pro
 ```
 ```
 Articles about math, functional
-programming and the Swift
-programming language.
+programming and the Swift programming
+language.
 ```
 
 Not super impressive just yet, but still nice how little work we had to do to get there!
