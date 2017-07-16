@@ -4,7 +4,7 @@ title:  "Pretty Printing HTML"
 date:   2017-06-29
 categories: swift html dsl
 author: Brandon Williams
-summary: "TODO"
+summary: "We implement a pretty printing function for our HTML DSL that renders a document to a well-formatted string."
 image: TODO
 ---
 
@@ -235,11 +235,12 @@ private func prettyPrintOpenTag(element: Element) -> Doc {
   return .text("<")
     <> .text(element.name)
     <> prettyPrint(attributes: element.attribs)
-    <> (element.content == nil ? .text(" />") : .text(">") <> .hardline)
+    <> .text(">")
+    <> (element.content == nil ? .empty : .hardline)
 }
 ```
 
-The most complicated part of this is how we checked if `children` is `nil` so that we can close up immediately with `/>`, and otherwise we append `>` and a newline so that the children will print inside the tag.
+The most complicated part of this is how we checked if `children` is `nil` to determine if we need to print a newline so that children are printed inside the tag. (todo: mention empty here instead of later)
 
 ### Pretty printing an array of attributes
 
@@ -320,13 +321,11 @@ private func prettyPrintCloseTag(element: Element) -> Doc {
 
 Here we make sure to do nothing in the case that `children` is `nil`, and otherwise we go to a newline and print the closing tag.
 
-## Taking the pretty printer for a test drive
+## Conclusion
 
 We have now completed the implementation of a basic pretty printer! Here’s a demo of what we have accomplished, where the red line corresponds to the page width of the document:
 
 ![](/assets/html-dsl/pretty-print.gif)
-
-## Conclusion
 
 
 
