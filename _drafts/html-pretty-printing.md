@@ -10,7 +10,7 @@ image: TODO
 
 {% include server-side-series.html sequence="4" %}
 
-In a [previous article]({% post_url 2017-06-23-rendering-html-dsl-in-swift %}) we implemented a naive HTML renderer by recursively walking the node tree and rendering each atomic unit. The implementation was simple, and it produces a “minified” version of the HTML since there were no newlines or spaces to make the result more readable. Sometimes we want to produce a string representation that is easier to grok, for example in development mode of a server it can be helpful to have nicely formatted HTML, and it can be useful for doing [“snapshot testing”](https://facebook.github.io/jest/docs/snapshot-testing.html
+In a [previous article]({% post_url 2017-06-23-rendering-html-dsl-in-swift %}) we implemented a naive HTML renderer by recursively walking the node tree and rendering each atomic unit. The implementation was simple, and it produced a “minified” version of the HTML since there were no newlines or spaces to make the result more readable. Sometimes we want to produce a string representation that is easier to grok, for example in development mode of a server it can be helpful to have nicely formatted HTML, and it can be useful for doing [“snapshot testing”](https://facebook.github.io/jest/docs/snapshot-testing.html
 ) of documents.
 
 “Pretty printing” is the act of taking a piece of data, and printing it to a string that in some sense is aesthetically pleasing. For example, HTML is a tree of nodes that make up a document, and can be printed to a string in a variety of ways:
@@ -165,7 +165,7 @@ That’s precisely what we want! So we can fill in our function as:
 func prettyPrint(text: String) -> Doc {
   return text
     .split(separator: " ")
-    .map{ Doc.text(String($0)) }
+    .map { Doc.text(String($0)) }
     .fillSep()
 }
 ```
@@ -322,6 +322,8 @@ Here we make sure to do nothing in the case that `children` is `nil`, and otherw
 
 ## Conclusion
 
+![](/assets/html-dsl/pretty-print.gif)
+
 ## Exercises
 
 * make this more robust by taking a `Config` value that describes pagewidth, indentation, hang style, etc...
@@ -330,7 +332,8 @@ Here we make sure to do nothing in the case that `children` is `nil`, and otherw
 
 ## References
 
-https://en.wikipedia.org/wiki/Prettyprint
-https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
-https://facebook.github.io/jest/docs/snapshot-testing.html
-https://github.com/bkase/DoctorPretty
+* [Pretty print](https://en.wikipedia.org/wiki/Prettyprint)
+* [A prettier printer](https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf)
+* [Snapshot testing](https://facebook.github.io/jest/docs/snapshot-testing.html)
+* [DoctorPretty](https://github.com/bkase/DoctorPretty)
+* [Algebraic Structure and Protocols]({% post_url 2015-02-17-algebraic-structure-and-protocols %})
