@@ -327,7 +327,7 @@ We have now completed the implementation of a basic pretty printer! Here’s a d
 
 ![Demo of pretty printing a basic HTML doucment](/assets/html-dsl/pretty-print.gif)
 
-
+It is pretty amazing that we were able to implement this advanced of a pretty printer using just a few simple combinators in the [DoctorPretty](https://github.com/bkase/DoctorPretty) library. It’s a testament to the power of abstraction via algebraic properties. I highly recommend reading Wadler’s original paper, [A prettier printer](https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf).
 
 ## Exercises
 
