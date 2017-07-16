@@ -37,7 +37,7 @@ Hello world
 </html>
 ```
 
-Each of those printings represent the same HTML document, yet the last one is easiest to comprehend. However, just adding newlines and tabs on nodes sometimes isn’t enough. A single line may be very long, and you might want to wrap lines after they flow past a certain page width. For example, the following document has been pretty printed to make sure that no line goes beyond 40 characters:
+Each of those printings represent the same HTML document, yet the last one is easiest to take in. However, just adding newlines and tabs on nodes sometimes isn’t enough. A single line may be very long, and you might want to wrap lines after they flow past a certain page width. For example, the following document has been pretty printed to make sure that no line goes beyond 40 characters:
 
 ```html
 <html>
@@ -126,7 +126,7 @@ func prettyPrint(node: Node) -> Doc {
 }
 ```
 
-Let’s assume for a moment that we have two hypothetical functions `prettyPrint(element:)` and `prettyPrint(text:)` that no how to print those pieces, then we have:
+Let’s assume for a moment that we have two hypothetical functions `prettyPrint(element:)` and `prettyPrint(text:)` that know how to print those pieces, then we have:
 
 ```swift
 func prettyPrint(node: Node) -> Doc {
@@ -284,7 +284,7 @@ func prettyPrint(attribute: Attribute) -> Doc {
 
 ### Pretty printing children nodes
 
-Rendering the children nodes leans on recursively calling the `prettyPrint(node:)` function, with a few small additions. First, if the children array is `nil` (for tags that do not support children), then we want to just return the empty document so that we do not do any formatting.
+Rendering the children nodes leans on recursively calling the `prettyPrint(node:)` function, with a few small additions. First, if the children array is `nil` (for tags that do not support children), then we want to just return the empty document so that we do not do any formatting. There’s a special `Doc` value called `empty` that helps with that:
 
 ```swift
 func prettyPrintChildren(nodes: [Node]?) -> Doc {
@@ -294,7 +294,7 @@ func prettyPrintChildren(nodes: [Node]?) -> Doc {
 }
 ```
 
-To fill in the rest we can `map` over the nodes, `prettyPrint` each of them, and then apply the `vcat` operator to get a single document with all the children vertically stacked. We can also apply the `indent` operator to make sure that the children are indented inside their parent tag:
+To fill in the rest we can `map` over the nodes, `prettyPrint` each of them, and then apply the `vcat` operator to get a single document with all the children vertically stacked. We also apply the `indent` operator to make sure that the children are indented inside their parent tag:
 
 ```swift
 func prettyPrintChildren(nodes: [Node]?) -> Doc {
@@ -308,7 +308,7 @@ func prettyPrintChildren(nodes: [Node]?) -> Doc {
 
 ### Pretty printing a close tag
 
-When rendering the closing tag we need to make sure not to do anything for the tags that cannot have children nodes. There’s a special `Doc` value called `empty` that helps with that:
+When rendering the closing tag we need to make sure not to do anything for the tags that cannot have children nodes:
 
 ```swift
 private func prettyPrintCloseTag(element: Element) -> Doc {
@@ -320,15 +320,25 @@ private func prettyPrintCloseTag(element: Element) -> Doc {
 
 Here we make sure to do nothing in the case that `children` is `nil`, and otherwise we go to a newline and print the closing tag.
 
-## Conclusion
+## Taking the pretty printer for a test drive
+
+We have now completed the implementation of a basic pretty printer! Here’s a demo of what we have accomplished, where the red line corresponds to the page width of the document:
 
 ![](/assets/html-dsl/pretty-print.gif)
 
+## Conclusion
+
+
+
 ## Exercises
 
-* make this more robust by taking a `Config` value that describes pagewidth, indentation, hang style, etc...
+* Make pretty printing configurable by introducing a `Config` type that is seeded into `prettyPrint(node:config:)` and allows the following customizations:
+  * Page width
+  * Number of spaces for indentation
+  * “Hang style”, i.e. allowing opting in/out of the “all or nothing” policy of fitting all attributes on a single line before they all break to new lines
+  * Opt in/out to aligning the `=` of attribute key/value pairs.
 
-* pretty print style and class attributes
+* In the introduction we mentioned that you could break the values of `style` and `class` attributes onto new lines if they don’t fit on one line, but we didn’t actually implement it. Add extra logic to `prettyPrint(attribtue:)` to allow this. Any other attributes that might benefit from this?
 
 ## References
 
