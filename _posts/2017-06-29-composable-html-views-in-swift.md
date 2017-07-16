@@ -5,7 +5,7 @@ date:   2017-06-29
 categories: swift html dsl
 author: Brandon Williams
 summary: "We define a view as a function from data to HTML nodes, and show how this results in three different types of compositions of views."
-image: /assets/html-dsl/pt2-preview-img.jpg
+image: /assets/html-dsl/pt3-preview-img.jpg
 ---
 
 {% include server-side-series.html sequence="3" %}

@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  "Pretty Printing HTML"
-date:   2017-06-29
+date:   2017-07-17
 categories: swift html dsl
 author: Brandon Williams
 summary: "We implement a pretty printing function for our HTML DSL that renders a document to a well-formatted string."
-image: TODO
+image: /assets/html-dsl/pt4-preview-img.jpg
 ---
 
 {% include server-side-series.html sequence="4" %}
