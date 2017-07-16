@@ -12,7 +12,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 **May 2017**: My colleague [Lisa Luo](http://www.twitter.com/luoser) and I gave a talk at [UIKonf](http://www.uikonf.com) about how we unify our foundations across iOS and Android by building off of functional programming in Swift and Kotlin.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_DuGaAkQSnM" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/_DuGaAkQSnM" frameborder="0" allowfullscreen></iframe>
 
 <br>
 
@@ -24,7 +24,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 > Brandon from Kickstarter joins us and shows how the company uses view models to write highly testable code. We integrate Apple Pay payments and look at Kickstarter's open-source codebase.
 
-<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMzYvNTAvOTg2ZjI0N2UtZTU4YS00MTQzLTk4M2YtOGQxZDRiMDRkNGZhLzQ3IFZpZXcgTW9kZWxzIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=318940b4f059d474" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMzYvNTAvOTg2ZjI0N2UtZTU4YS00MTQzLTk4M2YtOGQxZDRiMDRkNGZhLzQ3IFZpZXcgTW9kZWxzIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=318940b4f059d474" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" width="560" style="max-width: 100%;">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/480bc61f-3920-4282-b6ec-e0ab77b71cef/2/hls.m3u8" type="application/x-mpegURL">
 </video>
 
@@ -35,7 +35,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 > Brandon from Kickstarter joins us to discuss deep linking into an iOS app. We show how to unify all potential entry points into the app using a common route enum, and then we take a look at this pattern in Kickstarter's open source codebase.
 
 
-<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMDYvMjgvZTlhNTE5NjgtYTJhNS00YzU0LTkzNjEtODMwNGIyOWIwODRhLzQ5IERlZXBsaW5raW5nIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=5060556c01a1ba8e" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDQvMjgvMDcvMDYvMjgvZTlhNTE5NjgtYTJhNS00YzU0LTkzNjEtODMwNGIyOWIwODRhLzQ5IERlZXBsaW5raW5nIGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=5060556c01a1ba8e" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" width="560" style="max-width: 100%;">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/be77e730-777a-4c1e-b2d4-b163ccd7e07a/1/hls.m3u8" type="application/x-mpegURL">
 </video>
 
@@ -45,7 +45,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 > Brandon from Kickstarter is back to show us how the company uses playgrounds to prototype and style individual view controllers.
 
-<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDUvMTkvMTkvMTEvNTAvZGMxOWIwZTktMDljYS00ODk4LWIyMmQtNzc1ZThmN2JkNjNlLzUxIFBsYXlncm91bmQtRHJpdmVuIERldmVsb3BtZW50IGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=6201e61a5cc75591" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" width="560">
+<video controls preload="none" playsinline="true" poster="https://d2sazdeahkz1yk.cloudfront.net/assets/W1siZiIsIjIwMTcvMDUvMTkvMTkvMTEvNTAvZGMxOWIwZTktMDljYS00ODk4LWIyMmQtNzc1ZThmN2JkNjNlLzUxIFBsYXlncm91bmQtRHJpdmVuIERldmVsb3BtZW50IGF0IEtpY2tzdGFydGVyLmpwZyJdLFsicCIsInRodW1iIiwiMTkyMHgxMDgwIyJdXQ?sha=6201e61a5cc75591" tabindex="-1" src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" width="560" style="max-width: 100%;">
   <source src="https://d2sazdeahkz1yk.cloudfront.net/videos/1e7e2723-36dc-4a11-b81f-02703b7bb305/1/hls.m3u8" type="application/x-mpegURL">
 </video>
 
@@ -54,7 +54,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 ## Monoids, Predicates and Sorting Functions
 **April 2017**: At the [2017 Functional Swift Conference](http://2017.funswiftconf.com) in Brooklyn I spoke about small atomic units of abstractions can piece together to build surprisingly complex, yet expressive, components. In particular, I used semigroups and monoids to build an expressive algebra for predicates and sorting functions. This talk is roughly based on the article I wrote “[The Algebra of Predicates and Sorting Functions]({% post_url 2017-04-18-algbera-of-predicates-and-sorting-functions %})”.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/VFPhPOnPiTY" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/VFPhPOnPiTY" frameborder="0" allowfullscreen></iframe>
 
 <br>
 
@@ -63,7 +63,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 **March 2017**: There are precisely two things that make functions fully testable: the isolation of effects and the surfacing of ‘co-effects’. We will explore a bit of the formal theory behind these two sides, and show how they lead to code that can be easily tested. We will also show how we do this at Kickstarter by diving into our recently open sourced codebase.
 
 <a href="https://news.realm.io/news/try-swift-brandon-williams-writing-testable-code/">
-  <img src="/assets/two-sides-of-testing.jpg" width="560" alt="The two sides of writing testable code" />
+  <img src="/assets/two-sides-of-testing.jpg" width="560" style="max-width: 100%;" alt="The two sides of writing testable code" />
 </a>
 
 <br>
@@ -71,14 +71,14 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 ## Finding Happiness in Functional Programming
 **Oct 2016:** At the [2016 Functional Swift Conference](http://2016.funswiftconf.com) in Budapest I spoke about how embracing simple, pure functions above all other abstractions has enabled my colleagues and me to build a well-tested, well-understood [codebase](https://kickstarter.engineering/open-sourcing-our-android-and-ios-apps-6891be909fcd). I first covered the basics of pure functions and the ideas of identifying effects and separating them from your functions. I then described how these ideas allowed us better our testing suites, enabled us to replace simulators and storyboards with Swift playgrounds, and ultimately a better working relationship with engineers, designers and product managers.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/A0VaIKK2ijM" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/A0VaIKK2ijM" frameborder="0" allowfullscreen></iframe>
 
 <br>
 
 ## Lenses in Swift
 **Dec 2015:** At the [2015 Functional Swift Conference](http://2015.funswiftconf.com) in Brooklyn I described the basics of lenses and how to implement them in Swift.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ofjehH9f-CU" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/ofjehH9f-CU" frameborder="0" allowfullscreen></iframe>
 
 <br>
 
@@ -92,4 +92,4 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 ## Functional Programming in a Playground
 **Dec 2014:** At the [2014 Functional Swift Conference](http://2014.funswiftconf.com) in Brooklyn I used Swift playgrounds as a highly interactive way for exploring functional programming ideas. In particular, I developed the ideas of transducers and show how they lead to highly composable data transformations.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/estNbh2TF3E" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/estNbh2TF3E" frameborder="0" allowfullscreen></iframe>
