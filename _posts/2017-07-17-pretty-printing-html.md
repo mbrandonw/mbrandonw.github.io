@@ -230,7 +230,7 @@ Now we just gotta render those 3 pieces and we’ll be done!
 Well, easier said than done! There’s still quite a bit of work to do. Rendering an open tag consists of the node’s name (e.g. `<body`), it’s attributes, and then possibly a `>` and newline depending on children nodes. Assume for a moment that we already have a `prettyPrint(attributes:)` function that can deal with an array of attributes, then our open tags function can be written as:
 
 ```swift
-private func prettyPrintOpenTag(element: Element) -> Doc {
+func prettyPrintOpenTag(element: Element) -> Doc {
 
   return .text("<")
     <> .text(element.name)
@@ -312,7 +312,7 @@ func prettyPrintChildren(nodes: [Node]?) -> Doc {
 When rendering the closing tag we need to make sure not to do anything for the tags that cannot have children nodes:
 
 ```swift
-private func prettyPrintCloseTag(element: Element) -> Doc {
+func prettyPrintCloseTag(element: Element) -> Doc {
   return element.content == nil
     ? .empty
     : .hardline <> .text("</") <> .text(element.name) <> .text(">")
