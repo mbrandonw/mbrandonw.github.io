@@ -325,7 +325,7 @@ Here we make sure to do nothing in the case that `children` is `nil`, and otherw
 
 We have now completed the implementation of a basic pretty printer! Here’s a demo of what we have accomplished, where the red line corresponds to the page width of the document:
 
-![](/assets/html-dsl/pretty-print.gif)
+![Demo of pretty printing a basic HTML doucment](/assets/html-dsl/pretty-print.gif)
 
 
 
