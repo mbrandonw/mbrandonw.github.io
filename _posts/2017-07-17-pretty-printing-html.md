@@ -101,7 +101,7 @@ To do this type of complex pretty printing we will use a wonderful little librar
 ) written by [Brandon Kase](https://twitter.com/bkase_). It is based on a fantastic article called [“A prettier printer”](https://homepages.inf.ed.ac.uk/wadler/papers/prettier/prettier.pdf
 ) by [Philip Wadler](http://homepages.inf.ed.ac.uk/wadler/), written 20 years ago in 1997!
 
-The idea is to transform your data structure, in our case `Node`, into the `Doc` data structure using some combinators that describe how the lines of the document flow. The pretty printer is then in charge of turning that `Doc` into a nicely formatted string. We are not going to dive into the internals of DoctoryPretty, so you are encouraged to read its [documentation](https://github.com/bkase/DoctorPretty) and [tests](https://github.com/bkase/DoctorPretty/blob/master/Tests/DoctorPrettyTests/DoctorPrettyTests.swift).
+The idea is to transform your data structure, in our case `Node`, into the `Doc` data structure using some combinators that describe how the lines of the document flow. The pretty printer is then in charge of turning that `Doc` into a nicely formatted string. We are not going to dive into the internals of DoctorPretty, so you are encouraged to read its [documentation](https://github.com/bkase/DoctorPretty) and [tests](https://github.com/bkase/DoctorPretty/blob/master/Tests/DoctorPrettyTests/DoctorPrettyTests.swift).
 
 ## Pretty printing a node
 
@@ -337,7 +337,7 @@ It is pretty amazing that we were able to implement this advanced of a pretty pr
   * “Hang style”, i.e. allowing opting in/out of the “all or nothing” policy of fitting all attributes on a single line before they all break to new lines
   * Opt in/out to aligning the `=` of attribute key/value pairs.
 
-* In the introduction we mentioned that you could break the values of `style` and `class` attributes onto new lines if they don’t fit on one line, but we didn’t actually implement it. Add extra logic to `prettyPrint(attribtue:)` to allow this. Any other attributes that might benefit from this?
+* In the introduction we mentioned that you could break the values of `style` and `class` attributes onto new lines if they don’t fit on one line, but we didn’t actually implement it. Add extra logic to `prettyPrint(attribute:)` to allow this. Any other attributes that might benefit from this?
 
 ## References
 
