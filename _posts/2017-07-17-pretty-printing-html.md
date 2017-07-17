@@ -236,11 +236,11 @@ func prettyPrintOpenTag(element: Element) -> Doc {
     <> .text(element.name)
     <> prettyPrint(attributes: element.attribs)
     <> .text(">")
-    <> (element.content == nil ? .empty : .hardline)
+    <> (element.children == nil ? .empty : .hardline)
 }
 ```
 
-The most complicated part of this is how we checked if `children` is `nil` to determine if we need to print a newline so that children are printed inside the tag. (todo: mention empty here instead of later)
+The most complicated part of this is how we checked if `children` is `nil` to determine if we need to print a newline so that children are printed inside the tag. In the case of `children` being `nil` we can use the `empty` document to signify that there is nothing left to do.
 
 ### Pretty printing an array of attributes
 
@@ -285,7 +285,7 @@ func prettyPrint(attribute: Attribute) -> Doc {
 
 ### Pretty printing children nodes
 
-Rendering the children nodes leans on recursively calling the `prettyPrint(node:)` function, with a few small additions. First, if the children array is `nil` (for tags that do not support children), then we want to just return the empty document so that we do not do any formatting. There’s a special `Doc` value called `empty` that helps with that:
+Rendering the children nodes leans on recursively calling the `prettyPrint(node:)` function, with a few small additions. First, if the children array is `nil` (for tags that do not support children), then we want to just return the empty document so that we do not do any formatting:
 
 ```swift
 func prettyPrintChildren(nodes: [Node]?) -> Doc {
@@ -313,7 +313,7 @@ When rendering the closing tag we need to make sure not to do anything for the t
 
 ```swift
 func prettyPrintCloseTag(element: Element) -> Doc {
-  return element.content == nil
+  return element.children == nil
     ? .empty
     : .hardline <> .text("</") <> .text(element.name) <> .text(">")
 }
