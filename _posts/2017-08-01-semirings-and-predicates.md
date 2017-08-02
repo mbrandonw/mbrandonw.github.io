@@ -194,7 +194,7 @@ func && <A> (lhs: Predicate<A>, rhs: Predicate<A>) -> Predicate<A> {
 Now we can write:
 
 ```swift
-Array(0...100).filtered(by: isEven && !isLessThan(10) || isMagic)
+Array(0...100).filtered(by: isEven && isLessThan(10) || isMagic)
 ```
 
 And now that reads great! We can even take it a step further by defining a prefix function `!` for negating a predicate:
