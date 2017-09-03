@@ -121,7 +121,7 @@ a *  (b +  c) == a *  b +  a *  c
 
 ## Constructing new semirings from existing
 
-Many of the constructions we did for monoids also work for semigroups. For example, we can take the type of functions from a fixed type into a semiring:
+Many of the constructions we did for monoids also work for semirings. For example, we can take the type of functions from a fixed type into a semiring:
 
 ```swift
 struct FunctionS<A, S: Semiring> {
@@ -194,7 +194,7 @@ func && <A> (lhs: Predicate<A>, rhs: Predicate<A>) -> Predicate<A> {
 Now we can write:
 
 ```swift
-Array(0...100).filtered(by: isEven && !isLessThan(10) || isMagic)
+Array(0...100).filtered(by: isEven && isLessThan(10) || isMagic)
 ```
 
 And now that reads great! We can even take it a step further by defining a prefix function `!` for negating a predicate:
