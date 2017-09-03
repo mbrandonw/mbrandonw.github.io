@@ -8,7 +8,7 @@ author: Brandon Williams
 
 There is a wonderful correspondence between Swift’s types and plain ole algebra. Turns out that forming enums and structs is analogous to taking sums and products of integers. Understanding this connection can help one to model data in a more precise way by simplify types via factoring and removing invalid states from the type. It’s much akin to how one might rewrite the algebraic expression `a * b + a * c` as `a * (b + c)`.
 
-# Enums and Structs
+## Enums and Structs
 
 Recall that an enum type allows us to express a new type in which a value is precisely _one_ of the cases specified in the enum. For example:
 
@@ -52,7 +52,7 @@ TwoField<Never, Void> // no values!
 
 Again this last example is quite interesting. `Never` contains no values, and so `TwoField<Never, Void>` must necessarily have no values since we can’t inhabit the `one` field. It also makes sense from the perspective that `0` multiplied with anything is `0` again.
 
-# Algebra with Types
+## Algebra with Types
 
 At this point we have seen that there is a correspondence with forming enums and structs of finite types and taking the sum and product of the number of values those types hold. Let us take a leap of faith to speak more abstractly, and say that forming an enum or struct of types is the sum and product of types. So, where we previously would have used `TwoCase<Int, String>` we are now going to abstractly say `Int + String`, and similarly `TwoField<Bool, [Int]>` is `Bool * [Int]`. Right now these are just formal symbols we are using in hopes that later we will be able to extract some understanding or intuition from them.
 
@@ -79,7 +79,7 @@ enum Optional<T> {
 
 This is similar to our `TwoCase` enum, except the `.none` case has no associated value. In Swift an enum case with no associated value is just a shortcut to saying that the associated value is in fact `Void`, i.e. `case none(Void)`. Since `Void` has a unique value, Swift can just substitute in `()` where necessary and you don’t have to worry about it.
 
-It is now clear why `Int? = Int + 1`, for `Int?` is equivalent to `TwoCase<Int, Void>`. Then, example after that, we interpreted `TwoField<Bool?, Int?>` as `(Bool + 1) * (Int + 1)`. Remember that multiplication _distributes_ over addition (i.e. `a * (b + c) == a * b + a * c`), and so let’s apply that to this expression:
+It is now clear why `Int? = Int + 1`, for `Int?` is equivalent to `TwoCase<Int, Void>`. Then, in the example after that, we interpreted `TwoField<Bool?, Int?>` as `(Bool + 1) * (Int + 1)`. Remember that multiplication _distributes_ over addition (i.e. `a * (b + c) == a * b + a * c`), and so let’s apply that to this expression:
 
 ```swift
 TwoField<Bool?, Int?>                
@@ -108,7 +108,7 @@ We have now built enough intuition to precisely say how we plan on doing algebra
 * We will use integers `n` to denote the unique type with `n` elements. It should be clear from context whether `n` is being used as an integer or a type.
 
 
-# Exponents
+## Exponents
 
 There’s another important operation in algebra that is not captured by addition or multiplication: exponentiation. It allows you to multiply an integer with itself a certain number of times, i.e. `m^n` means to multiply `m` with itself `n` times. How can we express this with types?
 
@@ -116,7 +116,7 @@ To answer this let’s focus on a special case and see if we can generalize. Con
 
 Thinking of `Int^2` as functions `(2) -> Int` shows how to generalize integer exponentiation to types. We will say that the exponent `A^B` of two types `A` and `B` is simply the function type `(B) -> A`. Notice the ordering of `A` and `B`, i.e. the power of the exponent is `B` which is the source of the function `(B) -> A`.
 
-# Recursive Types
+## Recursive Types
 
 The algebra of types also help guide us in understanding recursive types. A recursive type is one in which some subpart refers to the whole. The most canonical example is perhaps `List`s. A definition of `List` goes as so: a value of `List<A>` is either empty, or it’s a head value `head: A` and a tail value `tail: List<A>`. By using our intuition of “or” corresponding to enums and “and” corresponding to structs, we can write out code for this definition directly:
 
@@ -171,16 +171,117 @@ Yet again we’ve come to a perfectly fine algebraic equation that makes little 
 
 
 
-# Fixed points
+## Fixed points
 
-# Applications
+## Applications
 
 * `{ data, response, error in }`
 * cancelation state
 * styling enum/struct
 * non empty
 
-## Non-empty lists
+### Modeling success and failure
+
+A naive attempt at modeling the success and failure of an operation might be to use structs and optional values:
+
+```swift
+struct Result<A, E> {
+  let value: A?
+  let error: E?
+}
+```
+
+A `Result` value can be considered successful if it has a non-`nil` `value` and can be considered an error if `error` is non-`nil`. This pattern is even prevalent in Apple API’s, such as `URLSession`’s completion callbacks:
+
+```swift
+func dataTask(
+  with url: URL,
+  completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
+)
+->
+URLSessionDataTask
+```
+
+The `completionHandler` is a function taking 3 optional values. You assume it went successfully if `Data` is non-`nil`, and assume not successful if `error` is non-`nil`.
+
+Let us apply our principles of algebra to the `Result` type to see what it is problematic. Expanding out its definition in algebra gives us:
+
+```swift
+Result<A, E> = (A + 1) * (E + 1)
+             = A * E + A + E + 1
+```
+
+This shows that an alternative way of interpreting this struct is to think of it as an enum for four different cases: one in which you have a value _and_ an error, one in which you have only a value, one in which you have only an error, and finally a case where you have neither. The first and last cases are completely invalid, for the user of this API should not have to understand what it means to get a value _and_ an error, or to get _neither_. What we really want is just the middle part, the `A + E` part. But, this is just a plain enum! And in fact, all along we should have defined our `Result` as just that!
+
+```swift
+enum Result<A, E> {
+  case success(A)
+  case failure(E)
+}
+```
+
+Now we have forbidden the invalid states on the type level.
+
+Going back to the `URLSession` example we see that the data being provided has the algebraic form:
+
+```swift
+(Data + 1) * (URLResponse + 1) * (Error + 1)
+  = Data * URLResponse * Error
+    + Data * URLResponse
+    + URLResponse * Error
+    + Data * Error
+    + Data
+    + URLResponse
+    + Error
+    + 1
+```
+
+This is an enum with 8 different cases! It’s a bit of a mess. A lot of it is completely invalid and should be forbidden by the types. (It should be noted that the signature of this method is forced due to interop with Objective-C. A modern API that can leverage the full feature set of Swift can more precisely narrow these types, but anything that needs to interface with Objective-C must resort to the struct of optionals method.)
+
+### Cancelable operations
+
+The previous example showed how to model a success and failure state of an operation into a `Result` type. What if we wanted to add the possibility that the operation was neither successful nor failed, but was simply canceled? One might extend `Result` to account for that case:
+
+```swift
+enum Result<A, E> {
+  case success(A)
+  case failed(E)
+  case canceled
+}
+```
+
+However, this isn’t so nice because `Result` stood quite well on its own as a success/failure description. Some operations have no concept of cancelation and we are now forcing them to expose that possibility to users of the API. A less intrusive possibility is to create another type to wrap the idea of cancelation:
+
+```swift
+enum Cancelable<A> {
+  case value(A)
+  case canceled
+}
+```
+
+Now operations that can have a successful/failed/canceled state can be modeled by `Cancelable<Result<A, E>>`. This is a perfectly fine solution and we could stop right here. However, using our knowledge of algebra of types we could see if there is another interpretation that might flatten things a bit. Algebraically, `Cancelable` is simply:
+
+```swift
+Cancelable<A> = A + 1
+Cancelable<Result<A, E>> = Result<A, E> + 1
+```
+
+This is equivalent to the optional type, where we interpret the `nil` case as the `.canceled` case. So, a cancelable result could equivalently be modeled as just an optional result `Result<A, E>?`. If you get `nil` back you can understand that to mean the operation was canceled, for example:
+
+```swift
+service.perform { result in
+  switch result {
+  case let .some(.success(value)):
+    // success with `value`
+  case let .some(.failed(error)):
+    // failed with `error`
+  case .none:
+    // canceled
+  }
+}
+```
+
+### Non-empty lists
 
 It is possible to express, at the type-level, a type which represents lists that cannot be empty. Recall that the algebraic expansion of `List<A>` looks like so:
 
@@ -188,7 +289,7 @@ It is possible to express, at the type-level, a type which represents lists that
 List<A> = 1 + A + A^2 + A^3 + A^4 + ...
 ```
 
-where each summand corresponds to a list of a specific lengths. The first term, `1`, in particular corresponds to the empty list, which is precisely what we want to remove. So, rewriting this to represent our hypothetical `NonEmptyList<A>` we get:
+where each summand corresponds to a list of a specific lengths. The first term, `1`, in particular corresponds to the empty list, which is precisely what we want to exclude. So, rewriting this to represent our hypothetical `NonEmptyList<A>` we get:
 
 ```swift
 NonEmptyList<A> = A + A^2 + A^3 + A^4 + ...
@@ -244,19 +345,20 @@ indirect enum NonEmptyList<A> {
 
 Both the struct and enum versions of this data type are equivalent, and which you choose to use is up to preference.
 
-# Categorification
+## Categorification
 
 We have only scratched the surface of this topic, but I’d like to show a small glimpse of what else there is to explore. In mathematics there is a process known as “[categorification](https://en.wikipedia.org/wiki/Categorification)”. It takes objects of little or no structure and lifts them into a world with lots of structure. In this lifted world there are constructions that have no corresponding analogy down in the structureless world, so it necessarily gives you a richer playground to explore the domain you are interested in.
 
 As an example from mathematics, there is an invariant of knots known as the [Alexander polynomial](https://en.wikipedia.org/wiki/Alexander_polynomial) discovered in the 1920’s. To each knot it associates a polynomial such that if two polynomials are equivalent then their polynomials are equal. For example, the Alexander polynomial of the simplest knot, the [trefoil](https://en.wikipedia.org/wiki/Trefoil_knot), is $$t - 1 + t^{-1}$$. Then, about 80 years later, it was discovered that living above the coeffecients of the polynomial (in this case $$1, -1, 1$$) is an entire world of groups (I briefly talked about groups [here]({% post_url 2015-02-17-algebraic-structure-and-protocols %})). You can recover the polynomial coeffecients from the groups by calculating the dimension of the group. But, the amazing part is where there was once only simple integers in a polynomial is an entire world of groups, along with everything that the [theory of groups](https://en.wikipedia.org/wiki/Group_theory) has to offer, which was previously hidden when only looking at the polynomial.
 
-This is analagous to what we have just experienced with types. The categorification of the positive natural numbers
+This is analogous to what we have just experienced with types. The categorification of the positive natural numbers
 
 
-# Exercises
+## Exercises
 
 * do stuff for trees
+* derivative of `List<A>`
 
-# References
+## References
 
 * https://en.wikipedia.org/wiki/Categorification
