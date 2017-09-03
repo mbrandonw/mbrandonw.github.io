@@ -159,17 +159,90 @@ List<A> = 1 + A * List<A>
 => List<A> = 1 / (1 - A)
 ```
 
-Ok, we are now left with an expression that makes little sense from a type theoretic viewpoint, but algebraically it’s totally fine. We are saying that `List` is a function that takes a variable `A`, and does the transformation `1 / (1 - A)`. Interestingly, this formula is well known in mathematics, and there is a very good chance you did too long ago in school. It is the closed form of a [geometric series](https://en.wikipedia.org/wiki/Geometric_series#Formula) and can be expanded to an infinite sum of terms:
+Ok, we are now left with an expression that makes little sense from a type theoretic viewpoint, but algebraically it’s totally fine. We are saying that `List` is a function that takes a variable `A`, and does the transformation `1 / (1 - A)`. Interestingly, this formula is well known in mathematics, and there is a very good chance you learned it long ago in school. It’s the closed form of a [geometric series](https://en.wikipedia.org/wiki/Geometric_series#Formula) and expanded forms an infinite sum of terms:
 
 ```swift
 List<A> = 1 / (1 - A)
         = 1 + A + A^2 + A^3 + A^4 + ...
 ```
 
-Yet again we’ve come to a perfectly fine algebraic equation that makes little sense in types. How does one do an infinite sum of types in Swift? Some kind of strange infinite case enum? Well, we can’t, 
+Yet again we’ve come to a perfectly fine algebraic equation that makes little sense in types. We can’t take an infinite sum of types in Swift, but let’s still try to make sense of this expression. The last equation represents a type where a value of that type is either `Void` (corresponding to `1`), or a value in `A`, or two values in `A`, or three values in `A`, or four values in `A`, etc. This is precisely what a list is! It’s either the empty list, a list of one element, a list of two elements, a list of three elements, etc! So, our bizarre algebraic manipulations of the types ultimately gave us something sensible!
+
+
 
 
 # Fixed points
+
+# Applications
+
+* `{ data, response, error in }`
+* cancelation state
+* styling enum/struct
+* non empty
+
+## Non-empty lists
+
+It is possible to express, at the type-level, a type which represents lists that cannot be empty. Recall that the algebraic expansion of `List<A>` looks like so:
+
+```swift
+List<A> = 1 + A + A^2 + A^3 + A^4 + ...
+```
+
+where each summand corresponds to a list of a specific lengths. The first term, `1`, in particular corresponds to the empty list, which is precisely what we want to remove. So, rewriting this to represent our hypothetical `NonEmptyList<A>` we get:
+
+```swift
+NonEmptyList<A> = A + A^2 + A^3 + A^4 + ...
+```
+
+We have two ways of interpreting this. First, we could factor out an `A` in the right-hand side, obtaining:
+
+```swift
+NonEmptyList<A> = A * (1 + A + A^2 + A^3 + A^4 + ...)
+```
+
+This now translates directly to a struct using the `List<A>` type:
+
+```swift
+struct NonEmptyList<A> {
+  let head: A
+  let tail: List<A>
+}
+```
+
+This makes perfect sense too. A non-empty list is nothing but a head value with a (possibly empty) tail list.
+
+Alternatively, instead of factoring out `A` and using `List<A>`, we could have tried to work backwards to produce a recursive definition of `NonEmptyList`. For example, we could factor `A` and then convert the geometric series back to `1 / (1 - A)`:
+
+```swift
+NonEmptyList<A> = A + A^2 + A^3 + A^4 + ...
+                = A * (1 + A + A^2 + A^3 + A^4 + ...)
+                = A / (1 - A)
+```
+
+Then multiply both sides by `1 - A` and expand:
+
+```swift
+NonEmptyList<A> * (1 - A) = A
+=> NonEmptyList<A> - A * NonEmptyList<A> = A
+```
+
+Finally move `A * NonEmptyList<A>` to the right side:
+
+```swift
+NonEmptyList<A> - A * NonEmptyList<A> = A
+=> NonEmptyList<A> = A + A * NonEmptyList<A>
+```
+
+This now directly translates to a recursive enum:
+
+```swift
+indirect enum NonEmptyList<A> {
+  case single(A)
+  case cons(A, NonEmptyList<A>)
+}
+```
+
+Both the struct and enum versions of this data type are equivalent, and which you choose to use is up to preference.
 
 # Categorification
 
@@ -180,14 +253,9 @@ As an example from mathematics, there is an invariant of knots known as the [Ale
 This is analagous to what we have just experienced with types. The categorification of the positive natural numbers
 
 
-# Applications
-
-* `{ data, response, error in }`
-* cancelation state
-* styling enum/struct
-* non empty
-
 # Exercises
+
+* do stuff for trees
 
 # References
 
