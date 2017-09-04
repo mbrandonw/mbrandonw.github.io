@@ -142,7 +142,7 @@ List<A> = 1 + A * List<A>
 => List<A> - A * List<A> = 1
 ```
 
-Then we are going to factor out the `List<A>` on the left-side of the equation (which is completely valid on the type level):
+Then we are going to factor out the `List<A>` on the left-side of the equation (which _is_ valid on the type level):
 
 ```swift
 List<A> = 1 + A * List<A>
@@ -163,6 +163,7 @@ Ok, we are now left with an expression that makes little sense from a type theor
 
 ```swift
 List<A> = 1 / (1 - A)
+        = 1 + A + A*A + A*A*A + A*A*A*A + ...
         = 1 + A + A^2 + A^3 + A^4 + ...
 ```
 
@@ -240,7 +241,7 @@ This is an enum with 8 different cases! It’s a bit of a mess. A lot of it is c
 
 ### Cancelable operations
 
-The previous example showed how to model a success and failure state of an operation into a `Result` type. What if we wanted to add the possibility that the operation was neither successful nor failed, but was simply canceled? One might extend `Result` to account for that case:
+The previous example showed how to model a success and failure state of an operation as a `Result` type. What if we wanted to add the possibility that the operation was neither successful nor failed, but was simply canceled? One might extend `Result` to account for that case:
 
 ```swift
 enum Result<A, E> {
@@ -349,7 +350,9 @@ Both the struct and enum versions of this data type are equivalent, and which yo
 
 We have only scratched the surface of this topic, but I’d like to show a small glimpse of what else there is to explore. In mathematics there is a process known as “[categorification](https://en.wikipedia.org/wiki/Categorification)”. It takes objects of little or no structure and lifts them into a world with lots of structure. In this lifted world there are constructions that have no corresponding analogy down in the structureless world, so it necessarily gives you a richer playground to explore the domain you are interested in.
 
-As an example from mathematics, there is an invariant of knots known as the [Alexander polynomial](https://en.wikipedia.org/wiki/Alexander_polynomial) discovered in the 1920’s. To each knot it associates a polynomial such that if two polynomials are equivalent then their polynomials are equal. For example, the Alexander polynomial of the simplest knot, the [trefoil](https://en.wikipedia.org/wiki/Trefoil_knot), is $$t - 1 + t^{-1}$$. Then, about 80 years later, it was discovered that living above the coeffecients of the polynomial (in this case $$1, -1, 1$$) is an entire world of groups (I briefly talked about groups [here]({% post_url 2015-02-17-algebraic-structure-and-protocols %})). You can recover the polynomial coeffecients from the groups by calculating the dimension of the group. But, the amazing part is where there was once only simple integers in a polynomial is an entire world of groups, along with everything that the [theory of groups](https://en.wikipedia.org/wiki/Group_theory) has to offer, which was previously hidden when only looking at the polynomial.
+As an example from mathematics, there is an invariant of knots known as the [Alexander polynomial](https://en.wikipedia.org/wiki/Alexander_polynomial) discovered in the 1920’s. To each knot it associates a polynomial such that if two knots are equivalent then their polynomials are equal. For example, the Alexander polynomial of the simplest knot, the [trefoil](https://en.wikipedia.org/wiki/Trefoil_knot), is $$t - 1 + t^{-1}$$.
+
+Then, about 80 years later, it was discovered that living above the coeffecients of the polynomial (for the trefoil they are $$1, -1, 1$$) is an entire world of groups (I briefly talked about groups [here]({% post_url 2015-02-17-algebraic-structure-and-protocols %})). You can recover the polynomial coeffecients from the groups by calculating the dimensions of the groups. But, the amazing part is where there was once only simple integers in a polynomial is an entire world of groups, along with everything that the [theory of groups](https://en.wikipedia.org/wiki/Group_theory) has to offer, which was previously hidden when only looking at the polynomial.
 
 This is analogous to what we have just experienced with types. The categorification of the positive natural numbers
 
