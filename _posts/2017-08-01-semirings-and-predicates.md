@@ -257,4 +257,4 @@ struct EndoS<A: CommutativeMonoid> {
 
 is a semiring where `+` is given by pointwise `<>`-application of functions and `*` is given by function composition.
 
-4.) A [ring](https://en.wikipedia.org/wiki/Ring_(mathematics)) is a semiring that has the additional axiom that addition is invertible, i.e. there is a function `inverse: (S) -> S` such that `a + inverse(a) = inverse(a) + a = S.zero` for all `a: S`. Can you think of anything that form a ring? Does `Bool` for a ring?
+4.) A [ring](https://en.wikipedia.org/wiki/Ring_(mathematics)) is a semiring that has the additional axiom that addition is invertible, i.e. there is a function `inverse: (S) -> S` such that `a + inverse(a) = inverse(a) + a = S.zero` for all `a: S`. Can you think of anything that form a ring? Does `Bool` form a ring?
