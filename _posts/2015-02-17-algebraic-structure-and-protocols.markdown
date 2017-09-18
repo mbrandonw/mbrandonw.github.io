@@ -270,7 +270,7 @@ A group is a set \\(X\\), a binary operation \\(\cdot\\), and a distinguished el
 
 * \\(\cdot\\) is associative: \\( a \cdot (b \cdot c) = (a \cdot b) \cdot c \\) for all \\(a, b, c\\) in \\(X\\).
 * \\(e\\) is an identity: \\(e \cdot a = a \cdot e = a\\) for all \\(a\\) in \\(X\\).
-* For every \\(a\\) in \\(X\\) there exists an element \\(a^{-1}\\) in \\(X\\) such that \\(a^{-1}\\), if \\(a\cdot a^{-1} = a^{-1}\cdot a = e\\)
+* For every \\(a\\) in \\(X\\) there exists an element \\(a^{-1}\\) in \\(X\\) such that \\(a\cdot a^{-1} = a^{-1}\cdot a = e\\)
 
 Said more succintly, a group is a monoid with inverses. Examples include:
 
