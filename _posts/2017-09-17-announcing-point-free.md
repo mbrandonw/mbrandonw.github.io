@@ -22,7 +22,7 @@ Turns out, if you accomplish all of the above, all types of fun stuff starts pop
 
 ![](/assets/point-free-playground.png)
 
-And finally, we developed an all-purpose snapshot testing library so that we could take full snapshots of HTML text _and_ screenshots of pages at different browser sizes.
+And finally, we developed an all-purpose [snapshot testing library](https://www.github.com/pointfreeco/swift-snapshot-testing) so that we could take full snapshots of HTML text _and_ screenshots of pages at different browser sizes.
 
 We are so excited with our findings that we decided to open-source the whole collection of libraries we made that aid in developing server-side Swift. We are also open-sourcing the full source code of the site itself! You can find all of the repositories on the [Point-Free GitHub organization](https://github.com/pointfreeco), but here are some of the interesting things you will find:
 
