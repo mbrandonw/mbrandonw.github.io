@@ -19,7 +19,7 @@ enum TwoCase<A, B> {
 }
 ```
 
-A value of type `TwoCase<A, B>` is either of type `A` _or_ of type `B`. In a sense it contains all the values of `A` and values of `B` separately, each tagged by the `one` or `two` label. This is like a sum operation. In fact, if `A` were finite containing `m` values, and `B` were finite containing `n` values, then `TwoCase<A, B>` would be finite containing `m + n` elements. Here are some examples:
+A value of type `TwoCase<A, B>` is either of type `A` _or_ of type `B`. In a sense it contains all the values of `A` and values of `B` separately, each tagged by the `one` or `two` label. This is like a sum operation. In fact, if `A` were finite containing `m` values, and `B` were finite containing `n` values, then `TwoCase<A, B>` would be finite containing `m + n` values. Here are some examples:
 
 ```swift
 TwoCase<Void, Void>  // .one(()), .two(())

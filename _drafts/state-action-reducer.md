@@ -6,7 +6,7 @@ categories: swift fp redux effects
 author: Brandon Williams
 ---
 
-[Redux](http://redux.js.org) and [Elm](http://elm-lang.org) have popularized a concise way of modeling changing state in an understandable and testable way. It consists of a few simple pieces: a struct of state, an enum of actions, a “reducer” to create new state from the current state and an action, and finally some mechanism to notify interested parties of state changes. In this article we will dissect the pattern in depth and show off some nice compositions lurking underneath the scenes. We will also create a full blown effects system for modeling side-effects in a testable way.
+[Elm](http://elm-lang.org) and [Redux](http://redux.js.org) have popularized a concise way of modeling changing state in an understandable and testable way. It consists of a few simple pieces: a struct of state, an enum of actions, a “reducer” to create new state from the current state and an action, and finally some mechanism to notify interested parties of state changes. In this article we will dissect the pattern in depth and show off some nice compositions lurking underneath the scenes. We will also create a full blown effects system for modeling side-effects in a testable way.
 
 ## State, Action, Reducer
 
