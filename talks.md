@@ -6,6 +6,10 @@ permalink: /talks/
 
 I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbw234@gmail.com](mailto:mbw234@gmail.com).
 
+<br>
+
+# Index
+
 * [Composable Reducers](#composable-reducers)
 * [Playground-Driven Development](#playground-driven-development)
 * [Anything you can do, I can do better](#anything-you-can-do-i-can-do-better)
