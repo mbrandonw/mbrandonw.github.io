@@ -6,6 +6,20 @@ permalink: /talks/
 
 I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbw234@gmail.com](mailto:mbw234@gmail.com).
 
+* [Composable Reducers](#composable-reducers)
+* [Playground-Driven Development](#playground-driven-development)
+* [Anything you can do, I can do better](#anything-you-can-do-i-can-do-better)
+* [Swift Talks](#swift-talks)
+  * [View Models at Kickstarter](#view-models-at-kickstarterhttpstalkobjcioepisodess01e47-view-models-at-kickstarter)
+  * [Deep Linking at Kickstarter](#deep-linking-at-kickstarterhttpstalkobjcioepisodess01e49-deep-linking-at-kickstarter)
+  * [Playground-Driven Development at Kickstarter](#playground-driven-development-at-kickstarterhttpstalkobjcioepisodess01e51-playground-driven-development-at-kickstarter)
+* [Monoids, Predicates and Sorting Functions](#monoids-predicates-and-sorting-functions)
+* [The Two Sides of Writing Testable Code](#the-two-sides-of-writing-testable-codehttpsnewsrealmionewstry-swift-brandon-williams-writing-testable-code)
+* [Finding Happiness in Functional Programming](#finding-happiness-in-functional-programming)
+* [Lenses in Swift](#lenses-in-swift)
+* [Proof in Functions](#proof-in-functions)
+* [Functional Programming in a Playground](#functional-programming-in-a-playground)
+
 <br>
 
 ## Composable Reducers
