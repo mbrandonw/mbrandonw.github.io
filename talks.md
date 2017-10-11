@@ -24,7 +24,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 ## Composable Reducers
 
-**September 2017**: This talk is entirely focused on the composability properties of reducers, which are functions of the form `(S, A) -> S`. Turns out, there are lots of nice ways to compose such functions, and when applied to ways to model application state (e.g. in Elm and Redux), we show that this allows one to write very simple, local reducers while still leaving yourself open to compose them in a global manner.
+**September 2017**: I gave this talk at the [Functional Swift Conference](http://2017-fall.funswiftconf.com) in Berlin, and it entirely focuses on the composability properties of reducers, which are functions of the form `(S, A) -> S`. Turns out, there are lots of nice ways to compose such functions, and when applied to ways to model application state (e.g. in Elm and Redux), we show that this allows one to write very simple, local reducers while still leaving yourself open to compose them in a global manner.
 
 <iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/QOIigosUNGU" frameborder="0" allowfullscreen></iframe>
 
@@ -32,7 +32,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 ## Playground-Driven Development
 
-**September 2017**: This talk goes a little bit deeper into the topic I first [discussed](#playground-driven-development-at-kickstarterhttpstalkobjcioepisodess01e51-playground-driven-development-at-kickstarter) on “Swift Talk” with Chris Eidhof. It shows how we can replace a large portion of our everyday work in simulators and storyboards with Swift playgrounds. Towards the end of the talk I give a small preview of how I’ve even been using playgrounds to do server-side Swift development.
+**September 2017**: I gave this talk at [FrenchKit](http://frenchkit.fr) in Paris, and it goes a little bit deeper into the topic I first [discussed](#playground-driven-development-at-kickstarterhttpstalkobjcioepisodess01e51-playground-driven-development-at-kickstarter) on “Swift Talk” with Chris Eidhof. It shows how we can replace a large portion of our everyday work in simulators and storyboards with Swift playgrounds. Towards the end of the talk I give a small preview of how I’ve even been using playgrounds to do server-side Swift development.
 
 <iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/DrdxSNG-_DE" frameborder="0" allowfullscreen></iframe>
 
