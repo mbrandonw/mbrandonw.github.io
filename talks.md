@@ -14,11 +14,11 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 * [Playground-Driven Development](#playground-driven-development)
 * [Anything you can do, I can do better](#anything-you-can-do-i-can-do-better)
 * [Swift Talks](#swift-talks)
-  * [View Models at Kickstarter](#view-models-at-kickstarterhttpstalkobjcioepisodess01e47-view-models-at-kickstarter)
-  * [Deep Linking at Kickstarter](#deep-linking-at-kickstarterhttpstalkobjcioepisodess01e49-deep-linking-at-kickstarter)
-  * [Playground-Driven Development at Kickstarter](#playground-driven-development-at-kickstarterhttpstalkobjcioepisodess01e51-playground-driven-development-at-kickstarter)
+  * [View Models at Kickstarter](#view-models-at-kickstarter)
+  * [Deep Linking at Kickstarter](#deep-linking-at-kickstarter)
+  * [Playground-Driven Development at Kickstarter](#playground-driven-development-at-kickstarter)
 * [Monoids, Predicates and Sorting Functions](#monoids-predicates-and-sorting-functions)
-* [The Two Sides of Writing Testable Code](#the-two-sides-of-writing-testable-codehttpsnewsrealmionewstry-swift-brandon-williams-writing-testable-code)
+* [The Two Sides of Writing Testable Code](#the-two-sides-of-writing-testable-code)
 * [Finding Happiness in Functional Programming](#finding-happiness-in-functional-programming)
 * [Lenses in Swift](#lenses-in-swift)
 * [Proof in Functions](#proof-in-functions)
@@ -36,7 +36,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 ## Playground-Driven Development
 
-**September 2017**: I gave this talk at [FrenchKit](http://frenchkit.fr) in Paris, and it goes a little bit deeper into the topic I first [discussed](#playground-driven-development-at-kickstarterhttpstalkobjcioepisodess01e51-playground-driven-development-at-kickstarter) on “Swift Talk” with Chris Eidhof. It shows how we can replace a large portion of our everyday work in simulators and storyboards with Swift playgrounds. Towards the end of the talk I give a small preview of how I’ve even been using playgrounds to do server-side Swift development.
+**September 2017**: I gave this talk at [FrenchKit](http://frenchkit.fr) in Paris, and it goes a little bit deeper into the topic I first [discussed](#playground-driven-development-at-kickstarter) on “Swift Talk” with Chris Eidhof. It shows how we can replace a large portion of our everyday work in simulators and storyboards with Swift playgrounds. Towards the end of the talk I give a small preview of how I’ve even been using playgrounds to do server-side Swift development.
 
 <iframe width="560" height="315" style="max-width: 100%;"  src="https://www.youtube.com/embed/DrdxSNG-_DE" frameborder="0" allowfullscreen></iframe>
 
