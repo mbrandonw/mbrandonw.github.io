@@ -6,9 +6,11 @@ permalink: /talks/
 
 I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbw234@gmail.com](mailto:mbw234@gmail.com).
 
-<br>
+# Upcoming talks
 
-# Index
+* [Swift Summit](http://swiftsummit.com) – October 30th - 31st, 2017 – “Server-Side Swift from Scratch”
+
+# Past talks
 
 * [Composable Reducers](#composable-reducers)
 * [Playground-Driven Development](#playground-driven-development)
