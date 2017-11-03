@@ -32,7 +32,7 @@ Have a team that is interested in some of the [ideas](#my-work) discussed on thi
 
 #### **Speaking**
 
-I am available to speak at meet ups and conferences on a variety of topics.
+I am available to [speak](/talks) at meet ups and conferences on a variety of topics.
 
 - Kotlin for Swift Developers (and vice versa!)
 - Functional Programming

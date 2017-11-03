@@ -1,12 +1,14 @@
 ---
 layout: post
-title:  "Composable Reducers with an Effects System"
+title:  "Composable Reducers"
 date:   2017-07-28
-categories: swift fp redux effects
+categories: swift fp redux
 author: Brandon Williams
 ---
 
-[Elm](http://elm-lang.org) and [Redux](http://redux.js.org) have popularized a concise way of modeling changing state in an understandable and testable way. It consists of a few simple pieces: a struct of state, an enum of actions, a “reducer” to create new state from the current state and an action, and finally some mechanism to notify interested parties of state changes. In this article we will dissect the pattern in depth and show off some nice compositions lurking underneath the scenes. We will also create a full blown effects system for modeling side-effects in a testable way.
+[Elm](http://elm-lang.org) and [Redux](http://redux.js.org) have popularized a concise way of managing Applications state in an understandable and testable way. It consists of a few simple pieces: a model for state, a model for actions, a “reducer” to create new state from the current state and an action, and finally some runtime mechanism to accumulate state over time and update UI. In this article we will dissect the pattern in depth and show off some nice compositions lurking underneath the scenes.
+
+TODO: playground link
 
 ## State, Action, Reducer
 
@@ -46,17 +48,19 @@ struct Reducer: Monoid {
 
 The identity reducer is the one that discards the action and returns the state with no changes.
 
-## Lifting of state
+Using some of the ideas from a previous article, “[Algebraic Structure and Protocols]({% post_url 2015-02-17-algebraic-structure-and-protocols %})”, we state all of the above more simply. Functions of the form `(S, A) -> S` can be rewritten as `(A, S) -> S` (order of arguments doesn't matter), which can be curried to `(A) -> (S) -> S`, which can be rewritten as `(A) -> Endo<S>`, where `Endo<S>` is the type of functions `(S) -> S` (known as endomorphisms). We saw previously that `Endo<S>` is a monoid, and we say that the type of functions into a monoid forms a monoid, therefore `(A) -> Endo<S>` is naturally a monoid from previous results without even having to define anything in code.
 
-## Lifting of actions
+Now, unfortunately, Swift’s type-system isn’t expressive enough to allow us to use all these facts without creating wrapper types, but still a fun digression!
 
 ## Store
 
-## Effects
+## A sample reducer
 
-Right now the system doesn’t provide a way to handle side-effects, it’s left up to the user. For example, on a button press action you may want to make an API call, and when the request finishes it dispatches an action back to the store. You could certainly put this logic directly in the reducer, but you wouldn’t be able to test it.
+## Simplifying with mutation
 
-Rather than doing that effect right in the reducer, we will adapt the reducer to not only return the new state, but also a first-class value that _describes_ the effect to be done, without actually doing it. We will then build an interpreter into the `Store` that executes the effects. This allows us write tests to assert that effects
+## Lifting of state
+
+## Lifting of actions
 
 ## Exercises
 

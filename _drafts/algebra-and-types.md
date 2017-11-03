@@ -6,7 +6,7 @@ categories: swift fp
 author: Brandon Williams
 ---
 
-There is a wonderful correspondence between Swift’s types and plain ole algebra. Turns out that forming enums and structs is analogous to taking sums and products of integers. Understanding this connection can help one to model data in a more precise way by simplify types via factoring and removing invalid states from the type. It’s much akin to how one might rewrite the algebraic expression `a * b + a * c` as `a * (b + c)`.
+There is a wonderful correspondence between Swift types and algebra. Turns out that forming enums and structs is analogous to taking sums and products of integers. Understanding this connection can help one to model data in a more precise way by simplifying the types via factoring and removing invalid states from the type. The process is akin to how one might rewrite the algebraic expression `a * b + a * c` as `a * (b + c)`.
 
 ## Enums and Structs
 
@@ -19,7 +19,7 @@ enum TwoCase<A, B> {
 }
 ```
 
-A value of type `TwoCase<A, B>` is either of type `A` _or_ of type `B`. In a sense it contains all the values of `A` and values of `B` separately, each tagged by the `one` or `two` label. This is like a sum operation. In fact, if `A` were finite containing `m` values, and `B` were finite containing `n` values, then `TwoCase<A, B>` would be finite containing `m + n` values. Here are some examples:
+A value of type `TwoCase<A, B>` is either of type `A` _or_ of type `B`. In a sense it contains all the values of `A` and values of `B` separately, each tagged by the `one` or `two` label. This is like a sum operation. In fact, if `A` were finite containing `m` values, and `B` were finite containing `n` values, then `TwoCase<A, B>` would be finite containing `m + n` values. Here are some examples where we enumerate all the values in some types:
 
 ```swift
 TwoCase<Void, Void>  // .one(()), .two(())
@@ -56,7 +56,7 @@ Again this last example is quite interesting. `Never` contains no values, and so
 
 At this point we have seen that there is a correspondence with forming enums and structs of finite types and taking the sum and product of the number of values those types hold. Let us take a leap of faith to speak more abstractly, and say that forming an enum or struct of types is the sum and product of types. So, where we previously would have used `TwoCase<Int, String>` we are now going to abstractly say `Int + String`, and similarly `TwoField<Bool, [Int]>` is `Bool * [Int]`. Right now these are just formal symbols we are using in hopes that later we will be able to extract some understanding or intuition from them.
 
-Let also assign a special symbol to the types with zero and one elements respectively. Examples of each of those types are `Never` and `Void` respectively, and we will denote them by `0` and `1`.
+Let’s also assign a special symbol to the types with zero and one elements respectively. Examples of each of those types are `Never` and `Void` respectively, and we will denote them by `0` and `1`.
 
 Here are some examples of performing algebra with types:
 
@@ -318,7 +318,7 @@ Alternatively, instead of factoring out `A` and using `List<A>`, we could have t
 ```swift
 NonEmptyList<A> = A + A^2 + A^3 + A^4 + ...
                 = A * (1 + A + A^2 + A^3 + A^4 + ...)
-                = A / (1 - A)
+                = A * 1 / (1 - A)
 ```
 
 Then multiply both sides by `1 - A` and expand:
@@ -356,11 +356,23 @@ Then, about 80 years later, it was discovered that living above the coeffecients
 
 This is analogous to what we have just experienced with types. The categorification of the positive natural numbers
 
+TODO:
+
+* intuition for infix operators on structs vs enums: why are infix operators easier to define on structs than enums?
 
 ## Exercises
 
-* do stuff for trees
-* derivative of `List<A>`
+1.) Come up with an algebraic data type for a tree. In words, a tree `Tree<A>` is a structure where each value is either a node holding a value of type `A`, _or_ two branches to the left and right subtrees `Tree<A>`.
+
+2.) What familiar type is equivalent to `Either<Void, A>`?
+
+3.) Is `(A, B)?` equivalent to `(A?, B?)`? If not, what additional values does one type have that the other doesn’t?
+
+4.) Is `Either<A, B>?` equivalent to `Either<A?, B?>`? If not, what additional values does one type have that the other doesn’t?
+
+5.) Recall that the derivative of a monomial expression $$X^n$$ is $$nX^{n-1}$$. Applying this rule formally, compute the derivate of `List<A>` with respect to `A`.
+
+6.) Show that the derivative computed above is equal to `(List<A>, List<A>)`.
 
 ## References
 
