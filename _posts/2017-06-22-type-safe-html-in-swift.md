@@ -308,7 +308,7 @@ let id = AttributeKey<String>("id")
 let width = AttributeKey<Int>("width")
 ```
 
-The first is the key `id` with it’s expected value type encoded as `String`, and the second is the key `width` with it’s expected value type as `Int`.
+The first is the key `id` with its expected value type encoded as `String`, and the second is the key `width` with its expected value type as `Int`.
 
 To enforce this contract we change `Attribute`s initializer to be private so that no one is allowed to create instances, and force the creation of attributes through the `=>` operator, which we redefine to take advantage of the phantom type:
 
