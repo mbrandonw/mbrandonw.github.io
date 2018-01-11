@@ -49,7 +49,7 @@ The advantages of approaching views like this is that you get support for all th
 
 The downsides, however, far outweigh the ups. Most errors in templating languages appear at runtime since they are usually not compiled. One can adopt a linting tool to find some (but not all) errors, but that is also an extra dependency that you need to manage. Some templating languages are compiled (like [HAML](http://haml.info)), but even then the tooling is basic and can return confusing error messages. In general, it is on you to make these languages safe for you to deploy with confidence.
 
-Furthermore, a templating language is just that: a language! It needs to be robust enough to handle what most users what to do with a language. That means it should support expressions, logical flow, loops, IDE autocomplete, IDE syntax highlighting, and more. It also needs to solve all of the new problems that appear, like escaping characters that are ambiguous with respect to HTML and the template language.
+Furthermore, a templating language is just that: a language! It needs to be robust enough to handle what most users want to do with a language. That means it should support expressions, logical flow, loops, IDE autocomplete, IDE syntax highlighting, and more. It also needs to solve all of the new problems that appear, like escaping characters that are ambiguous with respect to HTML and the template language.
 
 We claim that rather than embracing “logic-less” templates, and instead embracing pure functions and types, we will get a far more expressive, safer and composable view layer that can be compiled directly in Swift with no extra tooling or dependencies.
 
@@ -308,7 +308,7 @@ let id = AttributeKey<String>("id")
 let width = AttributeKey<Int>("width")
 ```
 
-The first is the key `id` with it’s expected value type encoded as `String`, and the second is the key `width` with it’s expected value type as `Int`.
+The first is the key `id` with its expected value type encoded as `String`, and the second is the key `width` with its expected value type as `Int`.
 
 To enforce this contract we change `Attribute`s initializer to be private so that no one is allowed to create instances, and force the creation of attributes through the `=>` operator, which we redefine to take advantage of the phantom type:
 
