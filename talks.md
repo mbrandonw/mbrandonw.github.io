@@ -13,7 +13,6 @@ _Nothing planned!_
 
 # Past talks
 
-* [Server-Side Swift from Scratch](http://swiftsummit.com)
 * [Composable Reducers](#composable-reducers)
 * [Playground-Driven Development](#playground-driven-development)
 * [Anything you can do, I can do better](#anything-you-can-do-i-can-do-better)
