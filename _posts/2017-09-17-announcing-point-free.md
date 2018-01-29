@@ -1,5 +1,6 @@
 ---
 layout: post
+published: false
 title:  "Announcing Point-Free"
 date:   2017-09-17
 categories: swift functional programming
