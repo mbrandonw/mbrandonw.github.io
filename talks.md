@@ -13,6 +13,7 @@ _Nothing planned!_
 
 # Past talks
 
+* [Server-Side Swift from Scratch](#server-side-swift-from-scratch)
 * [Composable Reducers](#composable-reducers)
 * [Playground-Driven Development](#playground-driven-development)
 * [Anything you can do, I can do better](#anything-you-can-do-i-can-do-better)
@@ -28,6 +29,21 @@ _Nothing planned!_
 * [Functional Programming in a Playground](#functional-programming-in-a-playground)
 
 <br>
+
+## [Server-Side Swift from Scratch](https://www.skilled.io/u/swiftsummit/server-side-swift-from-scratch)
+
+**October 2017**: A rapid tour through what is required of a server-side web framework, and how Swift’s type system can help solve very complex problems in an expressive and safe way. I mostly focus on:
+
+* Server middleware as just a function that takes a request and produces a response. We use a technique known as phantom types to actually model the entire request-to-responsive lifecycle directly in the type system.
+* An applicative style router that is invertible. This means it can both route requests to a first class value, and print requests from a value. It is based on the ideas in [this](http://www.informatik.uni-marburg.de/~rendel/unparse/rendel10invertible.pdf) paper.
+* Lifting HTML and CSS views into Swift types so that we can transform them in new and interesting ways.
+* Using Xcode and the Swift toolchain to do painless snapshot testing, screenshot testing and using Swift playgounds to create entire webpages.
+
+The talk covers a lot of the core ideas that went into building the [Point-Free](https://www.pointfree.co) website, which is fully [open source](http://github.com/pointfr…).
+
+<a href="https://www.skilled.io/u/swiftsummit/server-side-swift-from-scratch">
+  <img src="/assets/serve-side-swift-from-scratch.jpg" width="560" style="max-width: 100%;" alt="The two sides of writing testable code" />
+</a>
 
 ## Composable Reducers
 
