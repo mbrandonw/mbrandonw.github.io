@@ -8,7 +8,7 @@ summary: "Point-Free has launched! A video series exploring Swift and functional
 image: /assets/point-free-card.png
 ---
 
-Back in September I announced that my colleague [Stephen Celis](http://www.stephencelis.com/) and I would be launching a new video series focused on functional programming and Swift, called [Point-Free](https://www.pointfree.co). Four months later, and a whole server-side Swift web framework written from scratch, we are live!
+Back in September I announced that my colleague [Stephen Celis](http://www.stephencelis.com/) and I would be launching a new video series focused on functional programming and Swift, called [Point-Free](https://www.pointfree.co). Four months later, and a whole [server-side Swift web framework written from scratch](https://www.skilled.io/u/swiftsummit/server-side-swift-from-scratch), we are live!
 
 <br>
 
