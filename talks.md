@@ -9,7 +9,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 # Upcoming talks
 
-_Nothing planned!_
+[`.concat()`](https://conc.at): March 3 2018, Salzburg Austria 
 
 # Past talks
 
