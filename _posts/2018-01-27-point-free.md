@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Launching Point-Free"
-date:   2017-09-17
+date:   2018-01-27
 categories: swift functional programming
 author: Brandon Williams
 summary: "Point-Free has launched! A video series exploring Swift and functional programming."
