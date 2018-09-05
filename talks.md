@@ -39,7 +39,7 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 * Lifting HTML and CSS views into Swift types so that we can transform them in new and interesting ways.
 * Using Xcode and the Swift toolchain to do painless snapshot testing, screenshot testing and using Swift playgounds to create entire webpages.
 
-The talk covers a lot of the core ideas that went into building the [Point-Free](https://www.pointfree.co) website, which is fully [open source](http://github.com/pointfr…).
+The talk covers a lot of the core ideas that went into building the [Point-Free](https://www.pointfree.co) website, which is fully [open source](http://github.com/pointfreeco/pointfreeco).
 
 <a href="https://www.skilled.io/u/swiftsummit/server-side-swift-from-scratch">
   <img src="/assets/serve-side-swift-from-scratch.jpg" width="560" style="max-width: 100%;" alt="The two sides of writing testable code" />
