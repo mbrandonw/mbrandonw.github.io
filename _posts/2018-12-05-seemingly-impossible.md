@@ -5,6 +5,7 @@ date:   2018-12-05
 categories: swift math functional programming
 author: Brandon Williams
 summary: "We will construct Swift programs that should be impossible to implement, yet somehow are not!"
+image: /assets/seemingly-impossible-cover.jpg
 ---
 
 
