@@ -174,7 +174,7 @@ func == (lhs: (Int) -> Int, rhs: (Int) -> Int) -> Bool {
 
 This is yet another impossible function to implement, and also equivalent to the [halting problem](https://en.wikipedia.org/wiki/Halting_problem).
 
-## Seeimingly impossible programs
+## Seemingly impossible programs
 
 Now that we have surveyed the possible and impossible for implementing a certain type of function, let's look at something that _should_ be impossible, yet somehow is not.
 
@@ -336,7 +336,7 @@ We need to introduce some laziness into our functions so that we do not try to c
 
 ```swift
 func + (lhs: Bit, rhs: @escaping @autoclosure () -> BitSequence) -> BitSequence {
-  return BitSequence { $0 == 0 ? lhs : rhs()($0 - 1) }
+  return BitSequence { $0 == 0 ? lhs : rhs().atIndex($0 - 1) }
 }
 ```
 
