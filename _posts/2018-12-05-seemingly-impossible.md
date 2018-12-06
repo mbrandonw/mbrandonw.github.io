@@ -17,7 +17,7 @@ However, I want to take a break from all of that and discuss something completel
 
 To show this, we are going to be implementing seemingly impossible Swift programs. That is, we are going to implement some functions in Swift that for all intents and purposes should be absolutely impossible to implement. In fact, the mind kind of boggles when confronted with the implementation because it seems so outlandish and outside the realm of reality.
 
-None of the results in this article are original material by me. I learned of these ideas in a series of papers and articles ([references](#references) at the end). The only thing original in this article is the presentation of the material in a (hopefully) approachable way, as the papers can be quite dense.
+None of the results in this article are original material by me. I learned of these ideas in a series of papers and articles ([references](#references) at the end). The only thing original in this article is the presentation of the material in a (hopefully) approachable way, as the papers can be quite dense. All of the code in this article is available in a [gist](https://gist.github.com/mbrandonw/981f589f32800d3409f817ad4f7c6802) that can be copied and pasted into a Swift playground if you want to follow along at home.
 
 ## Completely possible programs
 
@@ -553,3 +553,4 @@ And although these techniques and results aren't necessarily useful or practical
 - [Synthetic topology of data types and classical spaces](http://www.cs.bham.ac.uk/~mhe/papers/entcs87.pdf) – Martín Escardó
 - [Seemingly Impossible Functional Programs](http://math.andrej.com/2007/09/28/seemingly-impossible-functional-programs/) – Martín Escardó
 - [The topology of Seemingly impossible functional programs (Slides)](https://www.cs.bham.ac.uk/~mhe/.talks/popl2012/escardo-popl2012.pdf) – Martín Escardó
+- [Swift playground with code from this article](https://gist.github.com/mbrandonw/981f589f32800d3409f817ad4f7c6802)
