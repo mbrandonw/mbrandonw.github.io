@@ -136,7 +136,7 @@ The talk covers a lot of the core ideas that went into building the [Point-Free]
 <br>
 
 ## Proof in Functions
-**Feb 2015:** At the [Brooklyn Swift Meetup](https://www.meetup.com/Brooklyn-Swift-Developers/events/220352273/) I described how we can use the Swift type system to prove simple mathematical theorems. This talk coveres most of everything I discussed in my post [“Proof in Functions”](http://www.fewbutripe.com/swift/math/2015/01/06/proof-in-functions.html).
+**Feb 2015:** At the [Brooklyn Swift Meetup](https://www.meetup.com/Brooklyn-Swift-Developers/events/220352273/) I described how we can use the Swift type system to prove simple mathematical theorems. This talk covers most of everything I discussed in my post [“Proof in Functions”](http://www.fewbutripe.com/swift/math/2015/01/06/proof-in-functions.html).
 
 <iframe src="https://player.vimeo.com/video/121953811" width="560" height="315" style="max-width: 100%;" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
