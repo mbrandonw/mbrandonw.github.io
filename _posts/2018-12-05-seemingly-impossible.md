@@ -351,7 +351,7 @@ extension BitSequence {
 }
 ```
 
-This is equivalent to what we had before, but now it is sufficiently lazy for Swift to be able to run this program! It's going to seem incredible, almost magical, but be assured you there are no tricks involved.
+This is equivalent to what we had before, but now it is sufficiently lazy for Swift to be able to run this program! It's going to seem incredible, almost magical, but rest assured there are no tricks involved.
 
 Let's take this for a spin. Let's try to find a `BitSequence` that satisfies the property that it evaluates to `.one` on the first 5 even indices:
 
