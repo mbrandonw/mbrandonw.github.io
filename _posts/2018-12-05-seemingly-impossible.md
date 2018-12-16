@@ -389,8 +389,8 @@ Incredible! We are exhaustively searching an [uncountably](https://en.wikipedia.
 We can also ask to see if _every_ bit sequence satisfies some predicate, or if _any_ bit sequence satisfies it. For example:
 
 ```swift
-BitSequence.allSatisfy { 
-  s in s.atIndex(0) == .zero || s.atIndex(0) == .one  // true
+BitSequence.allSatisfy { s in
+  s.atIndex(0) == .zero || s.atIndex(0) == .one  // true
 } 
 BitSequence.allSatisfy { s in s.atIndex(0) == .zero } // false
 ```
