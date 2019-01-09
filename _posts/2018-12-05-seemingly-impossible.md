@@ -139,12 +139,12 @@ extension Int {
   }
 }
 
-Int.allSatisfy { $0 % 2 == 0 }                // false?
-Int.allSatisfy { $0 > 0 }                     // false?
-Int.allSatisfy { $0 % 2 == 0 || $0 % 2 == 1 } // true?
+Int.allSatisfy { $0 % 2 == 0 }                 // false?
+Int.allSatisfy { $0 > 0 }                      // false?
+Int.allSatisfy { $0 == 0 || $0 < 0 || $0 > 0 } // true?
 ```
 
-If we were able to implement this function then we'd expect the first two invocations of it to return `false`, because certainly not all integers are even or greater than zero, but the last one should be `true` because indeed every integer is even or odd.
+If we were able to implement this function then we'd expect the first two invocations of it to return `false`, because certainly not all integers are even or greater than zero, but the last one should be `true` because indeed every integer is zero, positive or negative.
 
 However, we cannot possibly implement this function. `Int` holds way too many values for us to possibly be able to check each one against a predicate in a reasonable amount of time (it's best to think of `Int` as modeling the infinite set of all integers). We could also try implementing this for large type, like `String`:
 
