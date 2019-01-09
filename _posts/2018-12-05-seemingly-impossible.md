@@ -554,3 +554,4 @@ And although these techniques and results aren't necessarily useful or practical
 - [Seemingly Impossible Functional Programs](http://math.andrej.com/2007/09/28/seemingly-impossible-functional-programs/) – Martín Escardó
 - [The topology of Seemingly impossible functional programs (Slides)](https://www.cs.bham.ac.uk/~mhe/.talks/popl2012/escardo-popl2012.pdf) – Martín Escardó
 - [Swift playground with code from this article](https://gist.github.com/mbrandonw/981f589f32800d3409f817ad4f7c6802)
+- [Video of a talk I gave on this subject](https://www.youtube.com/watch?v=PXI53f2CnVw)
