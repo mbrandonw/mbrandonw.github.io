@@ -9,10 +9,11 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 
 # Upcoming talks
 
-* [Protocol Witnesses (Lugano, Switzerland)](https://appbuilders.ch)
+None planned right now. 
 
 # Past talks
 
+* [Protocol Witnesses](#protocol-witnesses)
 * [Seemingly Impossible Swift Programs](#seemingly-impossible-swift-programs)
 * [Server-Side Swift from Scratch, for web devs](#server-side-swift-from-scratch-for-web-devs)
 * [Server-Side Swift from Scratch](#server-side-swift-from-scratch)
@@ -29,6 +30,14 @@ I’m available to speak at conferences and meet ups, so please feel free to dro
 * [Lenses in Swift](#lenses-in-swift)
 * [Proof in Functions](#proof-in-functions)
 * [Functional Programming in a Playground](#functional-programming-in-a-playground)
+
+<br>
+
+## [Protocol Witnesses](https://www.youtube.com/watch?v=3BVkbWXcFS4)
+
+**April 30, 2019: Lugano, Switzerland**: Protocol-oriented programming is strongly recommended in the Swift community, and Apple has given a lot of guidance on how to use it in your everyday code. However, there has not been a lot of attention on when it is not appropriate, and what to do in that case. We will explore this idea, and show that there is a completely straightforward and mechanical way to translate any protocol into a concrete datatype. Once you do this you can still write your code much like you would with protocols, but all of the complexity inherit in protocols go away. Even more amazing, a new type of composition appears that is difficult to see when dealing with only protocols. We will also demo a real life, open source library that was originally written in the protocol-oriented way, but after running into many problems with the protocols, it was rewritten entirely in this witness-oriented way. The outcome was really surprising, and really powerful.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3BVkbWXcFS4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <br>
 
