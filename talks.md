@@ -43,7 +43,7 @@ None planned right now.
 
 ## [Seemingly Impossible Swift Programs](https://www.youtube.com/watch?v=PXI53f2CnVw)
 
-**December 2018: New Yrok, NY**: In this talk I live code an implementation of a "seemingly impossible" Swift program. It's one that for all intents and purposes should be impossible, yet somehow isn't: we will perform an exhaustive search across an infinite space of values in finite time. Once this program is implemented I try to show some of the mathematics that explains how this could be true, and show that it has a surprising link to a field of mathematics known as topology.
+**December 2018: New York, NY**: In this talk I live code an implementation of a "seemingly impossible" Swift program. It's one that for all intents and purposes should be impossible, yet somehow isn't: we will perform an exhaustive search across an infinite space of values in finite time. Once this program is implemented I try to show some of the mathematics that explains how this could be true, and show that it has a surprising link to a field of mathematics known as topology.
 
 I later turned this talk into a blog post “[Seemingly Impossible Swift Programs]({% post_url 2018-12-05-seemingly-impossible %})”. All of the material in this talk can be found in a series of papers and articles by Martín Escardó:
 
