@@ -190,7 +190,7 @@ let data = HomepageData(
     ],
   footerData: .init(
     authorName: "Brandon Williams",
-    email: "mbw234@gmail.com",
+    email: "mbrandonw@hey.com",
     twitter: "mbrandonw"
   )
 )
@@ -221,7 +221,7 @@ which will output the following HTML.
     <footer>
       <ul>
         <li>Brandon Williams</li>
-        <li>mbw234@gmail.com</li>
+        <li>mbrandonw@hey.com</li>
         <li>@mbrandonw</li>
       </ul>
       <p>Articles about math, functional programming and the Swift programming language.</p>
@@ -536,7 +536,7 @@ let data = SiteLayoutData(
   ],
   footerData: .init(
     authorName: "Brandon Williams",
-    email: "mbw234@gmail.com",
+    email: "mbrandonw@hey.com",
     twitter: "mbrandonw"
   )
 )

@@ -86,7 +86,7 @@ let data = HomepageData(
     ],
   footerData: .init(
     authorName: "Brandon Williams",
-    email: "mbw234@gmail.com",
+    email: "mbrandonw@hey.com",
     twitter: "mbrandonw"
   )
 )
@@ -173,7 +173,7 @@ let siteData = SiteLayoutData(
     ],
   footerData: .init(
     authorName: "Brandon Williams",
-    email: "mbw234@gmail.com",
+    email: "mbrandonw@hey.com",
     twitter: "mbrandonw"
   )
 )

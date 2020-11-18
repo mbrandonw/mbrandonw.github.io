@@ -5,11 +5,11 @@ permalink: /talks/
 summary: "A list of my upcoming and past talks at conferences."
 ---
 
-I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbw234@gmail.com](mailto:mbw234@gmail.com).
+I’m available to speak at conferences and meet ups, so please feel free to drop me an email [mbrandonw@hey.com](mailto:mbrandonw@hey.com).
 
 # Upcoming talks
 
-None planned right now. 
+None planned right now.
 
 # Past talks
 

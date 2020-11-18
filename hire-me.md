@@ -41,7 +41,7 @@ I am available to [speak](/talks) at meet ups and conferences on a variety of to
 
 # Contact me
 
-If any of this sounds interesting to you and your team, please get in touch! My email is [mbw234@gmail.com](mailto:mbw234+hireme@gmail.com) and I have availability immediately.
+If any of this sounds interesting to you and your team, please get in touch! My email is [mbrandonw@hey.com](mailto:mbrandonw+hireme@hey.com) and I have availability immediately.
 
 <br>
 
