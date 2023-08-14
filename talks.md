@@ -37,7 +37,7 @@ None planned right now.
 
 ## [Control your dependencies, don't let them control you](https://www.youtube.com/watch?v=pHOyEivnmb0)
 
-**August 10, 2023, Toronto, Canada**: Dependencies are code in your application that talk to the outside, uncontrollable world. They make code difficult to test, they can break previews and simulators, and they can be slow to compile. Learn how to take back control over your dependencies and not let them control you.
+**April 18, 2023, NYC**: Dependencies are code in your application that talk to the outside, uncontrollable world. They make code difficult to test, they can break previews and simulators, and they can be slow to compile. Learn how to take back control over your dependencies and not let them control you.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/pHOyEivnmb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
