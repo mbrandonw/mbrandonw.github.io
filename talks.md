@@ -13,6 +13,7 @@ None planned right now.
 
 # Past talks
 
+* [Control your dependencies, don't let them control you](#control-your-dependencies-dont-let-them-control-you)
 * [SwiftUI Navigation and URL Routing](#swiftui-navigation-and-url-routing)
 * [Protocol Witnesses](#protocol-witnesses)
 * [Seemingly Impossible Swift Programs](#seemingly-impossible-swift-programs)
@@ -34,13 +35,27 @@ None planned right now.
 
 <br>
 
-## [SwiftUI Navigation and URL Routing]()
+## [Control your dependencies, don't let them control you](https://www.youtube.com/watch?v=pHOyEivnmb0)
 
-## [Protocol Witnesses](https://vimeo.com/showcase/9831667/video/751580644)
+**August 10, 2023, Toronto, Canada**: Dependencies are code in your application that talk to the outside, uncontrollable world. They make code difficult to test, they can break previews and simulators, and they can be slow to compile. Learn how to take back control over your dependencies and not let them control you.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pHOyEivnmb0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<br>
+
+## [SwiftUI Navigation and URL Routing](https://vimeo.com/751580644)
 
 **September 16, 2022: Logroño, Spain**: After a brief overview of how SwiftUI's new NavigationStack API works, we'll explore how to build a router that can transform nebulous URLs into state that drives deep-linking in your application. Then, almost magically, that same code will be used to power a server-side application for generating deep-linking URLs.
 
 <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/751580644?h=6714fe76d6" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+
+<br>
+
+## [Protocol Witnesses](https://vimeo.com/showcase/9831667/video/751580644)
+
+**April 30, 2019: Lugano, Switzerland**: Protocol-oriented programming is strongly recommended in the Swift community, and Apple has given a lot of guidance on how to use it in your everyday code. However, there has not been a lot of attention on when it is not appropriate, and what to do in that case. We will explore this idea, and show that there is a completely straightforward and mechanical way to translate any protocol into a concrete datatype. Once you do this you can still write your code much like you would with protocols, but all of the complexity inherit in protocols go away. Even more amazing, a new type of composition appears that is difficult to see when dealing with only protocols. We will also demo a real life, open source library that was originally written in the protocol-oriented way, but after running into many problems with the protocols, it was rewritten entirely in this witness-oriented way. The outcome was really surprising, and really powerful.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3BVkbWXcFS4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <br>
 
