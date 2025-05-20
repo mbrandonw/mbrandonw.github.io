@@ -300,7 +300,7 @@ The `Group` protocol has inherited from `Monoid` since that gives us the binary 
 We can make `Int` into a group:
 
 ```swift
-extension Int {
+extension Int: Group {
   func inv() -> Int {
     return -self
   }
